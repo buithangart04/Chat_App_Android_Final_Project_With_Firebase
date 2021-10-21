@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AuthProject</string>
+    <string name="incoming_meeting_invitation">Incoming meeting invitation</string>
+    <string name="send_meeting_invitation">Send meeting invitation</string>
 </resources>

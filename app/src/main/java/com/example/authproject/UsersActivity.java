@@ -42,6 +42,7 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
     private ActivityUsersBinding binding;
     private PreferenceManager preferenceManager;
     FirebaseFirestore database = FirebaseFirestore.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -51,7 +52,7 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
         preferenceManager = new PreferenceManager(getApplicationContext());
         Intent intent = getIntent();
 //
-        preferenceManager.putString(Constants.KEY_USER_EMAIL,intent.getStringExtra("email"));
+        preferenceManager.putString(Constants.KEY_USER_EMAIL, intent.getStringExtra("email"));
         database.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -59,8 +60,8 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if(document.getString("email").equals(intent.getStringExtra("email"))){
-                                    preferenceManager.putString(Constants.KEY_NAME,document.getString(Constants.KEY_NAME));
+                                if (document.getString("email").equals(intent.getStringExtra("email"))) {
+                                    preferenceManager.putString(Constants.KEY_NAME, document.getString(Constants.KEY_NAME));
                                 }
 
                             }
@@ -73,63 +74,63 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
         getUsers();
     }
 
-    private void setListeners(){
+    private void setListeners() {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
     }
 
-    private void getUsers(){
+    private void getUsers() {
         loading(true);
 
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .get()
-                .addOnCompleteListener(task ->{
-                   loading(false);
-                   String currentUserId = preferenceManager.getString(Constants.KEY_USER_EMAIL);
-                   if(task.isSuccessful() && task.getResult()!=null){
-                       List<User> users = new ArrayList<>();
-                       for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
-                           if(currentUserId.equals(queryDocumentSnapshot.getData().get("email"))){
-                               continue;
-                           }
-                           User user = new User();
+                .addOnCompleteListener(task -> {
+                    loading(false);
+                    String currentUserId = preferenceManager.getString(Constants.KEY_USER_EMAIL);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            if (currentUserId.equals(queryDocumentSnapshot.getData().get("email"))) {
+                                continue;
+                            }
+                            User user = new User();
                             user.setFullName(queryDocumentSnapshot.getString(Constants.KEY_NAME));
-                           user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
-
-
+                            user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
+                            user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN);
                             users.add(user);
+                        }
+                        if (users.size() > 0) {
+                            UsersAdapter usersAdapter = new UsersAdapter(users, this);
+                            binding.usersRecyclerView.setAdapter(usersAdapter);
+                            binding.usersRecyclerView.setVisibility(View.VISIBLE);
 
-                       }
-                       if(users.size()>0){
-                           UsersAdapter usersAdapter = new UsersAdapter(users,this);
-                           binding.usersRecyclerView.setAdapter(usersAdapter);
-                           binding.usersRecyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            showErrorMessage();
+                        }
 
-                       }else{
-                           showErrorMessage();
-                       }
-
-                   }else{
-                       showErrorMessage();
-                   }
+                    } else {
+                        showErrorMessage();
+                    }
                 });
 
     }
-    private void showErrorMessage(){
-        binding.textErrorMessage.setText(String.format("%s","No user available"));
+
+    private void showErrorMessage() {
+        binding.textErrorMessage.setText(String.format("%s", "No user available"));
         binding.textErrorMessage.setVisibility(View.VISIBLE);
     }
-    private void loading(Boolean isLoading){
-        if(isLoading){
+
+    private void loading(Boolean isLoading) {
+        if (isLoading) {
             binding.progressBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             binding.progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onUserCLick(User user) {
-        Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-        intent.putExtra(Constants.KEY_USER,user);
+        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+        intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
         finish();
     }

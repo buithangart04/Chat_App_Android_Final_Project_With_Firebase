@@ -3,11 +3,13 @@ package com.example.authproject;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.authproject.adapters.ChatAdapter;
 import com.example.authproject.databinding.ActivityChatBinding;
@@ -33,7 +35,8 @@ public class ChatActivity extends AppCompatActivity {
     List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
-    private FirebaseFirestore database ;
+    private FirebaseFirestore database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,75 +47,105 @@ public class ChatActivity extends AppCompatActivity {
         loadReceiversDetails();
         init();
         listenMessage();
-    }
-    private void init (){
-        preferenceManager =new PreferenceManager(getApplicationContext());
-        chatMessages = new ArrayList<>();
-        chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(Constants.KEY_USER_EMAIL));
-        binding.recMessage.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
-        binding.recMessage.setAdapter(chatAdapter);
-        database= FirebaseFirestore.getInstance();
+        setCallListener(receiverUser);
     }
 
-    private void sendMessage (){
-        HashMap<String,Object> message = new HashMap<>();
+    private void init() {
+        preferenceManager = new PreferenceManager(getApplicationContext());
+        chatMessages = new ArrayList<>();
+        chatAdapter = new ChatAdapter(chatMessages, preferenceManager.getString(Constants.KEY_USER_EMAIL));
+        binding.recMessage.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
+        binding.recMessage.setAdapter(chatAdapter);
+        database = FirebaseFirestore.getInstance();
+    }
+
+    private void sendMessage() {
+        HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL));
-        message.put(Constants.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
-        message.put(Constants.KEY_MESSAGE,binding.inputMessage.getText().toString());
-        message.put(Constants.KEY_TIMESTAMP,new Date() );
+        message.put(Constants.KEY_RECEIVER_EMAIL, receiverUser.getEmail());
+        message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
+        message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
         binding.inputMessage.setText(null);
     }
-    public void listenMessage(){
+
+    public void listenMessage() {
         database.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))
                 .whereEqualTo(Constants.KEY_RECEIVER_EMAIL, receiverUser.getEmail())
                 .addSnapshotListener(eventListener);
         database.collection(Constants.KEY_COLLECTION_CHAT)
                 .whereEqualTo(Constants.KEY_SENDER_EMAIL, receiverUser.getEmail())
-                .whereEqualTo(Constants.KEY_RECEIVER_EMAIL,preferenceManager.getString(Constants.KEY_USER_EMAIL) )
+                .whereEqualTo(Constants.KEY_RECEIVER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))
                 .addSnapshotListener(eventListener);
     }
-    private final EventListener<QuerySnapshot> eventListener = (value, error)->{
-        if(error!=null) return;
-        if(value!=null ){
+
+    private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
+        if (error != null) return;
+        if (value != null) {
             int count = chatMessages.size();
-            for(DocumentChange docs : value.getDocumentChanges()){
-                if(docs.getType()==DocumentChange.Type.ADDED){
+            for (DocumentChange docs : value.getDocumentChanges()) {
+                if (docs.getType() == DocumentChange.Type.ADDED) {
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderEmail  = docs.getDocument().getString(Constants.KEY_SENDER_EMAIL);
-                    chatMessage.receiverEmail  = docs.getDocument().getString(Constants.KEY_RECEIVER_EMAIL);
-                    chatMessage.message  = docs.getDocument().getString(Constants.KEY_MESSAGE);
-                    chatMessage.dateObject  = docs.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                    chatMessage.dateTime= Utilites.getDateFormat(chatMessage.dateObject);
+                    chatMessage.senderEmail = docs.getDocument().getString(Constants.KEY_SENDER_EMAIL);
+                    chatMessage.receiverEmail = docs.getDocument().getString(Constants.KEY_RECEIVER_EMAIL);
+                    chatMessage.message = docs.getDocument().getString(Constants.KEY_MESSAGE);
+                    chatMessage.dateObject = docs.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                    chatMessage.dateTime = Utilites.getDateFormat(chatMessage.dateObject);
                     chatMessages.add(chatMessage);
                 }
 
             }
-            Collections.sort(chatMessages, (obj1,obj2) -> {return obj1.dateObject.compareTo(obj2.dateObject) ;});
-            if(count==0){
+            Collections.sort(chatMessages, (obj1, obj2) -> {
+                return obj1.dateObject.compareTo(obj2.dateObject);
+            });
+            if (count == 0) {
                 chatAdapter.notifyDataSetChanged();
-            }else {
+            } else {
                 //visible true ------------------------------------
                 // change recyler View
-                chatAdapter.notifyItemRangeInserted(chatMessages.size(),chatMessages.size());
-                binding.recMessage.smoothScrollToPosition(chatMessages.size()-1);
+                chatAdapter.notifyItemRangeInserted(chatMessages.size(), chatMessages.size());
+                binding.recMessage.smoothScrollToPosition(chatMessages.size() - 1);
             }
             binding.recMessage.setVisibility(View.VISIBLE);
         }
     };
-    private Bitmap getBitMapFromEncodingString (String encodedImage){
-        byte []  bytes = Base64.decode(encodedImage,Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+
+    private Bitmap getBitMapFromEncodingString(String encodedImage) {
+        byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
-    private void loadReceiversDetails (){
+
+    private void loadReceiversDetails() {
         receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(receiverUser.getFullName());
     }
-    private void setListener(){
-        binding.imageBack.setOnClickListener(v-> onBackPressed());
-        binding.layoutSend.setOnClickListener(v-> sendMessage());
+
+    private void setListener() {
+        binding.imageBack.setOnClickListener(v -> onBackPressed());
+        binding.layoutSend.setOnClickListener(v -> sendMessage());
     }
 
+    private void setCallListener(User user) {
+        binding.imageCall.setOnClickListener(v -> initiateAudioMeeting(user));
+        binding.imageVideo.setOnClickListener(v -> initiateVideoMeeting(user));
+    }
 
+    private void initiateVideoMeeting(User user) {
+        if(user.token == null || user.token.trim().isEmpty()){
+            Toast.makeText(this, user.getFullName() + " is not avaiable for meeting", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "video");
+            startActivity(intent);
+        }
+    }
+
+    private void initiateAudioMeeting(User user) {
+        Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+        intent.putExtra("user", user);
+        intent.putExtra("type","audio");
+        startActivity(intent);
+    }
 }

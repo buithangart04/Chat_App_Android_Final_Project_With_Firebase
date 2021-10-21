@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.Constants;
+import com.example.authproject.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,12 +30,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private FirebaseAuth mAuth;
     FirebaseFirestore db;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        preferenceManager = new PreferenceManager(getApplicationContext());
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
@@ -118,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            User user = new User(fullName, age, email);
+                            User user = new User(fullName, age, email, null);
                             saveUserToFireStore(user);
 
                         } else {
@@ -129,7 +132,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void saveUserToFireStore(User user) {
-        CollectionReference dbUsers = db.collection("users");
+        CollectionReference dbUsers = db.collection(Constants.KEY_COLLECTION_USERS);
         dbUsers
                 .add(user)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
