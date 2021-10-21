@@ -20,28 +20,29 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        Log.d("FCM", "message : "+ token);
+        Log.d("FCM", "message : " + token);
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
 
         String title = remoteMessage.getNotification().getTitle();
         String text = remoteMessage.getNotification().getBody();
-        final String ChanelID ="HEADS_UP_NOTI";
-        NotificationChannel channel= new NotificationChannel(
+        final String ChanelID = "HEADS_UP_NOTI";
+        NotificationChannel channel = new NotificationChannel(
                 ChanelID,
                 "Heads up notification",
                 NotificationManager.IMPORTANCE_HIGH
-                );
+        );
         getSystemService(NotificationManager.class).createNotificationChannel(channel);
-        Notification.Builder notification = new Notification.Builder(this,ChanelID)
+        Notification.Builder notification = new Notification.Builder(this, ChanelID)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setAutoCancel(true);
-        NotificationManagerCompat.from(this).notify(new Random().nextInt()+1000,notification.build());
+        NotificationManagerCompat.from(this).notify(new Random().nextInt() + 1000, notification.build());
         super.onMessageReceived(remoteMessage);
-        Log.d("FCM", "message : "+ remoteMessage.getNotification().getBody());
+        Log.d("FCM", "message : " + remoteMessage.getNotification().getBody());
     }
 }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout tools:viewBindingIgnore="false" xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/teal_200"
-    tools:context=".ChatActivity">
+    tools:context=".ChatActivity"
+    tools:viewBindingIgnore="false">
+
     <View
         android:id="@+id/viewBackground"
         android:layout_width="match_parent"
@@ -13,13 +15,15 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/background_content_top"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/teal_200"
         app:layout_constraintBottom_toTopOf="@id/rec_message"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageBack"
         android:layout_width="30dp"
@@ -30,40 +34,40 @@
         android:padding="5dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageInfo"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="12dp"
         android:padding="5dp"
         android:src="@drawable/ic_info"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-
-<FrameLayout
-    android:id="@+id/layoutSend"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginBottom="12dp"
-    android:background="@drawable/background_chat_input"
+    <FrameLayout
+        android:id="@+id/layoutSend"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/background_chat_input"
         app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:padding="8dp"
-        android:src="@drawable/ic_send"
-        android:tint="@color/white"/>
-</FrameLayout>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_send"
+            android:tint="@color/white" />
+    </FrameLayout>
 
     <EditText
         android:id="@+id/inputMessage"
@@ -92,26 +96,26 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:text="TextView"
         android:gravity="center"
+        android:text="TextView"
         android:textSize="18dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/imageBack"
         app:layout_constraintEnd_toStartOf="@+id/imageInfo"
         app:layout_constraintStart_toEndOf="@+id/imageBack"
-        app:layout_constraintTop_toTopOf="@id/imageBack"
-        app:layout_constraintBottom_toBottomOf="@id/imageBack"/>
+        app:layout_constraintTop_toTopOf="@id/imageBack" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rec_message"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="32dp"
         android:clipToPadding="false"
         android:orientation="vertical"
         android:overScrollMode="never"
-        android:layout_height="0dp"
-        app:stackFromEnd="true"
         app:layout_constraintBottom_toBottomOf="@+id/viewBackground"
         app:layout_constraintTop_toBottomOf="@+id/textName"
-        tools:layout_editor_absoluteX="1dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginTop="10dp"/>
+        app:stackFromEnd="true"
+        tools:layout_editor_absoluteX="1dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
