@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.authproject.utilities.Constants;
+import com.example.authproject.utilities.ProjectStorage;
 
 public class InComingInvitationActivity extends AppCompatActivity {
 
@@ -16,7 +16,7 @@ public class InComingInvitationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_in_coming_invitation);
 
         ImageView imageMeetingType = findViewById(R.id.imageMeetingType);
-        String meetingType = getIntent().getStringExtra(Constants.REMOTE_MSG_MEETING_TYPE);
+        String meetingType = getIntent().getStringExtra(ProjectStorage.REMOTE_MSG_MEETING_TYPE);
 
         if (meetingType != null) {
             if (meetingType.equals("video")){
@@ -27,7 +27,7 @@ public class InComingInvitationActivity extends AppCompatActivity {
         TextView textUsername = findViewById(R.id.textUsername);
         TextView textEmail = findViewById(R.id.textEmail);
 
-        textUsername.setText(getIntent().getStringExtra(Constants.KEY_NAME));
-        textEmail.setText(getIntent().getStringExtra(Constants.KEY_USER_EMAIL));
+        textUsername.setText(getIntent().getStringExtra(ProjectStorage.KEY_NAME));
+        textEmail.setText(getIntent().getStringExtra(ProjectStorage.KEY_USER_EMAIL));
     }
 }

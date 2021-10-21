@@ -1,9 +1,12 @@
 package com.example.authproject;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,12 +18,11 @@ import com.example.authproject.adapters.ChatAdapter;
 import com.example.authproject.databinding.ActivityChatBinding;
 import com.example.authproject.models.ChatMessage;
 import com.example.authproject.models.User;
-import com.example.authproject.utilities.Constants;
+import com.example.authproject.utilities.ProjectStorage;
 import com.example.authproject.utilities.PreferenceManager;
-import com.example.authproject.utilities.Utilites;
+import com.example.authproject.utilities.FunctionalUtilites;
 import com.google.firebase.firestore.DocumentChange;;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ public class ChatActivity extends AppCompatActivity {
     List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
-    private FirebaseFirestore database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,30 +54,53 @@ public class ChatActivity extends AppCompatActivity {
     private void init() {
         preferenceManager = new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
-        chatAdapter = new ChatAdapter(chatMessages, preferenceManager.getString(Constants.KEY_USER_EMAIL));
+        chatAdapter = new ChatAdapter(chatMessages, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
         binding.recMessage.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
         binding.recMessage.setAdapter(chatAdapter);
-        database = FirebaseFirestore.getInstance();
+    }
+
+    //send file or image
+    private void sendAttachment() {
+        CharSequence[] options = new CharSequence[]{
+                "Images",
+                "PDF files",
+                "Word file"
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select the files");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+        });
     }
 
     private void sendMessage() {
         HashMap<String, Object> message = new HashMap<>();
-        message.put(Constants.KEY_SENDER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL));
-        message.put(Constants.KEY_RECEIVER_EMAIL, receiverUser.getEmail());
-        message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
-        message.put(Constants.KEY_TIMESTAMP, new Date());
-        database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+        message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
+        message.put(ProjectStorage.KEY_RECEIVER_EMAIL, receiverUser.getEmail());
+        message.put(ProjectStorage.KEY_MESSAGE, binding.inputMessage.getText().toString());
+        message.put(ProjectStorage.KEY_TIMESTAMP, new Date());
+        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
         binding.inputMessage.setText(null);
     }
 
     public void listenMessage() {
-        database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))
-                .whereEqualTo(Constants.KEY_RECEIVER_EMAIL, receiverUser.getEmail())
+        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
+                .whereEqualTo(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL))
+                .whereEqualTo(ProjectStorage.KEY_RECEIVER_EMAIL, receiverUser.getEmail())
                 .addSnapshotListener(eventListener);
-        database.collection(Constants.KEY_COLLECTION_CHAT)
-                .whereEqualTo(Constants.KEY_SENDER_EMAIL, receiverUser.getEmail())
-                .whereEqualTo(Constants.KEY_RECEIVER_EMAIL, preferenceManager.getString(Constants.KEY_USER_EMAIL))
+        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
+                .whereEqualTo(ProjectStorage.KEY_SENDER_EMAIL, receiverUser.getEmail())
+                .whereEqualTo(ProjectStorage.KEY_RECEIVER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL))
                 .addSnapshotListener(eventListener);
     }
 
@@ -87,11 +111,11 @@ public class ChatActivity extends AppCompatActivity {
             for (DocumentChange docs : value.getDocumentChanges()) {
                 if (docs.getType() == DocumentChange.Type.ADDED) {
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderEmail = docs.getDocument().getString(Constants.KEY_SENDER_EMAIL);
-                    chatMessage.receiverEmail = docs.getDocument().getString(Constants.KEY_RECEIVER_EMAIL);
-                    chatMessage.message = docs.getDocument().getString(Constants.KEY_MESSAGE);
-                    chatMessage.dateObject = docs.getDocument().getDate(Constants.KEY_TIMESTAMP);
-                    chatMessage.dateTime = Utilites.getDateFormat(chatMessage.dateObject);
+                    chatMessage.senderEmail = docs.getDocument().getString(ProjectStorage.KEY_SENDER_EMAIL);
+                    chatMessage.receiverEmail = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_EMAIL);
+                    chatMessage.message = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
+                    chatMessage.dateObject = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
+                    chatMessage.dateTime = FunctionalUtilites.getDateFormat(chatMessage.dateObject);
                     chatMessages.add(chatMessage);
                 }
 
@@ -117,13 +141,14 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadReceiversDetails() {
-        receiverUser = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
+        receiverUser = (User) getIntent().getSerializableExtra(ProjectStorage.KEY_USER);
         binding.textName.setText(receiverUser.getFullName());
     }
 
     private void setListener() {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
         binding.layoutSend.setOnClickListener(v -> sendMessage());
+        binding.layoutSendFile.setOnClickListener(v -> sendAttachment());
     }
 
     private void setCallListener(User user) {
@@ -132,7 +157,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void initiateVideoMeeting(User user) {
-        if(user.token == null || user.token.trim().isEmpty()){
+        if (user.token == null || user.token.trim().isEmpty()) {
             Toast.makeText(this, user.getFullName() + " is not avaiable for meeting", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
@@ -145,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
     private void initiateAudioMeeting(User user) {
         Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
         intent.putExtra("user", user);
-        intent.putExtra("type","audio");
+        intent.putExtra("type", "audio");
         startActivity(intent);
     }
 }
