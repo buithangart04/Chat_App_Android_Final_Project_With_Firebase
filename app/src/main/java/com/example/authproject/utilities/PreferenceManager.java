@@ -7,7 +7,7 @@ public class PreferenceManager {
     private final SharedPreferences sharedPreferences;
 
     public PreferenceManager(Context context){
-         sharedPreferences = context.getSharedPreferences(Constants.KEY_PREFERENCE_NAME,Context.MODE_PRIVATE);
+         sharedPreferences = context.getSharedPreferences(ProjectStorage.KEY_PREFERENCE_NAME,Context.MODE_PRIVATE);
 
     }
 
