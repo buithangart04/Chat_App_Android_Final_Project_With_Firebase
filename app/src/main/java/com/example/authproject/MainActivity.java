@@ -13,19 +13,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.authproject.utilities.Constants;
 import com.example.authproject.utilities.PreferenceManager;
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -94,13 +91,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         signInUser(email, password);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(Constants.KEY_COLLECTION_USERS)
-                .whereEqualTo(Constants.KEY_USER_EMAIL, email)
+        database.collection(ProjectStorage.KEY_COLLECTION_USERS)
+                .whereEqualTo(ProjectStorage.KEY_USER_EMAIL, email)
                 .get()
                 .addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful() && task1.getResult() != null) {
                         DocumentSnapshot documentSnapshot = task1.getResult().getDocuments().get(0);
-                        preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
+                        preferenceManager.putString(ProjectStorage.KEY_USER_ID, documentSnapshot.getId());
                         Log.d("check",documentSnapshot.getId());
                     }
                 });
@@ -163,10 +160,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void sendFCMTokenToDatabase(String token){
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference =
-                database.collection(Constants.KEY_COLLECTION_USERS).document(
-                    preferenceManager.getString(Constants.KEY_USER_ID)
+                database.collection(ProjectStorage.KEY_COLLECTION_USERS).document(
+                    preferenceManager.getString(ProjectStorage.KEY_USER_ID)
                 );
-        documentReference.update(Constants.KEY_FCM_TOKEN, token)
+        documentReference.update(ProjectStorage.KEY_FCM_TOKEN, token)
                 .addOnSuccessListener(runnable -> {
                     Toast.makeText(MainActivity.this,"token updated successfully", Toast.LENGTH_SHORT).show();
                 })

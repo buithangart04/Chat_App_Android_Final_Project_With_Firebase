@@ -13,7 +13,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.authproject.InComingInvitationActivity;
 import com.example.authproject.R;
-import com.example.authproject.utilities.Constants;
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -29,21 +29,21 @@ public class MessagingService extends FirebaseMessagingService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        String type = remoteMessage.getData().get(Constants.REMOTE_MSG_TYPE);
+        String type = remoteMessage.getData().get(ProjectStorage.REMOTE_MSG_TYPE);
         if (type != null) {
-            if (type.equals(Constants.REMOTE_MSG_INVITATION)) {
+            if (type.equals(ProjectStorage.REMOTE_MSG_INVITATION)) {
                 Intent intent = new Intent(getApplicationContext(), InComingInvitationActivity.class);
                 intent.putExtra(
-                        Constants.REMOTE_MSG_MEETING_TYPE,
-                        remoteMessage.getData().get(Constants.REMOTE_MSG_MEETING_TYPE)
+                        ProjectStorage.REMOTE_MSG_MEETING_TYPE,
+                        remoteMessage.getData().get(ProjectStorage.REMOTE_MSG_MEETING_TYPE)
                 );
                 intent.putExtra(
-                        Constants.KEY_NAME,
-                        remoteMessage.getData().get(Constants.KEY_NAME)
+                        ProjectStorage.KEY_NAME,
+                        remoteMessage.getData().get(ProjectStorage.KEY_NAME)
                 );
                 intent.putExtra(
-                        Constants.KEY_USER_EMAIL,
-                        remoteMessage.getData().get(Constants.KEY_USER_EMAIL)
+                        ProjectStorage.KEY_USER_EMAIL,
+                        remoteMessage.getData().get(ProjectStorage.KEY_USER_EMAIL)
                 );
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
