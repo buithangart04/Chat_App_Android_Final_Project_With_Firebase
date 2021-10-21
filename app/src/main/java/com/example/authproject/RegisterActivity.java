@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -27,14 +28,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText editTextFullName, editTextAge, editTextEmail, editTextPassword;
 
     private FirebaseAuth mAuth;
-    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         banner = (TextView) findViewById(R.id.banner);
@@ -129,7 +128,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void saveUserToFireStore(User user) {
-        CollectionReference dbUsers = db.collection("users");
+        CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
         dbUsers
                 .add(user)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

@@ -1,8 +1,6 @@
 package com.example.authproject.adapters;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -11,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.authproject.databinding.ItemMessageBinding;
 import com.example.authproject.databinding.ItemReceiverMessageBinding;
 import com.example.authproject.models.ChatMessage;
-import com.example.authproject.utilities.Utilites;
 
 import java.util.List;
 
