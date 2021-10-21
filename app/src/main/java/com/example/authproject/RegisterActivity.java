@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -13,13 +14,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.Constants;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -71,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         validateInput(fullName, age, email, password);
 
         createUser(fullName, age, email, password);
+        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 
     }
 
@@ -118,7 +128,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            User user = new User(fullName, age, email);
+
+                            Map<String, Object> user = new HashMap<>();
+                            user.put(Constants.KEY_NAME, fullName);
+                            user.put(Constants.KEY_USER_AGE, age);
+                            user.put(Constants.KEY_USER_EMAIL, email);
+                            user.put(Constants.KEY_USER_STATUS, "OFFLINE");
                             saveUserToFireStore(user);
 
                         } else {
@@ -128,19 +143,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
-    private void saveUserToFireStore(User user) {
-        CollectionReference dbUsers = db.collection("users");
-        dbUsers
-                .add(user)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+    private void saveUserToFireStore(Map user) {
+        FirebaseUser u = mAuth.getCurrentUser();
+        DocumentReference documentReference = FirebaseFirestore.getInstance().document("users/" + u.getUid());
+
+        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 }

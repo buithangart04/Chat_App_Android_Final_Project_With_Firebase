@@ -6,14 +6,24 @@ public class User implements Serializable {
     private String fullName;
     private String age;
     private String email;
+    private String status;
 
     public User() {
     }
 
-    public User(String fullName, String age, String email) {
+    public User(String fullName, String age, String email, String status) {
         this.fullName = fullName;
         this.age = age;
         this.email = email;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getFullName() {
@@ -38,5 +48,15 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "fullName='" + fullName + '\'' +
+                ", age='" + age + '\'' +
+                ", email='" + email + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

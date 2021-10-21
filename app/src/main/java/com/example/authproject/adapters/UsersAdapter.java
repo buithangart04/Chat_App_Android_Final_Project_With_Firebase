@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.authproject.databinding.ItemContainerUserBinding;
 import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
-
+    private FirebaseUser user;
     private final List<User> users;
     private final UserListener userListener;
 
@@ -55,6 +57,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
 
         }
         void setUserData(User user){
+
             binding.textName.setText(user.getFullName());
             binding.textEmail.setText(user.getEmail());
             binding.getRoot().setOnClickListener(v-> userListener.onUserCLick(user));
