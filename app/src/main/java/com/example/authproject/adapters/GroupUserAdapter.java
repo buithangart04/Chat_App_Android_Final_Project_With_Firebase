@@ -113,7 +113,6 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
                 public void onClick(View view) {
                     if (binding.checkBox.isChecked()) {
                         userSearch.remove(holder.getAdapterPosition());
-                        users.remove(holder.getAdapterPosition());
                         userGroup.add(userSearch.get(holder.getAdapterPosition()));
                         binding.checkBox.setChecked(false);
                         notifyDataSetChanged();

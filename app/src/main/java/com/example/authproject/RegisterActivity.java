@@ -14,7 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.authproject.models.User;
+<<<<<<< HEAD
 import com.example.authproject.utilities.Constants;
+=======
+import com.example.authproject.utilities.ProjectStorage;
+>>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,14 +40,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText editTextFullName, editTextAge, editTextEmail, editTextPassword;
 
     private FirebaseAuth mAuth;
-    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
         banner = (TextView) findViewById(R.id.banner);
@@ -143,6 +145,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
+<<<<<<< HEAD
     private void saveUserToFireStore(Map user) {
         FirebaseUser u = mAuth.getCurrentUser();
         DocumentReference documentReference = FirebaseFirestore.getInstance().document("users/" + u.getUid());
@@ -159,5 +162,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+=======
+    private void saveUserToFireStore(User user) {
+        CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
+        dbUsers
+                .add(user)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+>>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
     }
 }
