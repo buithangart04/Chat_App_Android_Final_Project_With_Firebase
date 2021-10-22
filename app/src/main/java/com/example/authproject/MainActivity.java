@@ -21,8 +21,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -66,6 +69,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this,ForgotPasswordActivity.class));
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+        DocumentReference documentReference =
+                database.collection(ProjectStorage.KEY_COLLECTION_USERS).document(
+                        preferenceManager.getString(ProjectStorage.KEY_USER_ID)
+                );
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put(ProjectStorage.KEY_FCM_TOKEN, FieldValue.delete());
+        documentReference.update(updates)
+                .addOnSuccessListener(runnable -> {
+                    preferenceManager.clear();
+                    finish();
+                })
+                .addOnFailureListener(runnable -> {
+                    Toast.makeText(MainActivity.this,"Unable to remove token: "+runnable.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+        super.onDestroy();
     }
 
     private void Login() {

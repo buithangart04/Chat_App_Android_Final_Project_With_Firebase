@@ -24,6 +24,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jitsi.meet.sdk.JitsiMeetActivity;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+import org.jitsi.meet.sdk.JitsiMeetView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -176,8 +177,12 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
                         JitsiMeetConferenceOptions.Builder builder = new JitsiMeetConferenceOptions.Builder();
                         builder.setServerURL(serverUrl);
                         builder.setWelcomePageEnabled(false);
+                        builder.setFeatureFlag("invite.enabled",false);
+                        builder.setFeatureFlag("raise-hand.enabled", false);
                         builder.setRoom(meetingRoom);
                         if (meetingType.equals("audio")) {
+                            builder.setFeatureFlag("video-mute.enabled", false);
+                            builder.setFeatureFlag("reactions.enabled", false);
                             builder.setVideoMuted(true);
                         }
                         JitsiMeetActivity.launch(OutgoingInvitationActivity.this, builder.build());
