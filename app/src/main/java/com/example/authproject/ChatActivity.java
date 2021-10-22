@@ -168,9 +168,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void initiateAudioMeeting(User user) {
-        Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
-        intent.putExtra("user", user);
-        intent.putExtra("type", "audio");
-        startActivity(intent);
+        if (user.token == null || user.token.trim().isEmpty()) {
+            Toast.makeText(this, user.getFullName() + " is not avaiable for meeting", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "audio");
+            startActivity(intent);
+        }
     }
 }

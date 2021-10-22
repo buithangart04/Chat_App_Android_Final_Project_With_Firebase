@@ -10,10 +10,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.authproject.InComingInvitationActivity;
 import com.example.authproject.R;
 import com.example.authproject.utilities.ProjectStorage;
+import com.google.firebase.messaging.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -45,8 +47,23 @@ public class MessagingService extends FirebaseMessagingService {
                         ProjectStorage.KEY_USER_EMAIL,
                         remoteMessage.getData().get(ProjectStorage.KEY_USER_EMAIL)
                 );
+                intent.putExtra(
+                        ProjectStorage.REMOTE_MSG_INVITER_TOKEN,
+                        remoteMessage.getData().get(ProjectStorage.REMOTE_MSG_INVITER_TOKEN)
+                );
+                intent.putExtra(
+                        ProjectStorage.REMOTE_MSG_MEETING_ROOM,
+                        remoteMessage.getData().get(ProjectStorage.REMOTE_MSG_MEETING_ROOM)
+                );
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+            } else if (type.equals(ProjectStorage.REMOTE_MSG_INVITATION_RESPONSE)) {
+                Intent intent = new Intent(ProjectStorage.REMOTE_MSG_INVITATION_RESPONSE);
+                intent.putExtra(
+                        ProjectStorage.REMOTE_MSG_INVITATION_RESPONSE,
+                        remoteMessage.getData().get(ProjectStorage.REMOTE_MSG_INVITATION_RESPONSE)
+                );
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
             }
         } else {
             String title = remoteMessage.getNotification().getTitle();

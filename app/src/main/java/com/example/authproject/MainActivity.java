@@ -51,21 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtForgotPassword = (TextView) findViewById(R.id.txtForgotPassword);
         txtForgotPassword.setOnClickListener(this);
         preferenceManager = new PreferenceManager(getApplicationContext());
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("TAG", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        String token = task.getResult();
-                        Log.d("token",token);
-                        // Log and toast
-                    }
-                });
     }
 
     @Override
@@ -88,24 +73,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String password = editTextPassword.getText().toString().trim();
 
         validateInput(email, password);
-
         signInUser(email, password);
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(ProjectStorage.KEY_COLLECTION_USERS)
-                .whereEqualTo(ProjectStorage.KEY_USER_EMAIL, email)
-                .get()
-                .addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful() && task1.getResult() != null) {
-                        DocumentSnapshot documentSnapshot = task1.getResult().getDocuments().get(0);
-                        preferenceManager.putString(ProjectStorage.KEY_USER_ID, documentSnapshot.getId());
-                        Log.d("check",documentSnapshot.getId());
-                    }
-                });
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
                     public void onComplete(@NonNull Task<String> task) {
-                        if (task.isSuccessful() && task.getResult() != null) {
+                        if (task.isSuccessful() && task.getResult() != null && preferenceManager.getString(ProjectStorage.KEY_USER_ID) != null) {
                             sendFCMTokenToDatabase(task.getResult());
                         }
                     }
@@ -139,6 +112,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void signInUser(String email, String password) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(ProjectStorage.KEY_COLLECTION_USERS)
+                .whereEqualTo(ProjectStorage.KEY_USER_EMAIL, email)
+                .get()
+                .addOnSuccessListener(task1 -> {
+                    DocumentSnapshot documentSnapshot = task1.getDocuments().get(0);
+                    preferenceManager.putString(ProjectStorage.KEY_USER_ID, documentSnapshot.getId());
+                });
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -159,10 +140,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void sendFCMTokenToDatabase(String token){
         FirebaseFirestore database = FirebaseFirestore.getInstance();
+
         DocumentReference documentReference =
                 database.collection(ProjectStorage.KEY_COLLECTION_USERS).document(
                     preferenceManager.getString(ProjectStorage.KEY_USER_ID)
                 );
+
         documentReference.update(ProjectStorage.KEY_FCM_TOKEN, token)
                 .addOnSuccessListener(runnable -> {
                     Toast.makeText(MainActivity.this,"token updated successfully", Toast.LENGTH_SHORT).show();
