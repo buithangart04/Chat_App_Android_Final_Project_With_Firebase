@@ -29,7 +29,4 @@ public class ProjectStorage {
         STORAGE_REFERENCE =  FirebaseStorage.getInstance().getReference();
     }
 
-
-
-
 }
