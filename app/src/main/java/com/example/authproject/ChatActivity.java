@@ -17,10 +17,9 @@ import com.example.authproject.models.ChatMessage;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.ProjectStorage;
 import com.example.authproject.utilities.PreferenceManager;
-import com.example.authproject.utilities.FunctionalUtilites;
+import com.example.authproject.utilities.FunctionalUtilities;
 import com.google.firebase.firestore.DocumentChange;;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -107,7 +106,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatMessage.receiverEmail  = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_EMAIL);
                     chatMessage.message  = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
                     chatMessage.dateObject  = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
-                    chatMessage.dateTime= FunctionalUtilites.getDateFormat(chatMessage.dateObject);
+                    chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
                     chatMessages.add(chatMessage);
                 }
 

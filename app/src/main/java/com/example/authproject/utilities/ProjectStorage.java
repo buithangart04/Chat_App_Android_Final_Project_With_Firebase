@@ -29,7 +29,6 @@ public class ProjectStorage {
         STORAGE_REFERENCE =  FirebaseStorage.getInstance().getReference();
     }
 
-
-
+    public static final int PICK_IMAGE_REQUEST = 2;
 
 }
