@@ -6,6 +6,7 @@ public class User implements Serializable {
     private String fullName;
     private String age;
     private String email;
+    private String uri;
 
     public User() {
     }
@@ -13,6 +14,13 @@ public class User implements Serializable {
     public User(String fullName, String age, String email) {
         this.fullName = fullName;
         this.age = age;
+        this.email = email;
+    }
+
+    public User(String fullName, String age, String email, String uri) {
+        this.fullName = fullName;
+        this.age = age;
+        this.uri = uri;
         this.email = email;
     }
 
@@ -38,5 +46,13 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }
