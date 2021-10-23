@@ -1,8 +1,8 @@
-package com.example.authproject.DAO;
+package com.example.authproject.dao;
 
 import android.util.Log;
 
-import com.example.authproject.utilities.Constants;
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,7 +21,7 @@ public class UserDAO {
                 .document("users/" + user.getUid());
         Map<String, Object> map = new HashMap<>();
 
-        map.put(Constants.KEY_USER_STATUS, status);
+        map.put(ProjectStorage.KEY_USER_STATUS, status);
         documentReference.update(map)
                 .addOnSuccessListener(unused -> Log.d("TAG", "User Online"))
                 .addOnFailureListener(e -> Log.e("TAG", "onFailure", e));

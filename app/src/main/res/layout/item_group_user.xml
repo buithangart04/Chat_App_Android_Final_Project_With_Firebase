@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="wrap_content">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile2"
@@ -34,11 +34,10 @@
         android:layout_width="32dp"
         android:layout_height="34dp"
         android:layout_marginStart="37dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="47dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/text_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

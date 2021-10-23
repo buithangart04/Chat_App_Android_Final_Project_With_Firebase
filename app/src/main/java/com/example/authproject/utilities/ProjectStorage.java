@@ -11,7 +11,10 @@ public class ProjectStorage {
     public static final String KEY_NAME = "fullName";
     public static final String KEY_USER = "user";
     public static final String KEY_USER_EMAIL = "email";
-
+    public static final String KEY_USER_STATUS ="status";
+    //Color
+    public static final String KEY_COLOR_DISABLED="#d7dadc";
+    public static final String KEY_COLOR_NAVIGATE="#0f7dd6";
     //Key chat in firebase
     public static final String KEY_COLLECTION_CHAT = "chat";
 
@@ -24,6 +27,8 @@ public class ProjectStorage {
     public static  FirebaseFirestore DATABASE_REFERENCE ;
     public static  StorageReference STORAGE_REFERENCE ;
     // constructor
+
+
     static {
         DATABASE_REFERENCE = FirebaseFirestore.getInstance();
         STORAGE_REFERENCE =  FirebaseStorage.getInstance().getReference();

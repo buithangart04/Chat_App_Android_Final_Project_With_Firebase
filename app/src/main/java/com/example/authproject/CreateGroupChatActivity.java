@@ -1,60 +1,59 @@
 package com.example.authproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
-import com.example.authproject.DAO.UserDAO;
-import com.example.authproject.R;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.authproject.adapters.ChosenGroupUserAdapter;
 import com.example.authproject.adapters.GroupUserAdapter;
-import com.example.authproject.adapters.UsersAdapter;
 import com.example.authproject.databinding.ActivityCreateGroupChatBinding;
-import com.example.authproject.databinding.ActivityUsersBinding;
-import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.User;
-import com.example.authproject.utilities.Constants;
 import com.example.authproject.utilities.PreferenceManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CreateGroupChatActivity extends AppCompatActivity {
 
     private ActivityCreateGroupChatBinding binding;
     private PreferenceManager preferenceManager;
-    private FirebaseFirestore database = FirebaseFirestore.getInstance();
     private GroupUserAdapter groupUserAdapter;
+    private ChosenGroupUserAdapter chosenGroupUserAdapter;
     private List<User> users = new ArrayList<>();
-
+    private List<User> userGroup = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCreateGroupChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        innit();
+        getCurrentUser();
+        getUsers();
+        searchUser(users);
+    }
+
+    private void getCurrentUser() {
         preferenceManager = new PreferenceManager(getApplicationContext());
         Intent intent = getIntent();
         ((LinearLayoutManager) binding.userRecycleView.getLayoutManager()).setStackFromEnd(true);
-        preferenceManager.putString(Constants.KEY_USER_EMAIL, intent.getStringExtra("email"));
-        database.collection("users")
+        preferenceManager.putString(ProjectStorage.KEY_USER_EMAIL, intent.getStringExtra("email"));
+        ProjectStorage.DATABASE_REFERENCE.collection("users")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if (document.getString("email").equals(intent.getStringExtra("email"))) {
-                                preferenceManager.putString(Constants.KEY_NAME, document.getString(Constants.KEY_NAME));
+                                preferenceManager.putString(ProjectStorage.KEY_NAME, document.getString(ProjectStorage.KEY_NAME));
                             }
 
                         }
@@ -62,32 +61,50 @@ public class CreateGroupChatActivity extends AppCompatActivity {
                         showErrorMessage();
                     }
                 });
+    }
 
-        getUsers();
-        searchUser(users);
+    private void innit() {
+        LinearLayoutManager linearLayoutManagerUser = new LinearLayoutManager(
+                getApplicationContext());
+        linearLayoutManagerUser.setReverseLayout(true);
+        LinearLayoutManager linearLayoutManagerUserGroup = new LinearLayoutManager(
+                getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        binding.userRecycleView.setLayoutManager(linearLayoutManagerUser);
+        binding.userGroupRecylerView.setLayoutManager(linearLayoutManagerUserGroup);
+
+        User u = new User("hung", "1", "1", "1");
+        User u2 = new User("hung", "1", "1", "1");
+        userGroup.add(u);
+        userGroup.add(u2);
+
+        chosenGroupUserAdapter = new ChosenGroupUserAdapter(userGroup);
+        binding.userGroupRecylerView.setAdapter(chosenGroupUserAdapter);
+        binding.userGroupRecylerView.setVisibility(View.VISIBLE);
+
     }
 
     private void getUsers() {
         loading(true);
 
-        database.collection(Constants.KEY_COLLECTION_USERS)
+        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
                 .addOnCompleteListener(task -> {
                     loading(false);
-                    String currentUserId = preferenceManager.getString(Constants.KEY_USER_EMAIL);
+                    String currentUserEmail = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
                     if (task.isSuccessful() && task.getResult() != null) {
 
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                            if (currentUserId.equals(queryDocumentSnapshot.getData().get("email"))) {
+                            if (currentUserEmail.equals(queryDocumentSnapshot.getData().get("email"))) {
                                 continue;
                             }
                             User user = new User();
-                            user.setFullName(queryDocumentSnapshot.getString(Constants.KEY_NAME));
-                            user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
+                            user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
+                            user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
                             users.add(user);
                         }
 
                         if (users.size() > 0) {
+                            Collections.reverse(users);
                             groupUserAdapter = new GroupUserAdapter(users);
                             binding.userRecycleView.setAdapter(groupUserAdapter);
                             binding.userRecycleView.setVisibility(View.VISIBLE);
@@ -135,6 +152,5 @@ public class CreateGroupChatActivity extends AppCompatActivity {
             binding.progressBarGroup.setVisibility(View.INVISIBLE);
         }
     }
-
 
 }

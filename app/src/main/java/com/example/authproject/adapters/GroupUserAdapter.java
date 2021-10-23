@@ -1,11 +1,7 @@
 package com.example.authproject.adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Filter;
@@ -14,25 +10,25 @@ import android.widget.Filterable;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.authproject.databinding.ItemContainerUserBinding;
 import com.example.authproject.databinding.ItemGroupUserBinding;
-import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.User;
 
-
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.UserViewHolder> implements Filterable {
     private List<User> users;
     private List<User> userSearch;
     private List<User> userGroup = new ArrayList<>();
+    private boolean isTextSearchEmpty = true;
 
     public GroupUserAdapter(List<User> users) {
         this.users = users;
         this.userSearch = users;
     }
+
+
 
     @NonNull
     @Override
@@ -50,17 +46,10 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
 
         holder.setUserData(userSearch.get(position), holder);
 
-        if (userGroup != null) {
-            Log.d("tag", userGroup.toString());
-        }
-
-        Log.d("tag", "onBindViewHolder");
-
     }
 
     @Override
     public int getItemCount() {
-        Log.d("tag", "getItemCount");
         return userSearch.size();
     }
 
@@ -70,10 +59,13 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-
                 if (charSequence.toString().isEmpty()) {
+                    isTextSearchEmpty = true;
+                    Log.d("TAG", "IF");
                     userSearch = users;
                 } else {
+                    isTextSearchEmpty = false;
+                    Log.d("TAG", "ELSE");
                     List<User> listFilter = new ArrayList<>();
                     for (User user : users) {
                         if (user.getFullName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
@@ -97,8 +89,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
         };
     }
 
-
-    class UserViewHolder extends RecyclerView.ViewHolder {
+    public class UserViewHolder extends RecyclerView.ViewHolder {
         ItemGroupUserBinding binding;
 
         UserViewHolder(ItemGroupUserBinding itemContainerUserBinding) {
@@ -106,18 +97,30 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
             binding = itemContainerUserBinding;
         }
 
-        void setUserData(User user, UserViewHolder holder) {
+        private int getUserPos(User userSearch) {
+            int pos = 0;
+            for (User u : users) {
+                if (u.getEmail().equals(userSearch.getEmail())) {
+                    pos = users.indexOf(u);
+                }
+            }
+            return pos;
+        }
+
+        private void setUserData(User user, UserViewHolder holder) {
             binding.textName.setText(user.getFullName());
-            binding.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (binding.checkBox.isChecked()) {
-                        userSearch.remove(holder.getAdapterPosition());
-                        users.remove(holder.getAdapterPosition());
-                        userGroup.add(userSearch.get(holder.getAdapterPosition()));
-                        binding.checkBox.setChecked(false);
-                        notifyDataSetChanged();
+            binding.checkBox.setOnClickListener(view -> {
+                if (binding.checkBox.isChecked()) {
+                    int position = holder.getAdapterPosition();
+                    userGroup.add(userSearch.get(position));
+                    if (!isTextSearchEmpty) {
+                        users.remove(getUserPos(userSearch.get(position)));
                     }
+                    userSearch.remove(position);
+                    binding.checkBox.setChecked(false);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, userSearch.size());
+                    Log.d("Tag", userGroup.toString());
                 }
             });
 

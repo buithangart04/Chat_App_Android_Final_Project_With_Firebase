@@ -1,11 +1,7 @@
 package com.example.authproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -13,8 +9,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.authproject.models.User;
-import com.example.authproject.utilities.Constants;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,11 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -130,10 +126,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         if (task.isSuccessful()) {
 
                             Map<String, Object> user = new HashMap<>();
-                            user.put(Constants.KEY_NAME, fullName);
-                            user.put(Constants.KEY_USER_AGE, age);
-                            user.put(Constants.KEY_USER_EMAIL, email);
-                            user.put(Constants.KEY_USER_STATUS, "OFFLINE");
+                            user.put(ProjectStorage.KEY_NAME, fullName);
+                            user.put(ProjectStorage.KEY_USER_EMAIL, email);
+                            user.put(ProjectStorage.KEY_USER_STATUS, "OFFLINE");
                             saveUserToFireStore(user);
 
                         } else {
