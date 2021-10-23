@@ -10,9 +10,14 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.util.Base64;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
+import android.view.ViewGroup;
 
 import com.example.authproject.adapters.ChatAdapter;
 import com.example.authproject.databinding.ActivityChatBinding;
@@ -20,7 +25,7 @@ import com.example.authproject.models.ChatMessage;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.ProjectStorage;
 import com.example.authproject.utilities.PreferenceManager;
-import com.example.authproject.utilities.FunctionalUtilites;
+import com.example.authproject.utilities.FunctionalUtilities;
 import com.google.firebase.firestore.DocumentChange;;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,6 +42,7 @@ public class ChatActivity extends AppCompatActivity {
     List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
+    boolean showOptionsFile= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,27 +66,37 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     //send file or image
-    private void sendAttachment() {
-        CharSequence[] options = new CharSequence[]{
-                "Images",
-                "PDF files",
-                "Word file"
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select the files");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                switch (i) {
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                }
-            }
-        });
+    private void sendAttachment(){
+        Transition transition = new Slide(Gravity.BOTTOM);
+        transition.setDuration(600);
+        transition.addTarget(binding.layoutChooseFile);
+
+        TransitionManager.beginDelayedTransition(binding.viewBackground, transition);
+        binding.layoutChooseFile.setVisibility(showOptionsFile ? View.GONE: View.VISIBLE );
+        binding.imageviewAdd.setImageResource(showOptionsFile?R.drawable.ic_add:R.drawable.ic_clear);
+        showOptionsFile=!showOptionsFile;
+
+//        CharSequence [] options = new CharSequence[]{
+//                "Images",
+//                "PDF files",
+//                "Word file"
+//        };
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Select the files");
+//        builder.setItems(options, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                switch(i){
+//                    case 0:
+//                        break;
+//                    case 1:
+//                        break;
+//                    case 2 :
+//                        break;
+//
+//                }
+//            }
+//        });
     }
 
     private void sendMessage() {
@@ -111,11 +127,11 @@ public class ChatActivity extends AppCompatActivity {
             for (DocumentChange docs : value.getDocumentChanges()) {
                 if (docs.getType() == DocumentChange.Type.ADDED) {
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderEmail = docs.getDocument().getString(ProjectStorage.KEY_SENDER_EMAIL);
-                    chatMessage.receiverEmail = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_EMAIL);
-                    chatMessage.message = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
-                    chatMessage.dateObject = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
-                    chatMessage.dateTime = FunctionalUtilites.getDateFormat(chatMessage.dateObject);
+                    chatMessage.senderEmail  = docs.getDocument().getString(ProjectStorage.KEY_SENDER_EMAIL);
+                    chatMessage.receiverEmail  = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_EMAIL);
+                    chatMessage.message  = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
+                    chatMessage.dateObject  = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
+                    chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
                     chatMessages.add(chatMessage);
                 }
 
@@ -148,7 +164,7 @@ public class ChatActivity extends AppCompatActivity {
     private void setListener() {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
         binding.layoutSend.setOnClickListener(v -> sendMessage());
-        binding.layoutSendFile.setOnClickListener(v -> sendAttachment());
+        binding.layoutOptionSendFile.setOnClickListener(v -> sendAttachment());
     }
 
     private void setCallListener(User user) {

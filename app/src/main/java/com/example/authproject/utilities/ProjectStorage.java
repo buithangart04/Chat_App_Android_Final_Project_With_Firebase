@@ -61,4 +61,6 @@ public class ProjectStorage {
         headers.put(ProjectStorage.REMOTE_MSG_CONTENT_TYPE,"application/json");
         return headers;
     }
+
+    public static final int PICK_IMAGE_REQUEST = 2;
 }
