@@ -6,17 +6,15 @@ public class User implements Serializable {
     private String fullName;
     private String age;
     private String email;
-    private String imgUrl;
     public String token;
 
     public User() {
     }
 
-    public User(String fullName, String age, String email, String imgUrl) {
+    public User(String fullName, String age, String email) {
         this.fullName = fullName;
         this.age = age;
         this.email = email;
-        this.imgUrl = imgUrl;
     }
 
     public String getFullName() {
@@ -41,13 +39,5 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 }
