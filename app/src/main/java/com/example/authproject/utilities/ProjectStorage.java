@@ -27,6 +27,7 @@ public class ProjectStorage {
     public static final String KEY_RECEIVER_EMAIL = "receiverEmail";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
+    public static final String KEY_MESSAGE_TYPE = "type";
     // access firebase database
     public static  FirebaseFirestore DATABASE_REFERENCE ;
     public static  StorageReference STORAGE_REFERENCE ;

@@ -1,29 +1,35 @@
 package com.example.authproject;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.adapters.ChatAdapter;
+import com.example.authproject.adapters.FileChooserAdapter;
 import com.example.authproject.databinding.ActivityChatBinding;
+import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.ChatMessage;
 import com.example.authproject.models.User;
-import com.example.authproject.utilities.ProjectStorage;
-import com.example.authproject.utilities.PreferenceManager;
+import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.FunctionalUtilities;
-import com.google.firebase.firestore.DocumentChange;;
+import com.example.authproject.utilities.PreferenceManager;
+import com.example.authproject.utilities.ProjectStorage;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -32,14 +38,18 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements UploadFileSuccessListener {
     private ActivityChatBinding binding;
     private User receiverUser;
     List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
+    private FileChooserAdapter fileChooserAdapter ;
     private PreferenceManager preferenceManager;
     boolean showOptionsFile= false;
+    List<Uri> listFileSelected;
+    private static final int PICK_IMAGE_REQUEST = 3241;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,58 +57,53 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();
-        //loadReceiversDetails();
-        //init();
-        //listenMessage();
+        loadReceiversDetails();
+        init();
+        listenMessage();
     }
     private void init (){
         preferenceManager =new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
+        listFileSelected = new ArrayList<>();
         chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
         binding.recMessage.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
         binding.recMessage.setAdapter(chatAdapter);
+        // set adapter for message
+        fileChooserAdapter = new FileChooserAdapter(listFileSelected);
+        binding.recFileAdd.setLayoutManager(new LinearLayoutManager(binding.sendBox.getContext(),LinearLayoutManager.HORIZONTAL,false));
+        binding.recFileAdd.setAdapter(fileChooserAdapter);
     }
     //send file or image
-    private void sendAttachment(){
+    private void showFileOptions(){
         Transition transition = new Slide(Gravity.BOTTOM);
-        transition.setDuration(600);
+        transition.setDuration(400);
         transition.addTarget(binding.layoutChooseFile);
 
         TransitionManager.beginDelayedTransition(binding.viewBackground, transition);
         binding.layoutChooseFile.setVisibility(showOptionsFile ? View.GONE: View.VISIBLE );
         binding.imageviewAdd.setImageResource(showOptionsFile?R.drawable.ic_add:R.drawable.ic_clear);
         showOptionsFile=!showOptionsFile;
-        
-//        CharSequence [] options = new CharSequence[]{
-//                "Images",
-//                "PDF files",
-//                "Word file"
-//        };
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Select the files");
-//        builder.setItems(options, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                switch(i){
-//                    case 0:
-//                        break;
-//                    case 1:
-//                        break;
-//                    case 2 :
-//                        break;
-//
-//                }
-//            }
-//        });
+
     }
     private void sendMessage (){
-        HashMap<String,Object> message = new HashMap<>();
-        message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
-        message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
-        message.put(ProjectStorage.KEY_MESSAGE,binding.inputMessage.getText().toString());
-        message.put(ProjectStorage.KEY_TIMESTAMP,new Date() );
-        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
-        binding.inputMessage.setText(null);
+        if(!binding.inputMessage.getText().toString().trim().isEmpty()&&binding.inputMessage.getText()!= null){
+            HashMap<String,Object> message = new HashMap<>();
+            message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
+            message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
+            message.put(ProjectStorage.KEY_MESSAGE,binding.inputMessage.getText().toString());
+            message.put(ProjectStorage.KEY_TIMESTAMP,new Date() );
+            message.put(ProjectStorage.KEY_MESSAGE_TYPE,"text");
+            ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
+            binding.inputMessage.setText(null);
+        }
+        if(listFileSelected.size()!=0){
+            for(Uri uri: listFileSelected){
+               new FileUtilities().uploadFile(this,this,uri);
+            }
+            listFileSelected.clear();
+            fileChooserAdapter.notifyDataSetChanged();
+        }
+
     }
     public void listenMessage(){
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
@@ -122,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatMessage.message  = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
                     chatMessage.dateObject  = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
                     chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
+                    chatMessage.type= docs.getDocument().getString(ProjectStorage.KEY_MESSAGE_TYPE);
                     chatMessages.add(chatMessage);
                 }
 
@@ -149,7 +155,45 @@ public class ChatActivity extends AppCompatActivity {
     private void setListener(){
         binding.imageBack.setOnClickListener(v-> onBackPressed());
         binding.layoutSend.setOnClickListener(v-> sendMessage());
-        binding.layoutOptionSendFile.setOnClickListener(v->sendAttachment());
+        binding.layoutOptionSendFile.setOnClickListener(v->showFileOptions());
     }
 
+    public void onChoseOptionSend(View view) {
+        switch(view.getId()){
+            case R.id.optionImage:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select an image"), PICK_IMAGE_REQUEST);
+                break;
+            case R.id.optionFile:
+                Toast.makeText(ChatActivity.this, "file choose", Toast.LENGTH_LONG).show();
+                break;
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==PICK_IMAGE_REQUEST&& resultCode==RESULT_OK&& data!=null && data.getData()!=null){
+            Uri filePath = data.getData();
+            listFileSelected.add(filePath);
+            fileChooserAdapter.notifyDataSetChanged();
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chatAdapter.notifyDataSetChanged();
+        binding.recMessage.setAdapter(chatAdapter);
+    }
+    @Override
+    public void onUploadFileSuccess(Uri uri) {
+        HashMap<String,Object> message = new HashMap<>();
+        message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
+        message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
+        message.put(ProjectStorage.KEY_MESSAGE,uri.toString());
+        message.put(ProjectStorage.KEY_TIMESTAMP,new Date() );
+        message.put(ProjectStorage.KEY_MESSAGE_TYPE,"image");
+        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
+    }
 }
