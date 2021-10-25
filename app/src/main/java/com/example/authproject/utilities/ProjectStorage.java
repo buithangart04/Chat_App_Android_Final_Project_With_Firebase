@@ -1,5 +1,6 @@
 package com.example.authproject.utilities;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -8,10 +9,13 @@ public class ProjectStorage {
     public static final String KEY_PREFERENCE_NAME = "firebase";
     // Key users in firebase
     public static final String KEY_COLLECTION_USERS = "users";
+    public static final String KEY_COLLECTION_GROUP = "group";
+    public static final String KEY_COLLECTION_GROUP_MESSAGE = "groupMessage";
     public static final String KEY_NAME = "fullName";
     public static final String KEY_USER = "user";
     public static final String KEY_USER_EMAIL = "email";
     public static final String KEY_USER_STATUS ="status";
+
     //Color
     public static final String KEY_COLOR_DISABLED="#d7dadc";
     public static final String KEY_COLOR_NAVIGATE="#0f7dd6";
@@ -26,6 +30,7 @@ public class ProjectStorage {
     // access firebase database
     public static  FirebaseFirestore DATABASE_REFERENCE ;
     public static  StorageReference STORAGE_REFERENCE ;
+    public static DocumentReference DOCUMENT_REFERENCE;
     // constructor
 
 
@@ -34,7 +39,6 @@ public class ProjectStorage {
         STORAGE_REFERENCE =  FirebaseStorage.getInstance().getReference();
     }
 
-
-
+    public static final int PICK_IMAGE_REQUEST = 2;
 
 }

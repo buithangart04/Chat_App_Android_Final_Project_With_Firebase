@@ -13,11 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AuthProject">
         <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
+            android:name=".GroupChatActivity"
+            android:exported="true" />
         <activity
-            android:name=".CreateGroupChatActivity"
+            android:name=".CreateGroupActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".CreateGroupUserActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
@@ -37,9 +40,9 @@
             android:name=".UsersActivity"
             android:exported="true" />
         <activity
-            android:name=".CreateGroupChatNameActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:exported="true">
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

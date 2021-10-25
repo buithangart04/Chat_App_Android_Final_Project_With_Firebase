@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CreateGroupChatActivity extends AppCompatActivity {
+public class CreateGroupUserActivity extends AppCompatActivity {
 
     private ActivityCreateGroupChatBinding binding;
     private PreferenceManager preferenceManager;
@@ -69,15 +69,13 @@ public class CreateGroupChatActivity extends AppCompatActivity {
         linearLayoutManagerUser.setReverseLayout(true);
         LinearLayoutManager linearLayoutManagerUserGroup = new LinearLayoutManager(
                 getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        chosenGroupUserAdapter = new ChosenGroupUserAdapter(userGroup);
+
+        groupUserAdapter = new GroupUserAdapter(users,chosenGroupUserAdapter);
         binding.userRecycleView.setLayoutManager(linearLayoutManagerUser);
         binding.userGroupRecylerView.setLayoutManager(linearLayoutManagerUserGroup);
 
-        User u = new User("hung", "1", "1", "1");
-        User u2 = new User("hung", "1", "1", "1");
-        userGroup.add(u);
-        userGroup.add(u2);
-
-        chosenGroupUserAdapter = new ChosenGroupUserAdapter(userGroup);
         binding.userGroupRecylerView.setAdapter(chosenGroupUserAdapter);
         binding.userGroupRecylerView.setVisibility(View.VISIBLE);
 
@@ -105,7 +103,7 @@ public class CreateGroupChatActivity extends AppCompatActivity {
 
                         if (users.size() > 0) {
                             Collections.reverse(users);
-                            groupUserAdapter = new GroupUserAdapter(users);
+                            groupUserAdapter = new GroupUserAdapter(users,chosenGroupUserAdapter);
                             binding.userRecycleView.setAdapter(groupUserAdapter);
                             binding.userRecycleView.setVisibility(View.VISIBLE);
 
@@ -120,7 +118,7 @@ public class CreateGroupChatActivity extends AppCompatActivity {
     }
 
     private void searchUser(List<User> users) {
-        groupUserAdapter = new GroupUserAdapter(users);
+        groupUserAdapter = new GroupUserAdapter(users,chosenGroupUserAdapter);
         binding.searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

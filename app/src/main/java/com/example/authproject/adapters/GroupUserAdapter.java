@@ -1,7 +1,10 @@
 package com.example.authproject.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Filter;
@@ -10,6 +13,8 @@ import android.widget.Filterable;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.authproject.CreateGroupUserActivity;
+import com.example.authproject.databinding.ActivityCreateGroupChatBinding;
 import com.example.authproject.databinding.ItemGroupUserBinding;
 import com.example.authproject.models.User;
 
@@ -21,9 +26,11 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
     private List<User> users;
     private List<User> userSearch;
     private List<User> userGroup = new ArrayList<>();
+    private ChosenGroupUserAdapter chosenGroupUserAdapter;
     private boolean isTextSearchEmpty = true;
 
-    public GroupUserAdapter(List<User> users) {
+    public GroupUserAdapter(List<User> users,ChosenGroupUserAdapter chosenGroupUserAdapter) {
+        this.chosenGroupUserAdapter = chosenGroupUserAdapter;
         this.users = users;
         this.userSearch = users;
     }
@@ -34,10 +41,12 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemGroupUserBinding itemContainerUserBinding = ItemGroupUserBinding.inflate(
+
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false
         );
+
         return new UserViewHolder(itemContainerUserBinding);
     }
 
@@ -82,12 +91,12 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-
                 userSearch = (List<User>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
     }
+
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
         ItemGroupUserBinding binding;
@@ -107,12 +116,13 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
             return pos;
         }
 
+
         private void setUserData(User user, UserViewHolder holder) {
             binding.textName.setText(user.getFullName());
             binding.checkBox.setOnClickListener(view -> {
                 if (binding.checkBox.isChecked()) {
                     int position = holder.getAdapterPosition();
-                    userGroup.add(userSearch.get(position));
+
                     if (!isTextSearchEmpty) {
                         users.remove(getUserPos(userSearch.get(position)));
                     }
@@ -120,6 +130,9 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
                     binding.checkBox.setChecked(false);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, userSearch.size());
+
+                    userGroup.add(userSearch.get(position));
+                    chosenGroupUserAdapter.notifyDataSetChanged();
                     Log.d("Tag", userGroup.toString());
                 }
             });

@@ -13,11 +13,9 @@ import com.example.authproject.models.User;
 import java.util.List;
 
 public class ChosenGroupUserAdapter extends RecyclerView.Adapter<ChosenGroupUserAdapter.UserViewHolder> {
-    private List<User> userGroup;
     private List<User> chosenUsers;
-    public ChosenGroupUserAdapter(List<User> userGroup) {
-        this.userGroup = userGroup;
-        this.chosenUsers=userGroup;
+    public ChosenGroupUserAdapter(List<User> chosenUsers) {
+        this.chosenUsers=chosenUsers;
     }
 
     @NonNull
@@ -34,6 +32,7 @@ public class ChosenGroupUserAdapter extends RecyclerView.Adapter<ChosenGroupUser
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         holder.setUserData(chosenUsers.get(position),holder);
+
     }
 
     @Override
