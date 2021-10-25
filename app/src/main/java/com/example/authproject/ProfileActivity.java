@@ -43,27 +43,5 @@ public class ProfileActivity extends AppCompatActivity {
         final TextView emailTextView = (TextView) findViewById(R.id.emailAddress);
         final TextView ageTextView = (TextView) findViewById(R.id.age);
 
-        // get user in realtime database
-//        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                User userProfile = snapshot.getValue(User.class);
-//
-//                if (userProfile != null) {
-//                    String fullName = userProfile.getFullName();
-//                    String email = userProfile.getEmail();
-//                    String age = userProfile.getAge();
-//
-//                    fullNameTextView.setText(fullName);
-//                    emailTextView.setText(email);
-//                    ageTextView.setText(age);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(ProfileActivity.this, "Something wrong happend!", Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
 }

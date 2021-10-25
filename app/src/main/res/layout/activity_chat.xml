@@ -19,9 +19,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_message"
             android:layout_width="match_parent"
-            android:clipToPadding="false"
             android:orientation="vertical"
-            android:overScrollMode="never"
             android:layout_height="0dp"
             app:stackFromEnd="true"
             app:layout_constraintBottom_toTopOf="@+id/layoutChooseFile"
@@ -83,6 +81,7 @@
             android:orientation="horizontal">
             <FrameLayout
                 android:id="@+id/optionImage"
+                android:onClick="onChoseOptionSend"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
@@ -92,16 +91,17 @@
                 android:background="@drawable/background_attachment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_image_send"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" >
-            </ImageView>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_image_send"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" >
+                    </ImageView>
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/optionFile"
+                android:onClick="onChoseOptionSend"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
@@ -111,14 +111,14 @@
                 android:background="@drawable/background_attachment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_attach_file"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" >
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_attach_file"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" >
 
-            </ImageView>
+                    </ImageView>
             </FrameLayout>
         </LinearLayout>
 
@@ -171,34 +171,32 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/layoutSend"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="12dp"
         app:layout_constraintStart_toEndOf="@id/layoutOptionSendFile"
+        android:background="@drawable/background_chat_input"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_file_add"
             android:layout_width="match_parent"
             android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:overScrollMode="never"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/inputMessage"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="1dp"
-            android:padding="5dp"
             />
 
         <EditText
             android:id="@+id/inputMessage"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/background_chat_input"
             android:hint="Type a message "
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
             android:inputType="text"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"

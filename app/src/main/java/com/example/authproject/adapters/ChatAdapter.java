@@ -1,6 +1,7 @@
 package com.example.authproject.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.authproject.databinding.ItemMessageBinding;
 import com.example.authproject.databinding.ItemReceiverMessageBinding;
 import com.example.authproject.models.ChatMessage;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -71,7 +73,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             binding= itemMessageBinding;
         }
         void setData(ChatMessage chatMessage){
-            binding.textMessage.setText(chatMessage.message);
+            if (chatMessage.type.contains("text")) {
+                binding.textMessage.setVisibility(View.VISIBLE);
+                binding.textMessage.setText(chatMessage.message);
+                binding.imageMessage.setVisibility(View.GONE);
+            }
+            else if(chatMessage.type.contains("image")){
+                binding.imageMessage.setVisibility(View.VISIBLE);
+                binding.textMessage.setVisibility(View.GONE);
+                Picasso.get().load(chatMessage.message).into(binding.imageMessage);
+            }
             binding.textDatetime.setText(chatMessage.dateTime);
         }
     }
@@ -82,7 +93,16 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             binding= itemReceiverMessageBinding;
         }
         void setData(ChatMessage chatMessage){
-            binding.textReceiveMessage.setText(chatMessage.message);
+            if (chatMessage.type.contains("text")){
+                binding.textReceiveMessage.setVisibility(View.VISIBLE);
+                binding.imageMessage.setVisibility(View.GONE);
+                binding.textReceiveMessage.setText(chatMessage.message);
+            }
+            else if(chatMessage.type.contains("image")){
+                binding.imageMessage.setVisibility(View.VISIBLE);
+                binding.textReceiveMessage.setVisibility(View.GONE);
+                Picasso.get().load(chatMessage.message).into(binding.imageMessage);
+            }
             binding.textDatetime.setText(chatMessage.dateTime);
         }
     }
