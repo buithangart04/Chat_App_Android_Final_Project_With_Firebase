@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if (user.isEmailVerified()) {
-                        Intent intent = new Intent(MainActivity.this, UsersActivity.class);
+                        Intent intent = new Intent(MainActivity.this, NavigatorActivity.class);
                         intent.putExtra("email",email);
 
                         // redirect to user profile
