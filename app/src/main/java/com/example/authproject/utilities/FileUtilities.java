@@ -1,7 +1,6 @@
 package com.example.authproject.utilities;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
