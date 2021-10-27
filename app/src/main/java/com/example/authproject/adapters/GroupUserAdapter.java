@@ -109,6 +109,7 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
 
         private void setUserData(User user, UserViewHolder holder) {
             binding.textName.setText(user.getFullName());
+<<<<<<< HEAD
             binding.checkBox.setOnClickListener(view -> {
                 if (binding.checkBox.isChecked()) {
                     int position = holder.getAdapterPosition();
@@ -119,6 +120,16 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
 
                     if (!isTextSearchEmpty) {
                         users.remove(getUserPos(userSearch.get(position)));
+=======
+            binding.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (binding.checkBox.isChecked()) {
+                        userSearch.remove(holder.getAdapterPosition());
+                        userGroup.add(userSearch.get(holder.getAdapterPosition()));
+                        binding.checkBox.setChecked(false);
+                        notifyDataSetChanged();
+>>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
                     }
 
                     userSearch.remove(position);
