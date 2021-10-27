@@ -7,22 +7,23 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile3"
-        android:layout_width="41dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="4dp"
         android:background="@drawable/user"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/text_name2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:riv_oval="true" />
 
     <TextView
         android:id="@+id/text_name2"
-        android:layout_width="79dp"
-        android:layout_height="26dp"
+        android:layout_width="65dp"
+        android:layout_height="20dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="5dp"
         android:gravity="center"
@@ -33,11 +34,11 @@
 
     <FrameLayout
         android:id="@+id/layoutCancel"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageProfile3"
         app:layout_constraintTop_toTopOf="parent">

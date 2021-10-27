@@ -1,5 +1,7 @@
 package com.example.authproject.adapters;
 
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,14 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.databinding.ItemChosenGroupUserBinding;
+import com.example.authproject.listeners.GetUserGroupListener;
 import com.example.authproject.models.User;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChosenGroupUserAdapter extends RecyclerView.Adapter<ChosenGroupUserAdapter.UserViewHolder> {
     private List<User> chosenUsers;
-    public ChosenGroupUserAdapter(List<User> chosenUsers) {
-        this.chosenUsers=chosenUsers;
+    private List<User> users = new ArrayList<>();
+    private GetUserGroupListener getUserGroupListener;
+
+    public ChosenGroupUserAdapter(List<User> chosenUsers, GetUserGroupListener getUserGroupListener) {
+
+        this.chosenUsers = chosenUsers;
+        this.getUserGroupListener = getUserGroupListener;
     }
 
     @NonNull
@@ -26,13 +36,14 @@ public class ChosenGroupUserAdapter extends RecyclerView.Adapter<ChosenGroupUser
                 parent,
                 false
         );
+
+
         return new ChosenGroupUserAdapter.UserViewHolder(itemChosenGroupUserBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        holder.setUserData(chosenUsers.get(position),holder);
-
+        holder.setUserData(chosenUsers.get(position), holder);
     }
 
     @Override
@@ -53,6 +64,9 @@ public class ChosenGroupUserAdapter extends RecyclerView.Adapter<ChosenGroupUser
             binding.textName2.setText(user.getFullName());
             binding.layoutCancel.setOnClickListener(view -> {
                 int position = holder.getAdapterPosition();
+                users.add(chosenUsers.get(position));
+                getUserGroupListener.onClick(chosenUsers.get(position));
+                getUserGroupListener.onClickUser("remove");
                 chosenUsers.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, chosenUsers.size());

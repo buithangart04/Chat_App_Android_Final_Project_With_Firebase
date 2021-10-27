@@ -62,6 +62,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         listenMessage();
     }
     private void init (){
+        Log.d("Tag", "init");
         preferenceManager =new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
         listFileSelected = new ArrayList<>();
@@ -75,6 +76,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     }
     //send file or image
     private void showFileOptions(){
+        Log.d("Tag", "showFileOptions");
         Transition transition = new Slide(Gravity.BOTTOM);
         transition.setDuration(400);
         transition.addTarget(binding.layoutChooseFile);
@@ -87,6 +89,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     }
     private void sendMessage (){
         if(!binding.inputMessage.getText().toString().trim().isEmpty()&&binding.inputMessage.getText()!= null){
+            Log.d("Tag", "sendMessage");
             HashMap<String,Object> message = new HashMap<>();
             message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
             message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
@@ -97,6 +100,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             binding.inputMessage.setText(null);
         }
         if(listFileSelected.size()!=0){
+            Log.d("Tag", "sendMessage File");
             for(Uri uri: listFileSelected){
                new FileUtilities().uploadFile(this,this,uri);
             }
@@ -106,6 +110,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
 
     }
     public void listenMessage(){
+        Log.d("Tag", "listenMessage");
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
                 .whereEqualTo(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL))
                 .whereEqualTo(ProjectStorage.KEY_RECEIVER_EMAIL, receiverUser.getEmail())
@@ -134,8 +139,10 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             }
             Collections.sort(chatMessages, (obj1,obj2) -> {return obj1.dateObject.compareTo(obj2.dateObject) ;});
             if(count==0){
+                Log.d("Tag", "eventListener = 0");
                 chatAdapter.notifyDataSetChanged();
             }else {
+                Log.d("Tag", "eventListener");
                 //visible true ------------------------------------
                 // change recyler View
                 chatAdapter.notifyItemRangeInserted(chatMessages.size(),chatMessages.size());
@@ -149,16 +156,19 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         return BitmapFactory.decodeByteArray(bytes,0,bytes.length);
     }
     private void loadReceiversDetails (){
+        Log.d("Tag", "loadReceiversDetails");
         receiverUser = (User) getIntent().getSerializableExtra(ProjectStorage.KEY_USER);
         binding.textName.setText(receiverUser.getFullName());
     }
     private void setListener(){
+        Log.d("Tag", "setListener");
         binding.imageBack.setOnClickListener(v-> onBackPressed());
         binding.layoutSend.setOnClickListener(v-> sendMessage());
         binding.layoutOptionSendFile.setOnClickListener(v->showFileOptions());
     }
 
     public void onChoseOptionSend(View view) {
+        Log.d("Tag", "onChoseOptionSend");
         switch(view.getId()){
             case R.id.optionImage:
                 Intent intent = new Intent();
@@ -188,6 +198,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     }
     @Override
     public void onUploadFileSuccess(Uri uri) {
+        Log.d("Tag", "onUploadFileSuccess");
         HashMap<String,Object> message = new HashMap<>();
         message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
         message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());

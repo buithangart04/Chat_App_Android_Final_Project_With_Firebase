@@ -1,6 +1,5 @@
 package com.example.authproject;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -13,31 +12,27 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.authproject.databinding.ActivityCreateGroupChatBinding;
+import com.example.authproject.adapters.ParticipantAdapter;
+import com.example.authproject.adapters.UsersAdapter;
 import com.example.authproject.databinding.ActivityCreateGroupChatNameAcitivityBinding;
-import com.example.authproject.models.ChatMessage;
 import com.example.authproject.models.Group;
 import com.example.authproject.models.GroupChatMessage;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.ProjectStorage;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CreateGroupActivity extends AppCompatActivity {
     private ActivityCreateGroupChatNameAcitivityBinding binding;
-    private List<User> userGroup = new ArrayList<>();
+    private List<User> chosenUser;
+    private List<String> user;
+    private List<String> admin;
+    private Group group;
+    private GroupChatMessage groupChatMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +40,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_group_chat_name_acitivity);
         binding = ActivityCreateGroupChatNameAcitivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        loading(true);
         init();
         getUserGroup();
         setListener();
@@ -58,7 +54,16 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void getUserGroup() {
-        loading(true);
+        loading(false);
+        Bundle bundle = getIntent().getExtras();
+        chosenUser = (List<User>) bundle.getSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
+                getApplicationContext());
+
+        binding.recyclerUser.setLayoutManager(linearLayoutManager);
+        ParticipantAdapter participantAdapter = new ParticipantAdapter(chosenUser);
+        binding.recyclerUser.setAdapter(participantAdapter);
+        binding.recyclerUser.setVisibility(View.VISIBLE);
     }
 
     private void setListener() {
@@ -85,6 +90,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             }
         });
         binding.textCreateGroup.setOnClickListener(view -> createGroup());
+        binding.textPreviousGroup.setOnClickListener(view -> onBackPressed());
     }
 
     private void loading(Boolean isLoading) {
@@ -100,21 +106,23 @@ public class CreateGroupActivity extends AppCompatActivity {
         String groupName = binding.textGroupName.getText().toString();
         String uri = "image";
 
-        List<String> userEmails = new ArrayList<>();
-        userEmails.add("remylia2k@gmail.com");
-        userEmails.add("meo2@gmail.com");
-        userEmails.add("meomeo@gmail.com");
+        Intent createGroupUser = getIntent();
+        String currentUserId = createGroupUser.getStringExtra(ProjectStorage.KEY_USER_EMAIL);
 
-        List<String> admin = new ArrayList<>();
-        admin.add("remylia2k@gmail.com");
+        user = new ArrayList<>();
+        for (User u : chosenUser) {
+            user.add(u.getEmail());
+        }
+        user.add(currentUserId);
+        admin = new ArrayList<>();
+        admin.add(currentUserId);
 
-        Group group = new Group(groupID, groupName, userEmails, uri,admin);
-        GroupChatMessage groupChatMessage = new GroupChatMessage("remylia2k@gmail.com",
-                "Unnecessary Message", new Date().toString());
+        group = new Group(groupID, groupName, user, uri, admin);
+        groupChatMessage = new GroupChatMessage(currentUserId,
+                "Unnecessary Message", new Date().toString(), "image", groupID);
 
         ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                 .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupID);
-
         ProjectStorage.DOCUMENT_REFERENCE.set(group)
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(getApplicationContext(), "Group has been created successfully!", Toast.LENGTH_LONG).show();
@@ -122,11 +130,12 @@ public class CreateGroupActivity extends AppCompatActivity {
                             .collection(ProjectStorage.KEY_COLLECTION_GROUP_MESSAGE)
                             .document("Unnecessary Message")
                             .set(groupChatMessage);
-                    Intent intent = new Intent(getApplicationContext(),GroupChatActivity.class);
-                    startActivity(intent);
+                    Intent createGroupIntent = new Intent(getApplicationContext(), GroupChatActivity.class);
+                    startActivity(createGroupIntent);
                     finish();
                 }).addOnFailureListener(e ->
                 Toast.makeText(getApplicationContext(), "Failed: " + e, Toast.LENGTH_LONG).show());
 
     }
+
 }

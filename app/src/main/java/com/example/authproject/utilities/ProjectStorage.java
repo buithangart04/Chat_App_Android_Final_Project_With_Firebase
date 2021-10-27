@@ -10,10 +10,11 @@ public class ProjectStorage {
     // Key users in firebase
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_COLLECTION_GROUP = "group";
-    public static final String KEY_COLLECTION_GROUP_MESSAGE = "groupMessage";
+    public static final String KEY_COLLECTION_GROUP_MESSAGE = "group-message";
     public static final String KEY_NAME = "fullName";
     public static final String KEY_USER = "user";
     public static final String KEY_USER_EMAIL = "email";
+    public static final String KEY_GROUP_PARTICIPANT = "participant";
     public static final String KEY_USER_STATUS ="status";
 
     //Color

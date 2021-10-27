@@ -5,17 +5,17 @@ import java.util.List;
 public class Group {
     private String id;
     private String groupName;
-    private List<String> email;
+    private List<String> user;
     private String uri;
     private List<String> admin;
 
     public Group() {
     }
 
-    public Group(String id, String groupName, List<String> email, String uri, List<String> admin) {
+    public Group(String id, String groupName, List<String> user, String uri, List<String> admin) {
         this.id = id;
         this.groupName = groupName;
-        this.email = email;
+        this.user = user;
         this.uri = uri;
         this.admin = admin;
     }
@@ -36,8 +36,8 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public List<String> getEmail() {
-        return email;
+    public List<String> getUser() {
+        return user;
     }
 
     public List<String> getAdmin() {
@@ -48,8 +48,8 @@ public class Group {
         this.admin = admin;
     }
 
-    public void setEmail(List<String> email) {
-        this.email = email;
+    public void setUser(List<String> user) {
+        this.user = user;
     }
 
     public String getUri() {

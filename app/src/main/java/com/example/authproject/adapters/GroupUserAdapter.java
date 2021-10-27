@@ -1,40 +1,34 @@
 package com.example.authproject.adapters;
 
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
+import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.authproject.CreateGroupUserActivity;
-import com.example.authproject.databinding.ActivityCreateGroupChatBinding;
 import com.example.authproject.databinding.ItemGroupUserBinding;
+import com.example.authproject.listeners.GetUserGroupListener;
 import com.example.authproject.models.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.UserViewHolder> implements Filterable {
     private List<User> users;
     private List<User> userSearch;
-    private List<User> userGroup = new ArrayList<>();
-    private ChosenGroupUserAdapter chosenGroupUserAdapter;
+    private List<User> chosenUsers = new ArrayList<>();
+    private GetUserGroupListener getUserGroupListener;
     private boolean isTextSearchEmpty = true;
 
-    public GroupUserAdapter(List<User> users,ChosenGroupUserAdapter chosenGroupUserAdapter) {
-        this.chosenGroupUserAdapter = chosenGroupUserAdapter;
+    public GroupUserAdapter(List<User> users, GetUserGroupListener getUserGroupListener) {
         this.users = users;
         this.userSearch = users;
+        this.getUserGroupListener = getUserGroupListener;
     }
-
 
 
     @NonNull
@@ -54,7 +48,6 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
 
         holder.setUserData(userSearch.get(position), holder);
-
     }
 
     @Override
@@ -64,17 +57,14 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
 
     @Override
     public Filter getFilter() {
-        Log.d("tag", "getFilter");
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 if (charSequence.toString().isEmpty()) {
                     isTextSearchEmpty = true;
-                    Log.d("TAG", "IF");
                     userSearch = users;
                 } else {
                     isTextSearchEmpty = false;
-                    Log.d("TAG", "ELSE");
                     List<User> listFilter = new ArrayList<>();
                     for (User user : users) {
                         if (user.getFullName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
@@ -123,17 +113,19 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
                 if (binding.checkBox.isChecked()) {
                     int position = holder.getAdapterPosition();
 
+                    chosenUsers.add(userSearch.get(position));
+                    getUserGroupListener.onClick(userSearch.get(position));
+                    getUserGroupListener.onClickUser("add");
+
                     if (!isTextSearchEmpty) {
                         users.remove(getUserPos(userSearch.get(position)));
                     }
+
                     userSearch.remove(position);
                     binding.checkBox.setChecked(false);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, userSearch.size());
 
-                    userGroup.add(userSearch.get(position));
-                    chosenGroupUserAdapter.notifyDataSetChanged();
-                    Log.d("Tag", userGroup.toString());
                 }
             });
 
