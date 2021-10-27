@@ -54,4 +54,15 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //video
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.8'
+
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.10.8'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.8'
+
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.10.8'
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.8'
+
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.8'
+
 }
