@@ -14,7 +14,8 @@
         android:theme="@style/Theme.AuthProject">
         <activity
             android:name=".ChatActivity"
-            android:exported="true" android:windowSoftInputMode="adjustResize"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="true" />
@@ -36,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".firebase.MessagingService"
             android:exported="false">
