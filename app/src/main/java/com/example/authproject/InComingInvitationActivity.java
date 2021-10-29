@@ -4,7 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +26,9 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import retrofit2.Call;
@@ -48,9 +56,16 @@ public class InComingInvitationActivity extends AppCompatActivity {
             }
         }
 
+        ImageView imageAvatar = findViewById(R.id.imageAvatar);
         TextView textUsername = findViewById(R.id.textUsername);
         TextView textEmail = findViewById(R.id.textEmail);
 
+        String avatarUrl = getIntent().getStringExtra(ProjectStorage.KEY_AVATAR);
+        if (avatarUrl != null) {
+//            new DownloadImageTask((ImageView) findViewById(R.id.imageAvatar))
+//                    .execute(avatarUrl);
+            imageAvatar.setImageBitmap(getBitmapFromURL(avatarUrl));
+        }
         textUsername.setText(getIntent().getStringExtra(ProjectStorage.KEY_NAME));
         textEmail.setText(getIntent().getStringExtra(ProjectStorage.KEY_USER_EMAIL));
 
@@ -70,6 +85,49 @@ public class InComingInvitationActivity extends AppCompatActivity {
             );
         });
     }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            Log.e("src",src);
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            Log.e("Bitmap","returned");
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Exception",e.getMessage());
+            return null;
+        }
+    }
+
+//    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+//        ImageView bmImage;
+//
+//        public DownloadImageTask(ImageView bmImage) {
+//            this.bmImage = bmImage;
+//        }
+//
+//        protected Bitmap doInBackground(String... urls) {
+//            String urldisplay = urls[0];
+//            Bitmap mIcon11 = null;
+//            try {
+//                InputStream in = new java.net.URL(urldisplay).openStream();
+//                mIcon11 = BitmapFactory.decodeStream(in);
+//            } catch (Exception e) {
+//                Log.e("Error", e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return mIcon11;
+//        }
+//
+//        protected void onPostExecute(Bitmap result) {
+//            bmImage.setImageBitmap(result);
+//        }
+//    }
 
     private void sendInvitationResponse(String type, String receiverToken) {
         try {
@@ -112,6 +170,9 @@ public class InComingInvitationActivity extends AppCompatActivity {
                             if (meetingType.equals("audio")) {
                                 builder.setFeatureFlag("video-mute.enabled", false);
                                 builder.setFeatureFlag("reactions.enabled", false);
+                                builder.setFeatureFlag("video-share.enabled", false);
+                                builder.setFeatureFlag("android.screensharing.enabled", false);
+                                builder.setFeatureFlag("android.screensharing.enabled", false);
                                 builder.setVideoMuted(true);
                             }
                             JitsiMeetActivity.launch(InComingInvitationActivity.this, builder.build());

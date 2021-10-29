@@ -40,6 +40,10 @@ public class MessagingService extends FirebaseMessagingService {
                         remoteMessage.getData().get(ProjectStorage.REMOTE_MSG_MEETING_TYPE)
                 );
                 intent.putExtra(
+                        ProjectStorage.KEY_AVATAR,
+                        remoteMessage.getData().get(ProjectStorage.KEY_AVATAR)
+                );
+                intent.putExtra(
                         ProjectStorage.KEY_NAME,
                         remoteMessage.getData().get(ProjectStorage.KEY_NAME)
                 );

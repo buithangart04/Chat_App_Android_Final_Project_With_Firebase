@@ -183,6 +183,9 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
                         if (meetingType.equals("audio")) {
                             builder.setFeatureFlag("video-mute.enabled", false);
                             builder.setFeatureFlag("reactions.enabled", false);
+                            builder.setFeatureFlag("video-share.enabled", false);
+                            builder.setFeatureFlag("android.screensharing.enabled", false);
+                            builder.setFeatureFlag("android.screensharing.enabled", false);
                             builder.setVideoMuted(true);
                         }
                         JitsiMeetActivity.launch(OutgoingInvitationActivity.this, builder.build());
