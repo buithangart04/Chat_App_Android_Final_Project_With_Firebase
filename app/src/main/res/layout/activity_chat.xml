@@ -91,13 +91,13 @@
                 android:background="@drawable/background_attachment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_image_send"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" >
-                    </ImageView>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_image_send"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" >
+                </ImageView>
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/optionFile"
@@ -111,14 +111,14 @@
                 android:background="@drawable/background_attachment"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_attach_file"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_attach_file"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" >
 
-                    </ImageView>
+                </ImageView>
             </FrameLayout>
         </LinearLayout>
 
@@ -126,79 +126,56 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <FrameLayout
-            android:id="@+id/layoutSend"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/background_chat_input"
-                app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:padding="8dp"
-                android:src="@drawable/ic_send"
-                android:tint="@color/black"/>
-        </FrameLayout>
-        <FrameLayout
-            android:id="@+id/layoutOptionSendFile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/background_chat_input"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" >
+    <FrameLayout
+        android:id="@+id/layoutSend"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/background_chat_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_send"
+            android:tint="@color/black"/>
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/layoutOptionSendFile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/background_chat_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imageview_add"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="4dp"
-                android:src="@drawable/ic_add"
-                android:tint="@color/black" />
-        </FrameLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageview_add"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="4dp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/black" />
+    </FrameLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/send_box"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-<<<<<<< HEAD
         app:layout_constraintEnd_toStartOf="@id/layoutSend"
-=======
-<<<<<<< HEAD
-        app:layout_constraintEnd_toEndOf="parent">
-=======
-    app:layout_constraintEnd_toEndOf="parent">
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:padding="8dp"
-        android:src="@drawable/ic_send"
-        android:tint="@color/white"/>
-</FrameLayout>
-    <FrameLayout
-        android:id="@+id/layoutSendFile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="12dp"
         app:layout_constraintStart_toEndOf="@id/layoutOptionSendFile"
         android:background="@drawable/background_chat_input"
-<<<<<<< HEAD
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_file_add"
@@ -209,16 +186,10 @@
             app:layout_constraintBottom_toTopOf="@+id/inputMessage"
             app:layout_constraintTop_toTopOf="parent"
             />
-=======
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
 
         <EditText
             android:id="@+id/inputMessage"
             android:layout_width="match_parent"
-<<<<<<< HEAD
             android:layout_height="48dp"
             android:hint="Type a message "
             android:imeOptions="actionDone"
@@ -239,74 +210,4 @@
 
 
 
-=======
-            android:layout_height="match_parent"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:padding="8dp"
-<<<<<<< HEAD
-            android:src="@drawable/ic_send"
-=======
-            android:src="@drawable/ic_add"
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
-            android:tint="@color/white" />
-    </FrameLayout>
-
-    <EditText
-        android:id="@+id/inputMessage"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/background_chat_input"
-        android:hint="Type a message "
-        android:imeOptions="actionDone"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/browser_actions_bg_grey"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/layoutSend"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@id/layoutSendFile" />
-
-    <TextView
-        android:id="@+id/textName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/imageBack"
-        app:layout_constraintEnd_toStartOf="@+id/imageInfo"
-        app:layout_constraintStart_toEndOf="@+id/imageBack"
-        app:layout_constraintTop_toTopOf="@id/imageBack" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rec_message"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="32dp"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="@+id/viewBackground"
-        app:layout_constraintTop_toBottomOf="@+id/textName"
-<<<<<<< HEAD
-        app:stackFromEnd="true"
-        tools:layout_editor_absoluteX="1dp" />
-=======
-        tools:layout_editor_absoluteX="1dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginTop="10dp"/>
-
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
 </androidx.constraintlayout.widget.ConstraintLayout>

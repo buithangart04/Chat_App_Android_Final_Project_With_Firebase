@@ -47,13 +47,15 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
         UserViewHolder(ItemContainerUserBinding itemContainerUserBinding) {
             super(itemContainerUserBinding.getRoot());
             binding = itemContainerUserBinding;
-
         }
 
         void setUserData(User user) {
             binding.textName.setText(user.getFullName());
             binding.textEmail.setText(user.getEmail());
-
+            Picasso.get().load(user.getUri())
+                    .resize(binding.imageProfile.getLayoutParams().width,
+                            binding.imageProfile.getLayoutParams().height)
+                    .into(binding.imageProfile);
         }
     }
 }

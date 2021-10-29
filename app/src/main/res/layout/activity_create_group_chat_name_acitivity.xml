@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".CreateGroupActivity">
 
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/img_group_avatar"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="160dp"
+        android:background="@drawable/user"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_group_name"
+        app:layout_constraintVertical_bias="0.0"
+        app:riv_oval="true" />
+
     <TextView
         android:id="@+id/text_previous_group"
         android:layout_width="wrap_content"
@@ -76,7 +91,7 @@
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

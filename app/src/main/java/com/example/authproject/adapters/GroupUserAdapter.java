@@ -1,6 +1,5 @@
 package com.example.authproject.adapters;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -106,40 +105,29 @@ public class GroupUserAdapter extends RecyclerView.Adapter<GroupUserAdapter.User
             return pos;
         }
 
-
         private void setUserData(User user, UserViewHolder holder) {
             binding.textName.setText(user.getFullName());
-<<<<<<< HEAD
+
+            Picasso.get().load(user.getUri())
+                    .resize(binding.imageProfile2.getLayoutParams().width,
+                            binding.imageProfile2.getLayoutParams().height)
+                    .into(binding.imageProfile2);
+
             binding.checkBox.setOnClickListener(view -> {
                 if (binding.checkBox.isChecked()) {
                     int position = holder.getAdapterPosition();
-
                     chosenUsers.add(userSearch.get(position));
                     getUserGroupListener.onClick(userSearch.get(position));
                     getUserGroupListener.onClickUser("add");
-
                     if (!isTextSearchEmpty) {
                         users.remove(getUserPos(userSearch.get(position)));
-=======
-            binding.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (binding.checkBox.isChecked()) {
-                        userSearch.remove(holder.getAdapterPosition());
-                        userGroup.add(userSearch.get(holder.getAdapterPosition()));
-                        binding.checkBox.setChecked(false);
-                        notifyDataSetChanged();
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
                     }
-
                     userSearch.remove(position);
                     binding.checkBox.setChecked(false);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, userSearch.size());
-
                 }
             });
-
         }
     }
 }

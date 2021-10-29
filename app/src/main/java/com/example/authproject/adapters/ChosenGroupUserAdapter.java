@@ -62,6 +62,11 @@ public class ChosenGroupUserAdapter extends RecyclerView.Adapter<ChosenGroupUser
 
         void setUserData(User user, UserViewHolder holder) {
             binding.textName2.setText(user.getFullName());
+            Picasso.get().load(user.getUri())
+                    .resize(binding.imageProfile3.getLayoutParams().width,
+                            binding.imageProfile3.getLayoutParams().height)
+                    .into(binding.imageProfile3);
+
             binding.layoutCancel.setOnClickListener(view -> {
                 int position = holder.getAdapterPosition();
                 users.add(chosenUsers.get(position));

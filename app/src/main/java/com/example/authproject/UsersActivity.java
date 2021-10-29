@@ -21,13 +21,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-import com.google.firebase.firestore.DocumentReference;
-=======
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -42,15 +35,6 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
     private Button btnLogout;
     private ActivityUsersBinding binding;
     private PreferenceManager preferenceManager;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    private FirebaseFirestore database = FirebaseFirestore.getInstance();
-    private UserDAO userDAO = new UserDAO();
-
-=======
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -59,20 +43,6 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         Intent intent = getIntent();
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-
-        preferenceManager.putString(Constants.KEY_USER_EMAIL, intent.getStringExtra("email"));
-        database.collection("users")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getString("email").equals(intent.getStringExtra("email"))) {
-                                preferenceManager.putString(Constants.KEY_NAME, document.getString(Constants.KEY_NAME));
-=======
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
 //
         preferenceManager.putString(ProjectStorage.KEY_USER_EMAIL,intent.getStringExtra("email"));
         ProjectStorage.DATABASE_REFERENCE.collection("users")
@@ -86,10 +56,6 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                                     preferenceManager.putString(ProjectStorage.KEY_NAME,document.getString(ProjectStorage.KEY_NAME));
                                 }
 
-<<<<<<< HEAD
-=======
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
                             }
                         } else {
                             showErrorMessage();
@@ -109,56 +75,35 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
 
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-                .addOnCompleteListener(task -> {
+                .addOnCompleteListener(task ->{
                     loading(false);
-                    String currentUserId = preferenceManager.getString(Constants.KEY_USER_EMAIL);
-                    if (task.isSuccessful() && task.getResult() != null) {
+                    String currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
+                    if(task.isSuccessful() && task.getResult()!=null){
                         List<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                            if (currentUserId.equals(queryDocumentSnapshot.getData().get("email"))) {
+                        for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
+                            if(currentUserId.equals(queryDocumentSnapshot.getData().get("email"))){
                                 continue;
                             }
                             User user = new User();
-                            user.setFullName(queryDocumentSnapshot.getString(Constants.KEY_NAME));
-                            user.setEmail(queryDocumentSnapshot.getString(Constants.KEY_USER_EMAIL));
-=======
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
-                .addOnCompleteListener(task ->{
-                   loading(false);
-                   String currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
-                   if(task.isSuccessful() && task.getResult()!=null){
-                       List<User> users = new ArrayList<>();
-                       for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
-                           if(currentUserId.equals(queryDocumentSnapshot.getData().get("email"))){
-                               continue;
-                           }
-                           User user = new User();
                             user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
-                           user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
+                            user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
 
-<<<<<<< HEAD
-=======
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
 
                             users.add(user);
 
-                       }
-                       if(users.size()>0){
-                           UsersAdapter usersAdapter = new UsersAdapter(users,this);
-                           binding.usersRecyclerView.setAdapter(usersAdapter);
-                           binding.usersRecyclerView.setVisibility(View.VISIBLE);
+                        }
+                        if(users.size()>0){
+                            UsersAdapter usersAdapter = new UsersAdapter(users,this);
+                            binding.usersRecyclerView.setAdapter(usersAdapter);
+                            binding.usersRecyclerView.setVisibility(View.VISIBLE);
 
-                       }else{
-                           showErrorMessage();
-                       }
+                        }else{
+                            showErrorMessage();
+                        }
 
-                   }else{
-                       showErrorMessage();
-                   }
+                    }else{
+                        showErrorMessage();
+                    }
                 });
 
     }
@@ -176,18 +121,8 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
 
     @Override
     public void onUserCLick(User user) {
-<<<<<<< HEAD
         Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
         intent.putExtra(ProjectStorage.KEY_USER,user);
-=======
-<<<<<<< HEAD
-        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-        intent.putExtra(Constants.KEY_USER, user);
-=======
-        Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-        intent.putExtra(ProjectStorage.KEY_USER,user);
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
         startActivity(intent);
     }
 }

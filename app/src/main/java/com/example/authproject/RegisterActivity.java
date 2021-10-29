@@ -19,16 +19,8 @@ import android.widget.Toast;
 
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.User;
-<<<<<<< HEAD
 import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.ProjectStorage;
-=======
-<<<<<<< HEAD
-import com.example.authproject.utilities.Constants;
-=======
-import com.example.authproject.utilities.ProjectStorage;
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -175,32 +167,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
-<<<<<<< HEAD
     @Override
     public void onUploadFileSuccess(Uri uri) {
         user.setUri(uri.toString());
 
-=======
-<<<<<<< HEAD
-    private void saveUserToFireStore(Map user) {
-        FirebaseUser u = mAuth.getCurrentUser();
-        DocumentReference documentReference = FirebaseFirestore.getInstance().document("users/" + u.getUid());
-
-        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
-            }
-        });
-
-=======
-    private void saveUserToFireStore(User user) {
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
         CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
         dbUsers
                 .add(user)
@@ -214,9 +184,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         }
                     }
                 });
-<<<<<<< HEAD
-=======
->>>>>>> d7eca48be3ed0febb1979cdb518126795365d0c6
->>>>>>> 10e65478a2fa427f71b996e1a8144ce638434a07
     }
 }

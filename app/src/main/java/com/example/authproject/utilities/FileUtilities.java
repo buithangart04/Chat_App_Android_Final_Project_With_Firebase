@@ -2,10 +2,17 @@ package com.example.authproject.utilities;
 
 import android.content.Context;
 import android.net.Uri;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.authproject.R;
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;

@@ -1,5 +1,7 @@
 package com.example.authproject.utilities;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -27,4 +29,5 @@ public class FunctionalUtilities {
                 return null;
         }
     }
+
 }
