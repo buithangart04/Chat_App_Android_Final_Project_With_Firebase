@@ -24,7 +24,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.jitsi.meet.sdk.JitsiMeetActivity;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
-import org.jitsi.meet.sdk.JitsiMeetView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -54,7 +53,7 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
 
         if (meetingType != null) {
             if (meetingType.equals("video")) {
-                imageMeetingType.setImageResource(R.drawable.ic_video);
+                imageMeetingType.setImageResource(R.drawable.ic_callvideo);
             } else {
                 imageMeetingType.setImageResource(R.drawable.ic_call);
             }

@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -50,7 +48,7 @@ public class InComingInvitationActivity extends AppCompatActivity {
 
         if (meetingType != null) {
             if (meetingType.equals("video")) {
-                imageMeetingType.setImageResource(R.drawable.ic_video);
+                imageMeetingType.setImageResource(R.drawable.ic_callvideo);
             } else {
                 imageMeetingType.setImageResource(R.drawable.ic_call);
             }
