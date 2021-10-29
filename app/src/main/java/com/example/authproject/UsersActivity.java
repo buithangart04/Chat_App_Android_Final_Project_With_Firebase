@@ -71,27 +71,25 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
 
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
-                .addOnCompleteListener(task ->{
-                   loading(false);
-                   String currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
-                   if(task.isSuccessful() && task.getResult()!=null){
-                       List<User> users = new ArrayList<>();
-                       for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
-                           if(currentUserId.equals(queryDocumentSnapshot.getData().get("email"))){
-                               continue;
-                           }
-                           User user = new User();
+                .addOnCompleteListener(task -> {
+                    loading(false);
+                    String currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            if (currentUserId.equals(queryDocumentSnapshot.getData().get("email"))) {
+                                continue;
+                            }
+                            User user = new User();
                             user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
-                           user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
-
-
+                            user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
+                            user.token = queryDocumentSnapshot.getString(ProjectStorage.KEY_FCM_TOKEN);
                             users.add(user);
-
-                       }
-                       if(users.size()>0){
-                           UsersAdapter usersAdapter = new UsersAdapter(users,this);
-                           binding.usersRecyclerView.setAdapter(usersAdapter);
-                           binding.usersRecyclerView.setVisibility(View.VISIBLE);
+                        }
+                        if (users.size() > 0) {
+                            UsersAdapter usersAdapter = new UsersAdapter(users, this);
+                            binding.usersRecyclerView.setAdapter(usersAdapter);
+                            binding.usersRecyclerView.setVisibility(View.VISIBLE);
 
                        }else{
                            showErrorMessage();

@@ -1,7 +1,12 @@
 package com.example.authproject;
 
-import android.app.Notification;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,6 +18,7 @@ import android.util.Base64;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,6 +65,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         loadReceiversDetails();
         init();
         listenMessage();
+        setCallListener(receiverUser);
     }
     private void init (){
         preferenceManager =new PreferenceManager(getApplicationContext());
@@ -217,5 +224,31 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         message.put(ProjectStorage.KEY_MESSAGE_TYPE,type);
         message.put(ProjectStorage.KEY_FILE_NAME,fileName);
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
+    }
+    private void setCallListener(User user) {
+        binding.imageCall.setOnClickListener(v -> initiateAudioMeeting(user));
+        binding.imageVideo.setOnClickListener(v -> initiateVideoMeeting(user));
+    }
+
+    private void initiateVideoMeeting(User user) {
+        if (user.token == null || user.token.trim().isEmpty()) {
+            Toast.makeText(this, user.getFullName() + " is not avaiable for video call", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "video");
+            startActivity(intent);
+        }
+    }
+
+    private void initiateAudioMeeting(User user) {
+        if (user.token == null || user.token.trim().isEmpty()) {
+            Toast.makeText(this, user.getFullName() + " is not avaiable for audio call", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "audio");
+            startActivity(intent);
+        }
     }
 }
