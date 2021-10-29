@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.databinding.ItemContainerUserBinding;
-import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.User;
 import com.squareup.picasso.Picasso;
 

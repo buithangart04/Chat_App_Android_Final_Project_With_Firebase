@@ -1,13 +1,6 @@
 package com.example.authproject.utilities;
 
 
-import android.widget.Adapter;
-import android.widget.Filter;
-import android.widget.Filter;
-import android.widget.Filterable;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.authproject.models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

@@ -15,7 +15,6 @@ public class ProjectStorage {
     public static final String KEY_USER_EMAIL = "email";
     public static final String KEY_USER_URI = "uri";
     public static final String KEY_GROUP_PARTICIPANT = "participant";
-    public static final String KEY_USER_STATUS = "status";
 
     //Color
     public static final String KEY_COLOR_DISABLED = "#d7dadc";
@@ -24,7 +23,6 @@ public class ProjectStorage {
     public static final String KEY_COLLECTION_CHAT = "chat";
     public static final String KEY_GROUP_ID = "groupId";
     public static final String KEY_SENDER_EMAIL = "senderEmail";
-
     public static final String KEY_RECEIVER_EMAIL = "receiverEmail";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
