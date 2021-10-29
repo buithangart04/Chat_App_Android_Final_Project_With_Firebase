@@ -15,6 +15,7 @@ public class ProjectStorage {
     public static final String KEY_USER_EMAIL = "email";
     public static final String KEY_FCM_TOKEN = "fcm_token";
     public static final String KEY_USER_ID = "user_id";
+    public static final String KEY_AVATAR = "uri";
 
     //Key chat in firebase
     public static final String KEY_COLLECTION_CHAT = "chat";
@@ -38,6 +39,7 @@ public class ProjectStorage {
     public static final String REMOTE_MSG_INVITATION_ACCEPTED= "accepted";
     public static final String REMOTE_MSG_INVITATION_REJECTED = "rejected";
     public static final String REMOTE_MSG_INVITATION_CANCELLED = "cancelled";
+
 
     public static final String REMOTE_MSG_MEETING_ROOM = "meetingRoom";
 
