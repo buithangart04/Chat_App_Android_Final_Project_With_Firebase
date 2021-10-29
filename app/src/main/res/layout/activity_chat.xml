@@ -59,6 +59,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
         <ImageView
+            android:id="@+id/imageCall"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="35dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_call"
+            app:layout_constraintEnd_toEndOf="@id/imageVideo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageVideo"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="35dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_callvideo"
+            app:layout_constraintEnd_toEndOf="@id/imageInfo"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
             android:id="@+id/imageInfo"
             android:layout_width="30dp"
             android:layout_height="30dp"
