@@ -8,7 +8,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +30,9 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 
@@ -59,9 +65,16 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
             }
         }
 
+        ImageView imageAvatar = findViewById(R.id.imageAvatar);
         TextView textUsername = findViewById(R.id.textUsername);
         TextView textEmail = findViewById(R.id.textEmail);
 
+        String avatarUrl = getIntent().getStringExtra(ProjectStorage.KEY_AVATAR);
+        if (avatarUrl != null) {
+//            new DownloadImageTask((ImageView) findViewById(R.id.imageAvatar))
+//                    .execute(avatarUrl);
+            imageAvatar.setImageBitmap(getBitmapFromURL(avatarUrl));
+        }
         User user = (User) getIntent().getSerializableExtra("user");
         if (user != null) {
             textUsername.setText(user.getFullName());
@@ -87,6 +100,24 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            Log.e("src",src);
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            Log.e("Bitmap","returned");
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Exception",e.getMessage());
+            return null;
+        }
     }
 
     private void initiateMeeting(String meetingType, String receiverToken) {

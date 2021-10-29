@@ -88,6 +88,7 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                             User user = new User();
                             user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
                             user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
+                            user.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
                             user.token = queryDocumentSnapshot.getString(ProjectStorage.KEY_FCM_TOKEN);
                             users.add(user);
                         }
