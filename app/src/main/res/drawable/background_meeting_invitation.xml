@@ -4,5 +4,6 @@
     <gradient
         android:angle="270"
         android:endColor="@color/colorMeetingInvitationEnd"
+        android:centerColor="@color/colorMeetingInvitationCenter"
         android:startColor="@color/colorMeetingInvitationStart"/>
 </shape>

@@ -172,7 +172,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onUploadFileSuccess(Uri uri,Object [] params) {
+    public void onUploadFileSuccess(Uri uri) {
         user.setUri(uri.toString());
 
         CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
