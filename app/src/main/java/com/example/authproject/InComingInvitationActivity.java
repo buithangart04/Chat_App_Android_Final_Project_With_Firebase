@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -19,6 +21,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.authproject.network.ApiClient;
 import com.example.authproject.network.ApiService;
 import com.example.authproject.utilities.ProjectStorage;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 import org.json.JSONArray;
@@ -60,9 +65,17 @@ public class InComingInvitationActivity extends AppCompatActivity {
 
         String avatarUrl = getIntent().getStringExtra(ProjectStorage.KEY_AVATAR);
         if (avatarUrl != null) {
-//            new DownloadImageTask((ImageView) findViewById(R.id.imageAvatar))
-//                    .execute(avatarUrl);
-            imageAvatar.setImageBitmap(getBitmapFromURL(avatarUrl));
+            Transformation transformation = new RoundedTransformationBuilder()
+                    .borderColor(Color.BLACK)
+                    .borderWidthDp(3)
+                    .cornerRadiusDp(30)
+                    .oval(false)
+                    .build();
+            Picasso.get()
+                    .load(avatarUrl)
+                    .fit()
+                    .transform(transformation)
+                    .into(imageAvatar);
         }
         textUsername.setText(getIntent().getStringExtra(ProjectStorage.KEY_NAME));
         textEmail.setText(getIntent().getStringExtra(ProjectStorage.KEY_USER_EMAIL));
@@ -83,49 +96,6 @@ public class InComingInvitationActivity extends AppCompatActivity {
             );
         });
     }
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            Log.e("src",src);
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            Log.e("Bitmap","returned");
-            return myBitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("Exception",e.getMessage());
-            return null;
-        }
-    }
-
-//    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-//        ImageView bmImage;
-//
-//        public DownloadImageTask(ImageView bmImage) {
-//            this.bmImage = bmImage;
-//        }
-//
-//        protected Bitmap doInBackground(String... urls) {
-//            String urldisplay = urls[0];
-//            Bitmap mIcon11 = null;
-//            try {
-//                InputStream in = new java.net.URL(urldisplay).openStream();
-//                mIcon11 = BitmapFactory.decodeStream(in);
-//            } catch (Exception e) {
-//                Log.e("Error", e.getMessage());
-//                e.printStackTrace();
-//            }
-//            return mIcon11;
-//        }
-//
-//        protected void onPostExecute(Bitmap result) {
-//            bmImage.setImageBitmap(result);
-//        }
-//    }
 
     private void sendInvitationResponse(String type, String receiverToken) {
         try {

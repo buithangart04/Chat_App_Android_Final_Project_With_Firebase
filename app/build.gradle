@@ -53,11 +53,21 @@ dependencies {
     // round image view
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'androidx.preference:preference:1.1.1'
-
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
 
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //video
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.8'
+
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.10.8'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.8'
+
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.10.8'
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.8'
+
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.8'
     //Swipe Refresh Layout
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     //Scalable size unit (support for different screen sizes)

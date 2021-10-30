@@ -39,17 +39,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textFirstChar"
+        <ImageView
+            android:id="@+id/imageAvatar"
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_60sdp"
             android:background="@drawable/background_meeting_invitation_user_icon"
-            android:fontFamily="@font/ubuntu_bold"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="@dimen/_30sdp"/>
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/textUsername"

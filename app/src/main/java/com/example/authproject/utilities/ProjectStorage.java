@@ -16,15 +16,15 @@ public class ProjectStorage {
     public static final String KEY_FCM_TOKEN = "fcm_token";
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_AVATAR = "uri";
+
     //Key chat in firebase
     public static final String KEY_COLLECTION_CHAT = "chat";
-
     public static final String KEY_SENDER_EMAIL = "senderEmail";
-
     public static final String KEY_RECEIVER_EMAIL = "receiverEmail";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
-
+    public static final String KEY_MESSAGE_TYPE = "type";
+    public static final String KEY_FILE_NAME= "fileName";
     //Key call in firebase
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";
     public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
@@ -40,16 +40,16 @@ public class ProjectStorage {
     public static final String REMOTE_MSG_INVITATION_REJECTED = "rejected";
     public static final String REMOTE_MSG_INVITATION_CANCELLED = "cancelled";
 
+
     public static final String REMOTE_MSG_MEETING_ROOM = "meetingRoom";
 
     // access firebase database
-    public static FirebaseFirestore DATABASE_REFERENCE;
-    public static StorageReference STORAGE_REFERENCE;
-
+    public static  FirebaseFirestore DATABASE_REFERENCE ;
+    public static  StorageReference STORAGE_REFERENCE ;
     // constructor
     static {
         DATABASE_REFERENCE = FirebaseFirestore.getInstance();
-        STORAGE_REFERENCE = FirebaseStorage.getInstance().getReference();
+        STORAGE_REFERENCE =  FirebaseStorage.getInstance().getReference();
     }
 
     public static HashMap<String, String> getRemoteMessageHeaders() {
@@ -63,4 +63,5 @@ public class ProjectStorage {
     }
 
     public static final int PICK_IMAGE_REQUEST = 2;
+
 }

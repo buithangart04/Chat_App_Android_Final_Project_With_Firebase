@@ -48,7 +48,6 @@ public class StartScreenActivity extends AppCompatActivity {
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair<View, String>(image, "logo_name");
                 pairs[1] = new Pair<View, String>(name, "logo_text");
-
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(StartScreenActivity.this, pairs);
                 startActivity(intent, options.toBundle());
                 finish();

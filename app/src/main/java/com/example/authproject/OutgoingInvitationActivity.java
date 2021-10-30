@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -24,6 +25,9 @@ import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.jitsi.meet.sdk.JitsiMeetActivity;
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
@@ -69,16 +73,23 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
         TextView textUsername = findViewById(R.id.textUsername);
         TextView textEmail = findViewById(R.id.textEmail);
 
-        String avatarUrl = getIntent().getStringExtra(ProjectStorage.KEY_AVATAR);
-        if (avatarUrl != null) {
-//            new DownloadImageTask((ImageView) findViewById(R.id.imageAvatar))
-//                    .execute(avatarUrl);
-            imageAvatar.setImageBitmap(getBitmapFromURL(avatarUrl));
-        }
         User user = (User) getIntent().getSerializableExtra("user");
         if (user != null) {
             textUsername.setText(user.getFullName());
             textEmail.setText(user.getEmail());
+            if (user.getUri() != null) {
+                Transformation transformation = new RoundedTransformationBuilder()
+                        .borderColor(Color.BLACK)
+                        .borderWidthDp(3)
+                        .cornerRadiusDp(30)
+                        .oval(false)
+                        .build();
+                Picasso.get()
+                        .load(user.getUri())
+                        .fit()
+                        .transform(transformation)
+                        .into(imageAvatar);
+            }
         }
 
         ImageView imageStopInvitation = findViewById(R.id.imageStopInvitation);
@@ -102,24 +113,6 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
 
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            Log.e("src",src);
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            Log.e("Bitmap","returned");
-            return myBitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("Exception",e.getMessage());
-            return null;
-        }
-    }
-
     private void initiateMeeting(String meetingType, String receiverToken) {
         try {
             JSONArray tokens = new JSONArray();
@@ -130,6 +123,7 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
             data.put(ProjectStorage.REMOTE_MSG_MEETING_TYPE, meetingType);
             data.put(ProjectStorage.KEY_NAME, preferenceManager.getString(ProjectStorage.KEY_NAME));
             data.put(ProjectStorage.KEY_USER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
+            data.put(ProjectStorage.KEY_AVATAR, preferenceManager.getString(ProjectStorage.KEY_AVATAR));
             data.put(ProjectStorage.REMOTE_MSG_INVITER_TOKEN, inviterToken);
 
             meetingRoom = preferenceManager.getString(ProjectStorage.KEY_USER_ID) + "_" +

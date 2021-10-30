@@ -4,6 +4,9 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
+    android:layout_marginBottom="12dp"
+    android:layout_marginTop="20dp"
+    android:padding="4dp"
     android:background="@drawable/background_attachment"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <FrameLayout
@@ -12,7 +15,7 @@
         android:layout_height="40dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="7dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/background_chat_input"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,7 +23,6 @@
 >
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageview_add"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="4dp"
@@ -29,20 +31,21 @@
     </FrameLayout>
     <TextView
         android:id="@+id/file_name"
+        android:maxWidth="180dp"
+        android:minHeight="40dp"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/layoutFile"
         app:layout_constraintTop_toTopOf="@id/layoutFile"
         android:text="textView"
         android:textSize="18dp"
-        android:padding="8dp"
+        android:padding="3dp"
         />
     <FrameLayout
         android:id="@+id/layoutCancel"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/background_chat_input"
         app:layout_constraintTop_toTopOf="parent"
