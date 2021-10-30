@@ -2,10 +2,6 @@ package com.example.authproject;
 
 import static com.example.authproject.utilities.ProjectStorage.PICK_IMAGE_REQUEST;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -14,19 +10,18 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.util.Patterns;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.PreferenceManager;
-import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.ProjectStorage;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
