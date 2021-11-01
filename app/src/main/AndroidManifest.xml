@@ -13,6 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AuthProject">
         <activity
+            android:name=".ListGroupParticipantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StartScreenActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".GroupInfoActivity"
             android:exported="false" />
         <activity
@@ -26,6 +38,14 @@
             android:name=".AddParticipantActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".OutgoingInvitationActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor" />
+        <activity
+            android:name=".InComingInvitationActivity"
+            android:exported="true"
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".ChatActivity"
             android:exported="true"
@@ -44,14 +64,7 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
 
         <service
             android:name=".firebase.MessagingService"

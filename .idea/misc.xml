@@ -7,22 +7,31 @@
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/drawable-xxhdpi/ic_user_cancel.xml" value="0.2703125" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/drawable/background_chat_input.xml" value="0.3828125" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/drawable/background_search.xml" value="0.3828125" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/drawable/ic_image_send.xml" value="0.2703125" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/drawable/ic_send.xml" value="0.2703125" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/drawable/ic_user_cancel.xml" value="0.2703125" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/drawable/ic_video.xml" value="0.2703125" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_chat.xml" value="0.36666666666666664" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_create_group_chat.xml" value="0.33" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_create_group_chat_name_acitivity.xml" value="0.264" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_forgot_password.xml" value="0.29739583333333336" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_group_chat.xml" value="0.36666666666666664" />
-        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_group_info.xml" value="0.245018115942029" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_group_info.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_group_participant.xml" value="0.21557971014492755" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_profile_actitvity.xml" value="0.36666666666666664" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_register.xml" value="0.22056159420289856" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/activity_users.xml" value="0.36666666666666664" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/fragment_group_admin.xml" value="0.25271739130434784" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/fragment_group_admin2.xml" value="0.25271739130434784" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/fragment_group_participant.xml" value="0.25271739130434784" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/item_chosen_group_user.xml" value="0.536" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/item_container_user.xml" value="0.75" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/item_group_user.xml" value="0.37947122861586313" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/item_message.xml" value="0.36666666666666664" />
         <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/item_receiver_message.xml" value="0.36666666666666664" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/layout/layout_leave_group_dialog.xml" value="0.25416666666666665" />
+        <entry key="..\:/AndroidStudioProjects/firebase-android-demo/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2703125" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.14635416666666667" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_chat_input.xml" value="0.14635416666666667" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_content_top.xml" value="0.14635416666666667" />

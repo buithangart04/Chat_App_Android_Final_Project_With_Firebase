@@ -17,7 +17,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_group_name"
+        app:layout_constraintTop_toBottomOf="@+id/editText_group_name"
         app:layout_constraintVertical_bias="0.0"
         app:riv_oval="true" />
 
@@ -63,7 +63,7 @@
         tools:ignore="TextContrastCheck" />
 
     <EditText
-        android:id="@+id/text_group_name"
+        android:id="@+id/editText_group_name"
         android:layout_width="308dp"
         android:layout_height="35dp"
         android:layout_marginStart="96dp"

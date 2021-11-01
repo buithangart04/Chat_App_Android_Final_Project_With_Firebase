@@ -19,12 +19,15 @@ import com.example.authproject.models.User;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.example.authproject.utilities.UserUtilities;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class AddParticipantActivity extends AppCompatActivity implements GetUserGroupListener {
@@ -34,9 +37,11 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
     private GroupUserAdapter groupUserAdapter;
     private ChosenGroupUserAdapter chosenGroupUserAdapter;
     private List<User> users;
+    private List<String> participant;
     private List<User> chosenUsers;
     private User user;
     private String currentUserId;
+    private String types;
     private String searchChar = "";
     private LinearLayoutManager linearLayoutManagerUser;
     private LinearLayoutManager linearLayoutManagerUserGroup;
@@ -46,9 +51,9 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         super.onCreate(savedInstanceState);
         binding = ActivityCreateGroupChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        innit();
+        init();
         getCurrentUser();
-        getUsers();
+        getUsers(types);
         searchUser(users);
     }
 
@@ -72,7 +77,15 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                 });
     }
 
-    private void innit() {
+    private void init() {
+        Intent intent = getIntent();
+        types = intent.getStringExtra(ProjectStorage.REMOTE_MSG_TYPE);
+        if (types == null) {
+            types = "new";
+        }
+        if (types.equalsIgnoreCase("current")) {
+            binding.textCreateGroupNext.setText("ADD");
+        }
         linearLayoutManagerUser = new LinearLayoutManager(
                 getApplicationContext(), LinearLayoutManager.VERTICAL, true);
         linearLayoutManagerUserGroup = new LinearLayoutManager(
@@ -87,7 +100,7 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         binding.userRecycleView.setLayoutManager(linearLayoutManagerUser);
     }
 
-    private void getUsers() {
+    private void getUsers(String type) {
         loading(true);
         users = new ArrayList<>();
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
@@ -96,7 +109,25 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                     loading(false);
                     currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
                     if (task.isSuccessful() && task.getResult() != null) {
-                        users = UserUtilities.getListUsers(currentUserId,task);
+                        switch (type) {
+                            case "new":
+                                users = UserUtilities.getListUsers(currentUserId, task);
+                                break;
+                            case "current":
+                                for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                                    User u = new User();
+                                    u.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
+                                    u.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
+                                    u.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
+                                    users.add(u);
+                                }
+                                Bundle bundle = getIntent().getExtras();
+                                participant = (List<String>) bundle.getSerializable(ProjectStorage.KEY_GROUP_CURRENT_PARTICIPANT);
+                                for (String s : participant) {
+                                    users = users.stream().filter(u -> !u.getEmail().equalsIgnoreCase(s)).collect(Collectors.toList());
+                                }
+                                break;
+                        }
                         if (users.size() > 0) {
                             Collections.reverse(users);
                             groupUserAdapter = new GroupUserAdapter(users, this);
@@ -109,7 +140,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                         showErrorMessage();
                     }
                 });
-        Log.d("Tag", users.toString());
     }
 
     private void searchUser(List<User> users) {
@@ -137,7 +167,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         });
     }
 
-
     private void showErrorMessage() {
         binding.textViewError.setText(String.format("%s", "No user available"));
         binding.textViewError.setVisibility(View.VISIBLE);
@@ -152,14 +181,38 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
     }
 
     private void saveUserGroup() {
-        currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
+        if (!types.equalsIgnoreCase("current")) {
+            currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) chosenUsers);
+            Intent createGroupIntent = new Intent(getApplicationContext(), CreateGroupActivity.class);
+            createGroupIntent.putExtras(bundle);
+            createGroupIntent.putExtra(ProjectStorage.KEY_USER_EMAIL, currentUserId);
+            startActivity(createGroupIntent);
+        }
+
+    }
+
+    private void saveUserToCurrentGroup() {
+
+        Intent intent = getIntent();
+        String groupID = intent.getStringExtra(ProjectStorage.KEY_GROUP_ID);
+        participant = new ArrayList<>();
+        //Update to database
+        ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
+                .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupID);
+        for (User u : chosenUsers) {
+            ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
+                    , FieldValue.arrayUnion(u.getEmail()));
+        }
+        Log.d("TAG", "SAVE CURRENT");
+        Log.d("TAG", groupID);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) chosenUsers);
-        Intent intent = new Intent(getApplicationContext(), CreateGroupActivity.class);
-        intent.putExtras(bundle);
-        intent.putExtra(ProjectStorage.KEY_USER_EMAIL, currentUserId);
-        startActivity(intent);
-
+        Intent i = new Intent(getApplicationContext(), GroupInfoActivity.class);
+        i.putExtra(ProjectStorage.KEY_USER_EMAIL, currentUserId);
+        startActivity(i);
+        finish();
     }
 
     @Override
@@ -173,10 +226,23 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
             case "add":
                 chosenUsers.add(user);
                 chosenGroupUserAdapter.notifyDataSetChanged();
-                if (chosenUsers.size() >= 2) {
-                    binding.textCreateGroupNext.setTextColor(Color.parseColor(ProjectStorage.KEY_COLOR_NAVIGATE));
-                    binding.textCreateGroupNext.setClickable(true);
-                    binding.textCreateGroupNext.setOnClickListener(view -> saveUserGroup());
+                if (types.equalsIgnoreCase("current")) {
+                    if (chosenUsers.size() >= 1) {
+                        binding.textCreateGroupNext.setTextColor(Color.parseColor(ProjectStorage.KEY_COLOR_NAVIGATE));
+                        binding.textCreateGroupNext.setClickable(true);
+                        binding.textCreateGroupNext.setOnClickListener(v -> {
+                            saveUserToCurrentGroup();
+                        });
+                    }
+
+                } else {
+                    if (chosenUsers.size() >= 2) {
+                        binding.textCreateGroupNext.setTextColor(Color.parseColor(ProjectStorage.KEY_COLOR_NAVIGATE));
+                        binding.textCreateGroupNext.setClickable(true);
+                        binding.textCreateGroupNext.setOnClickListener(v -> {
+                            saveUserGroup();
+                        });
+                    }
                 }
                 break;
             case "remove":
@@ -184,10 +250,19 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                 groupUserAdapter.getFilter().filter(searchChar);
                 binding.userRecycleView.scrollToPosition(users.size() - 1);
                 groupUserAdapter.notifyDataSetChanged();
-                if (chosenUsers.size() <= 2) {
-                    binding.textCreateGroupNext.setTextColor(Color.parseColor(ProjectStorage.KEY_COLOR_DISABLED));
-                    binding.textCreateGroupNext.setClickable(false);
+                if (types.equalsIgnoreCase("current")) {
+                    if (chosenUsers.size() <= 1) {
+                        binding.textCreateGroupNext.setTextColor(Color.parseColor(ProjectStorage.KEY_COLOR_DISABLED));
+                        binding.textCreateGroupNext.setClickable(false);
+                    }
+                    Log.d("TAG", "Remove CURRENT");
+                } else {
+                    if (chosenUsers.size() <= 2) {
+                        binding.textCreateGroupNext.setTextColor(Color.parseColor(ProjectStorage.KEY_COLOR_DISABLED));
+                        binding.textCreateGroupNext.setClickable(false);
+                    }
                 }
+
                 break;
             default:
                 break;

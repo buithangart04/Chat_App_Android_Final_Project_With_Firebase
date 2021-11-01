@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class GroupChatActivity extends AppCompatActivity implements UploadFileSuccessListener {
+public class GroupChatActivity extends AppCompatActivity {
     private ActivityGroupChatBinding binding;
     List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
@@ -69,7 +69,7 @@ public class GroupChatActivity extends AppCompatActivity implements UploadFileSu
         binding.recMessage.setLayoutManager(new LinearLayoutManager(GroupChatActivity.this));
         binding.recMessage.setAdapter(chatAdapter);
         // set adapter for message
-        fileChooserAdapter = new FileChooserAdapter(listFileSelected);
+
         binding.recFileAdd.setLayoutManager(new LinearLayoutManager(binding.sendBox.getContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.recFileAdd.setAdapter(fileChooserAdapter);
     }
@@ -101,13 +101,13 @@ public class GroupChatActivity extends AppCompatActivity implements UploadFileSu
 
             binding.inputMessage.setText(null);
         }
-        if (listFileSelected.size() != 0) {
-            for (Uri uri : listFileSelected) {
-                new FileUtilities().uploadFile(this, this, uri);
-            }
-            listFileSelected.clear();
-            fileChooserAdapter.notifyDataSetChanged();
-        }
+//        if (listFileSelected.size() != 0) {
+//            for (Uri uri : listFileSelected) {
+//                new FileUtilities().uploadFile(this, this, uri);
+//            }
+//            listFileSelected.clear();
+//            fileChooserAdapter.notifyDataSetChanged();
+//        }
     }
 
     private void setListener() {
@@ -161,8 +161,5 @@ public class GroupChatActivity extends AppCompatActivity implements UploadFileSu
         binding.recMessage.setAdapter(chatAdapter);
     }
 
-    @Override
-    public void onUploadFileSuccess(Uri uri) {
 
-    }
 }

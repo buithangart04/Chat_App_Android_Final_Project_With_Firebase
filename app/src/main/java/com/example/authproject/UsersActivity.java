@@ -1,22 +1,18 @@
 package com.example.authproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authproject.adapters.UsersAdapter;
 import com.example.authproject.databinding.ActivityUsersBinding;
 import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.User;
-import com.example.authproject.utilities.ProjectStorage;
 import com.example.authproject.utilities.PreferenceManager;
-
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -69,35 +65,33 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
 
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
-                .addOnCompleteListener(task ->{
+                .addOnCompleteListener(task -> {
                     loading(false);
                     String currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
-                    if(task.isSuccessful() && task.getResult()!=null){
+                    if (task.isSuccessful() && task.getResult() != null) {
                         List<User> users = new ArrayList<>();
-                        for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
-                            if(currentUserId.equals(queryDocumentSnapshot.getData().get("email"))){
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            if (currentUserId.equals(queryDocumentSnapshot.getData().get("email"))) {
                                 continue;
                             }
                             User user = new User();
                             user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
                             user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
-
-
+                            user.token = queryDocumentSnapshot.getString(ProjectStorage.KEY_FCM_TOKEN);
                             users.add(user);
-
                         }
-                        if(users.size()>0){
-                            UsersAdapter usersAdapter = new UsersAdapter(users,this);
+                        if (users.size() > 0) {
+                            UsersAdapter usersAdapter = new UsersAdapter(users, this);
                             binding.usersRecyclerView.setAdapter(usersAdapter);
                             binding.usersRecyclerView.setVisibility(View.VISIBLE);
 
-                        }else{
-                            showErrorMessage();
-                        }
+                       }else{
+                           showErrorMessage();
+                       }
 
-                    }else{
-                        showErrorMessage();
-                    }
+                   }else{
+                       showErrorMessage();
+                   }
                 });
 
     }

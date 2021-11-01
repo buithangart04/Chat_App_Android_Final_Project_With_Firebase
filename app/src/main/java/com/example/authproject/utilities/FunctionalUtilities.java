@@ -15,8 +15,8 @@ public class FunctionalUtilities {
         return UUID.randomUUID().toString();
     }
 
-    public String getRandomImageName() {
-        return "images/" + UUID.randomUUID();
+    public String getRandomFileName() {
+        return "files/" + UUID.randomUUID();
     }
 
     public static String generateId(String type) {

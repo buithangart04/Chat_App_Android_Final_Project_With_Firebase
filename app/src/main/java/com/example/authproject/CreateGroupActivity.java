@@ -72,7 +72,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
     }
 
     private void setListener() {
-        binding.textGroupName.addTextChangedListener(new TextWatcher() {
+        binding.editTextGroupName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -110,7 +110,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
 
     private void addGroupToFireStore() {
         groupID = FunctionalUtilities.generateId("group");
-        groupName = binding.textGroupName.getText().toString();
+        groupName = binding.editTextGroupName.getText().toString();
         Intent createGroupUser = getIntent();
         currentUserId = createGroupUser.getStringExtra(ProjectStorage.KEY_USER_EMAIL);
         user = new ArrayList<>();
@@ -143,10 +143,12 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
     }
 
     @Override
-    public void onUploadFileSuccess(Uri u) {
+    public void onUploadFileSuccess(Uri u,Object [] params) {
         group.uri = u.toString();
+
         ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                 .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupID);
+
         ProjectStorage.DOCUMENT_REFERENCE.set(group)
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(getApplicationContext(), "Group has been created successfully!", Toast.LENGTH_LONG).show();
