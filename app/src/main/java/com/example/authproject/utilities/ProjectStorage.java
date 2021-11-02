@@ -41,7 +41,6 @@ public class ProjectStorage {
     public static final String REMOTE_MSG_INVITATION_REJECTED = "rejected";
     public static final String REMOTE_MSG_INVITATION_CANCELLED = "cancelled";
 
-
     public static final String REMOTE_MSG_MEETING_ROOM = "meetingRoom";
 
     // access firebase database
