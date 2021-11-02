@@ -3,47 +3,35 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2222222222222222" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_accept_invitation.xml" value="0.2611111111111111" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_chat_input.xml" value="0.2703125" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_content_bottom.xml" value="0.2222222222222222" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_content_top.xml" value="0.2222222222222222" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_meeting_invitation.xml" value="0.2611111111111111" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_meeting_invitation_user_icon.xml" value="0.2611111111111111" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_reject_invitation.xml" value="0.2611111111111111" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/background_send_message.xml" value="0.2222222222222222" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/ic_callvideo.xml" value="0.23055555555555557" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/ic_info.xml" value="0.2537037037037037" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2222222222222222" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/drawable/ic_video.xml" value="0.23055555555555557" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_chat.xml" value="0.25416666666666665" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_forgot_password.xml" value="0.22282608695652173" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_in_coming_invitation.xml" value="0.25416666666666665" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_outgoing_invitation.xml" value="0.25416666666666665" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_register.xml" value="0.1" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_start_screen.xml" value="0.2" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/activity_users.xml" value="0.23278985507246377" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/file_chooser_viewholder.xml" value="0.22282608695652173" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/item_container_user.xml" value="0.22282608695652173" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/item_message.xml" value="0.25416666666666665" />
-        <entry key="..\:/Desktop/Dai_hoc_FPT/Semester_7/PRM391/Project/firebase-android-demo/app/src/main/res/layout/item_receiver_message.xml" value="0.25416666666666665" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.14635416666666667" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_accept_invitation.xml" value="0.17135416666666667" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_attachment.xml" value="0.2703125" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_chat_input.xml" value="0.14635416666666667" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_content_bottom.xml" value="0.2546875" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_content_top.xml" value="0.14635416666666667" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_receiver_message.xml" value="0.14635416666666667" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/background_send_message.xml" value="0.14635416666666667" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic__video.xml" value="0.22291666666666668" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_add.xml" value="0.1875" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_attach_file.xml" value="0.2703125" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_back.xml" value="0.14635416666666667" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_cancel.xml" value="0.2703125" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_clear.xml" value="0.2703125" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_image_send.xml" value="0.1875" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_info.xml" value="0.14635416666666667" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14635416666666667" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_send.xml" value="0.14635416666666667" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/drawable/ic_video.xml" value="0.109375" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_chat.xml" value="0.176" />
-        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_forgot_password.xml" value="0.1" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_forgot_password.xml" value="0.264" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_list_music.xml" value="0.25416666666666665" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_main.xml" value="0.2509057971014493" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_outgoing_invitation.xml" value="0.15520833333333334" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_profile_actitvity.xml" value="0.264" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_register.xml" value="0.1546875" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_start_screen.xml" value="0.22395833333333334" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_users.xml" value="0.23854166666666668" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/file_chooser_viewholder.xml" value="0.24682971014492755" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_container_user.xml" value="0.23854166666666668" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_message.xml" value="0.176" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_receiver_message.xml" value="0.13020833333333334" />

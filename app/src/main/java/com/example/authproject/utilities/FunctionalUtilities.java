@@ -9,7 +9,7 @@ public class FunctionalUtilities {
         return new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(date);
     }
 
-    private String getUUID() {
+    public String getUUID() {
         return UUID.randomUUID().toString();
     }
 
