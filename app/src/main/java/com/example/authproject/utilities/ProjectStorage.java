@@ -1,5 +1,6 @@
 package com.example.authproject.utilities;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -46,6 +47,8 @@ public class ProjectStorage {
     // access firebase database
     public static  FirebaseFirestore DATABASE_REFERENCE ;
     public static  StorageReference STORAGE_REFERENCE ;
+    public static DocumentReference DOCUMENT_REFERENCE;
+
     // constructor
     static {
         DATABASE_REFERENCE = FirebaseFirestore.getInstance();

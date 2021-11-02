@@ -20,15 +20,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, UploadFileSuccessListener {
 
@@ -161,9 +163,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             user = new User(fullName, email);
-//                            new FileUtilities()
-//                                    .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
-
                         } else {
                             Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                         }
@@ -172,20 +171,26 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onUploadFileSuccess(Uri uri,Object [] params) {
+    public void onUploadFileSuccess(Uri uri, Object[] params) {
+        String userId = new FunctionalUtilities().generateId("user");
         user.setUri(uri.toString());
+        user.setId(userId);
 
-        CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
-        dbUsers
-                .add(user)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
+                .document(ProjectStorage.KEY_COLLECTION_USERS + "/" + userId);
+
+        ProjectStorage.DOCUMENT_REFERENCE
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
-                        }
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                     }
                 });
     }
