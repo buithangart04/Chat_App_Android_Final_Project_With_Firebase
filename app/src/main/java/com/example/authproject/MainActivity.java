@@ -76,14 +76,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.txtRegister:
                 intent = new Intent(MainActivity.this, RegisterActivity.class);
-                pairs = new Pair[7];
-                pairs[0] = new Pair<View, String>(logoImage, "logo_name");
-                pairs[1] = new Pair<View, String>(logoName, "logo_text");
-                pairs[2] = new Pair<View, String>(loginText, "login_text");
-                pairs[3] = new Pair<View, String>(btnLogin, "button_tran");
-                pairs[4] = new Pair<View, String>(txtRegister, "singup_tran");
-                pairs[5] = new Pair<View, String>(editTextEmail, "email_text");
-                pairs[6] = new Pair<View, String>(editTextPassword, "password_text");
+                pairs = new Pair[5];
+                pairs[0] = new Pair<View, String>(loginText, "login_text");
+                pairs[1] = new Pair<View, String>(btnLogin, "button_tran");
+                pairs[2] = new Pair<View, String>(txtRegister, "singup_tran");
+                pairs[3] = new Pair<View, String>(editTextEmail, "email_text");
+                pairs[4] = new Pair<View, String>(editTextPassword, "password_text");
 
                 options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
                 startActivity(intent, options.toBundle());

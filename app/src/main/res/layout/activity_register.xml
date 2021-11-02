@@ -8,49 +8,14 @@
     android:background="#fff">
 
     <ImageView
-        android:id="@+id/logoImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/logo"
-        android:transitionName="logo_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
         android:id="@+id/img_avatar"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="128dp"
         android:src="@drawable/user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/logoName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ubuntu_medium"
-        android:text="@string/app_name"
-        android:textColor="#2196F3"
-        android:textSize="30sp"
-        android:transitionName="logo_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logoImage" />
-
-    <TextView
-        android:id="@+id/avatarText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:fontFamily="@font/ubuntu_medium"
-        android:text="Upload Avatar"
-        android:textColor="#2196F3"
-        android:textSize="22sp"
-        android:transitionName="logo_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_avatar" />
 
     <TextView
         android:id="@+id/loginText"
@@ -58,13 +23,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="76dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/ubuntu_medium"
         android:text="Sign up to continue"
         android:textSize="30sp"
         android:transitionName="login_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logoName" />
+        app:layout_constraintTop_toBottomOf="@+id/img_avatar" />
 
     <LinearLayout
         android:id="@+id/layoutRegister"

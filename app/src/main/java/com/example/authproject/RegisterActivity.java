@@ -79,14 +79,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.txtBackToLogin:
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                Pair[] pairs = new Pair[7];
-                pairs[0] = new Pair<View, String>(logoImage, "logo_name");
-                pairs[1] = new Pair<View, String>(logoName, "logo_text");
-                pairs[2] = new Pair<View, String>(loginText, "login_text");
-                pairs[3] = new Pair<View, String>(btnRegister, "button_tran");
-                pairs[4] = new Pair<View, String>(txtBackToLogin, "singup_tran");
-                pairs[5] = new Pair<View, String>(editTextEmail, "email_text");
-                pairs[6] = new Pair<View, String>(editTextPassword, "password_text");
+                Pair[] pairs = new Pair[5];
+                pairs[0] = new Pair<View, String>(loginText, "login_text");
+                pairs[1] = new Pair<View, String>(btnRegister, "button_tran");
+                pairs[2] = new Pair<View, String>(txtBackToLogin, "singup_tran");
+                pairs[3] = new Pair<View, String>(editTextEmail, "email_text");
+                pairs[4] = new Pair<View, String>(editTextPassword, "password_text");
 
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(RegisterActivity.this, pairs);
                 startActivity(intent, options.toBundle());
