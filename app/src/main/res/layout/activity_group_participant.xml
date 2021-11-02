@@ -6,36 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".ListGroupParticipantActivity">
 
-    <fragment
-        android:id="@+id/fragmentContainerView"
-        android:name="com.example.authproject.GroupParticipantFragment"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="96dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <FrameLayout
-        android:id="@+id/frameLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:id="@+id/frameLayoutAdmin"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_curved_group_button"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayoutFragment"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewParticipant"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyle"
+        <TextView
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="1.5dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="ADMINS" />
     </FrameLayout>
 
     <TextView
@@ -45,8 +33,40 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="ADD"
+        android:textColor="#0F7DD6"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/frameLayoutAll"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_curved_group_button"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayoutFragment"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="1.5dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="ALL" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayoutFragment"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

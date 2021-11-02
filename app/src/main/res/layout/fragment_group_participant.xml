@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="480dp"
-    tools:context=".GroupAdminFragment">
+    tools:context=".GroupParticipantFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewParticipant"
@@ -16,4 +16,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
+
 </FrameLayout>

@@ -85,8 +85,8 @@ public class GroupInfoActivity extends AppCompatActivity {
         bundle.putSerializable(ProjectStorage.KEY_GROUP_CURRENT_PARTICIPANT, (ArrayList<? extends Serializable>) participant);
         intent.putExtras(bundle);
         intent.putExtra(ProjectStorage.KEY_USER_EMAIL, currentUserId);
-        intent.putExtra(ProjectStorage.KEY_GROUP_ID,groupID);
-        intent.putExtra(ProjectStorage.REMOTE_MSG_TYPE,"current");
+        intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupID);
+        intent.putExtra(ProjectStorage.REMOTE_MSG_TYPE, "current");
         startActivity(intent);
     }
 
@@ -107,10 +107,6 @@ public class GroupInfoActivity extends AppCompatActivity {
                 for (String s : participant) {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN, FieldValue.arrayUnion(s));
                 }
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
             });
         } else {
             builder.setMessage("Are you sure want to leave ? You won't get any new message");
@@ -119,13 +115,14 @@ public class GroupInfoActivity extends AppCompatActivity {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN, FieldValue.arrayRemove(currentUserId));
                 }
                 ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT, FieldValue.arrayRemove(currentUserId));
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
             });
         }
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 }

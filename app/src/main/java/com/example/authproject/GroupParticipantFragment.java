@@ -7,12 +7,22 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class GroupParticipantFragment extends Fragment {
+import com.example.authproject.adapters.ParticipantAdapter;
+import com.example.authproject.models.User;
+import com.example.authproject.utilities.ProjectStorage;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+public class GroupParticipantFragment extends Fragment {
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
+    private ProgressBar progressBarParticipant;
+    private List<String> participant;
+    private List<User> users;
 
     public GroupParticipantFragment() {
     }
@@ -30,15 +40,47 @@ public class GroupParticipantFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_group_participant, container, false);
         recyclerView = v.findViewById(R.id.recyclerViewParticipant);
-        progressBar = v.findViewById(R.id.progressBarParticipant);
+        progressBarParticipant = v.findViewById(R.id.progressBarParticipant);
+        participant = (List<String>) getArguments().getSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT);
+        getListParticipant();
         return v;
+    }
+
+    private void getListParticipant() {
+        users = new ArrayList<>();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
+                getContext());
+        loading(true);
+        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
+                .get().addOnCompleteListener(task -> {
+            loading(false);
+            if (task.isSuccessful() && task.getResult() != null) {
+                for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                    for (String s : participant) {
+                        if (s.toLowerCase().equals(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL))) {
+                            User user = new User();
+                            user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
+                            user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
+                            user.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
+                            users.add(user);
+                        }
+                    }
+                }
+                if (users.size() > 0) {
+                    ParticipantAdapter participantAdapter = new ParticipantAdapter(users);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setAdapter(participantAdapter);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void loading(Boolean isLoading) {
         if (isLoading) {
-            progressBar.setVisibility(View.VISIBLE);
+            progressBarParticipant.setVisibility(View.VISIBLE);
         } else {
-            progressBar.setVisibility(View.INVISIBLE);
+            progressBarParticipant.setVisibility(View.INVISIBLE);
         }
     }
 }

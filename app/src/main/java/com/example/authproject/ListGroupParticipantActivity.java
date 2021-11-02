@@ -1,24 +1,17 @@
 package com.example.authproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 
-import com.example.authproject.adapters.ParticipantAdapter;
-import com.example.authproject.databinding.ActivityGroupParticipantBinding;
-import com.example.authproject.models.User;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,71 +19,27 @@ import java.util.List;
 
 public class ListGroupParticipantActivity extends AppCompatActivity {
     private List<String> participant;
-    private List<User> users;
     private List<String> admin;
     private String groupID;
     private String currentUserId;
-    private RecyclerView recyclerView;
-    private Text textAdd;
-    private ProgressBar progressBar;
-
+    //    private TextView textAdd;
+    private FrameLayout frameLayoutAll;
+    private FrameLayout frameLayoutAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_participant);
-        recyclerView = findViewById(R.id.recyclerViewParticipant);
+        frameLayoutAll = findViewById(R.id.frameLayoutAll);
+        frameLayoutAdmin = findViewById(R.id.frameLayoutAdmin);
 //        textAdd = findViewById(R.id.text_add_to_group);
-        progressBar = findViewById(R.id.progressBar2);
         init();
         setListener();
-        getListParticipant();
     }
-
-    private void getListParticipant() {
-        users = new ArrayList<>();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(
-                getApplicationContext());
-        loading(true);
-        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
-                .get().addOnCompleteListener(task -> {
-            loading(false);
-            if (task.isSuccessful() && task.getResult() != null) {
-                for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                    for (String s : participant) {
-                        if (s.toLowerCase().equals(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL))) {
-                            User user = new User();
-                            user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
-                            user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
-                            user.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
-                            users.add(user);
-                        }
-                    }
-                }
-                if (users.size() > 0) {
-                    ParticipantAdapter participantAdapter = new ParticipantAdapter(users);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    recyclerView.setAdapter(participantAdapter);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    private void loading(Boolean isLoading) {
-        if (isLoading) {
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-
     private void init() {
-
         Intent intent = getIntent();
         groupID = intent.getStringExtra(ProjectStorage.KEY_GROUP_ID);
         currentUserId = intent.getStringExtra(ProjectStorage.KEY_USER_EMAIL);
-//       textAdd.setTextColor(Color.parseColor(ProjectStorage.KEY_COLOR_NAVIGATE));
         ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                 .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupID);
         ProjectStorage.DOCUMENT_REFERENCE.addSnapshotListener((value, error) -> {
@@ -105,8 +54,20 @@ public class ListGroupParticipantActivity extends AppCompatActivity {
 
     private void setListener() {
 //        textAdd.setOnClickListener(v -> addParticipant());
+        frameLayoutAll.setOnClickListener(v -> replaceFragment(new GroupParticipantFragment()));
+        frameLayoutAdmin.setOnClickListener(v -> replaceFragment(new GroupAdminFragment()));
     }
 
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ProjectStorage.KEY_GROUP_ADMIN, (ArrayList<? extends Serializable>) admin);
+        bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) participant);
+        fragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.frameLayoutFragment, fragment);
+        fragmentTransaction.commit();
+    }
     private void addParticipant() {
         Intent intent = new Intent(ListGroupParticipantActivity.this, AddParticipantActivity.class);
         Bundle bundle = new Bundle();
@@ -117,4 +78,5 @@ public class ListGroupParticipantActivity extends AppCompatActivity {
         intent.putExtra(ProjectStorage.REMOTE_MSG_TYPE, "current");
         startActivity(intent);
     }
+
 }
