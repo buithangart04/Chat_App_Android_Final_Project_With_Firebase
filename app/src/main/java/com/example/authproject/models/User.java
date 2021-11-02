@@ -12,10 +12,13 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String id, String fullName, String email) {
-        this.id = id;
+    public User(String fullName, String email) {
         this.fullName = fullName;
         this.email = email;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFullName() {
