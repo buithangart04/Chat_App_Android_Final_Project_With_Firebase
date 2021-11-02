@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity"
-    android:orientation="vertical"
     android:background="#fff">
 
     <ImageView
@@ -14,6 +13,16 @@
         android:layout_height="150dp"
         android:src="@drawable/logo"
         android:transitionName="logo_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_avatar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="260dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,16 +39,30 @@
         app:layout_constraintTop_toBottomOf="@+id/logoImage" />
 
     <TextView
+        android:id="@+id/avatarText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="260dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:text="Upload Avatar"
+        android:textColor="#2196F3"
+        android:textSize="22sp"
+        android:transitionName="logo_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_avatar" />
+
+    <TextView
         android:id="@+id/loginText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="28dp"
         android:layout_gravity="center"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="@font/ubuntu_medium"
-        android:transitionName="login_text"
         android:text="Sign up to continue"
         android:textSize="30sp"
+        android:transitionName="login_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logoName" />
 
@@ -48,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_30sdp"
-        app:layout_constraintTop_toTopOf="@+id/registerText"
+        app:layout_constraintTop_toTopOf="@+id/loginText"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -114,11 +137,15 @@
         android:id="@+id/txtBackToLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
+        android:layout_marginTop="28dp"
         android:text="Already have an account? LogIn"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:transitionName="singup_tran"/>
+        android:transitionName="singup_tran"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutRegister" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

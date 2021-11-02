@@ -65,8 +65,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         loginText = findViewById(R.id.loginText);
         logoName = findViewById(R.id.logoName);
         logoImage = findViewById(R.id.logoImage);
-//        img_avatar = (ImageView) findViewById(R.id.img_avatar);
-//        img_avatar.setOnClickListener(this);
+        img_avatar = (ImageView) findViewById(R.id.img_avatar);
+        img_avatar.setOnClickListener(this);
 
     }
 
@@ -91,9 +91,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(RegisterActivity.this, pairs);
                 startActivity(intent, options.toBundle());
                 break;
-//            case R.id.img_avatar:
-//                selectImage();
-//                break;
+            case R.id.img_avatar:
+                selectImage();
+                break;
         }
     }
 
@@ -166,8 +166,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             user = new User(fullName, email);
-//                            new FileUtilities()
-//                                    .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
+                            new FileUtilities()
+                                    .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
 
                         } else {
                             Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
