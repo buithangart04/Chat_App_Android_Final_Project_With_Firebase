@@ -14,17 +14,14 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.util.Patterns;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
-import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.ProjectStorage;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -165,7 +162,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            user = new User(fullName, email);
+                            user = new User(new FunctionalUtilities().getUUID(), fullName, email);
 //                            new FileUtilities()
 //                                    .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
 
@@ -177,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onUploadFileSuccess(Uri uri,Object [] params) {
+    public void onUploadFileSuccess(Uri uri, Object[] params) {
         user.setUri(uri.toString());
 
         CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
