@@ -22,6 +22,7 @@ import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
+import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -62,8 +63,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         loginText = findViewById(R.id.loginText);
         logoName = findViewById(R.id.logoName);
         logoImage = findViewById(R.id.logoImage);
-//        img_avatar = (ImageView) findViewById(R.id.img_avatar);
-//        img_avatar.setOnClickListener(this);
+        img_avatar = (ImageView) findViewById(R.id.img_avatar);
+        img_avatar.setOnClickListener(this);
 
     }
 
@@ -76,21 +77,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.txtBackToLogin:
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                Pair[] pairs = new Pair[7];
-                pairs[0] = new Pair<View, String>(logoImage, "logo_name");
-                pairs[1] = new Pair<View, String>(logoName, "logo_text");
-                pairs[2] = new Pair<View, String>(loginText, "login_text");
-                pairs[3] = new Pair<View, String>(btnRegister, "button_tran");
-                pairs[4] = new Pair<View, String>(txtBackToLogin, "singup_tran");
-                pairs[5] = new Pair<View, String>(editTextEmail, "email_text");
-                pairs[6] = new Pair<View, String>(editTextPassword, "password_text");
+                Pair[] pairs = new Pair[5];
+                pairs[0] = new Pair<View, String>(loginText, "login_text");
+                pairs[1] = new Pair<View, String>(btnRegister, "button_tran");
+                pairs[2] = new Pair<View, String>(txtBackToLogin, "singup_tran");
+                pairs[3] = new Pair<View, String>(editTextEmail, "email_text");
+                pairs[4] = new Pair<View, String>(editTextPassword, "password_text");
 
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(RegisterActivity.this, pairs);
                 startActivity(intent, options.toBundle());
                 break;
-//            case R.id.img_avatar:
-//                selectImage();
-//                break;
+            case R.id.img_avatar:
+                selectImage();
+                break;
         }
     }
 
@@ -163,6 +162,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             user = new User(fullName, email);
+                            new FileUtilities()
+                                    .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
+
                         } else {
                             Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                         }
