@@ -34,8 +34,8 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getUri() {
-        return uri;
+    public String getId() {
+        return id;
     }
 
     public void setUri(String uri) {
