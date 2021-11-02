@@ -173,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onUploadFileSuccess(Uri uri, Object[] params) {
-        String userId = new FunctionalUtilities().getUUID();
+        String userId = new FunctionalUtilities().generateId("user");
         user.setUri(uri.toString());
         user.setId(userId);
 
