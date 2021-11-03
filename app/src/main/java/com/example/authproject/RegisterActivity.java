@@ -115,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editTextPassword.getEditText().getText().toString().trim();
         String fullName = editTextFullName.getEditText().getText().toString().trim();
 
-        if (!validateInputFullname(fullName) | !validateInputEmail(email) | !validateInputPassword(password)) {
+        if (!validateInputFullname(fullName) | !validateInputEmail(email) | !validateInputPassword(password) | validateAvatar()) {
             return;
         }
         createUser(fullName, email, password);
@@ -129,6 +129,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return true;
     }
 
+    private boolean validateAvatar() {
+        if (imgData == null) {
+            Toast.makeText(RegisterActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     private boolean validateInputEmail(String email) {
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required!");
@@ -136,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextEmail.setError("Pls provide valid email!");
+            editTextEmail.setError("Please provide valid email!");
             return false;
         }
         return true;

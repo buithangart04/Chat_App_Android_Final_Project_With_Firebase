@@ -32,6 +32,7 @@
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_start_screen.xml" value="0.22395833333333334" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/activity_users.xml" value="0.23854166666666668" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/file_chooser_viewholder.xml" value="0.24682971014492755" />
+        <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/fragment_profile.xml" value="0.1421875" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_container_user.xml" value="0.23854166666666668" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_message.xml" value="0.176" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_receiver_message.xml" value="0.13020833333333334" />
@@ -40,18 +41,6 @@
         <entry key="..\:/demo/AuthProject/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/demo/AuthProject/app/src/main/res/layout/activity_profile_actitvity.xml" value="0.25416666666666665" />
         <entry key="..\:/demo/AuthProject/app/src/main/res/layout/activity_register.xml" value="0.17753623188405798" />
-        <entry key="..\:/navigator-02/firebase-android-demo/app/src/main/res/drawable/ic_message.xml" value="0.2703125" />
-        <entry key="..\:/navigator-02/firebase-android-demo/app/src/main/res/drawable/ic_search.xml" value="0.2703125" />
-        <entry key="..\:/navigator-02/firebase-android-demo/app/src/main/res/layout/activity_navigator.xml" value="0.17753623188405798" />
-        <entry key="..\:/navigator-02/firebase-android-demo/app/src/main/res/layout/activity_profile_actitvity.xml" value="0.25416666666666665" />
-        <entry key="..\:/navigator-02/firebase-android-demo/app/src/main/res/layout/fragment_notify.xml" value="0.17753623188405798" />
-        <entry key="..\:/navigator-02/firebase-android-demo/app/src/main/res/layout/fragment_profile.xml" value="0.17753623188405798" />
-        <entry key="..\:/navigator-02/firebase-android-demo/app/src/main/res/menu/bottom_menu.xml" value="0.25416666666666665" />
-        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/activity_navigator.xml" value="0.25416666666666665" />
-        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/fragment_message.xml" value="0.25416666666666665" />
-        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/fragment_notify.xml" value="0.25416666666666665" />
-        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/fragment_search.xml" value="0.25416666666666665" />
-        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/menu/bottom_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

@@ -14,7 +14,7 @@ public class ProjectStorage {
     public static final String KEY_NAME = "fullName";
     public static final String KEY_USER = "user";
     public static final String KEY_USER_EMAIL = "email";
-    public static final String KEY_FCM_TOKEN = "fcm_token";
+    public static final String KEY_FCM_TOKEN = "token";
     public static final String KEY_USER_ID = "id";
     public static final String KEY_AVATAR = "uri";
 

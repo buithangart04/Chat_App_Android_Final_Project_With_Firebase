@@ -7,13 +7,14 @@
     tools:context=".RegisterActivity"
     android:background="#fff">
 
-
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/img_avatar"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="30dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="128dp"
+        android:scaleType="centerCrop"
+        app:riv_oval="true"
         android:src="@drawable/user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
