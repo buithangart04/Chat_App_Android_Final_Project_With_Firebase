@@ -30,9 +30,12 @@
             android:exported="true"
             android:screenOrientation="fullSensor" />
         <activity
+            android:name=".NavigatorActivity"
+            android:exported="true" />
+        <activity
             android:name=".ChatActivity"
-            android:exported="true" android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="true" />
