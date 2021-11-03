@@ -164,8 +164,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .whereEqualTo(ProjectStorage.KEY_USER_EMAIL, email)
                 .get()
                 .addOnSuccessListener(task1 -> {
-                    DocumentSnapshot documentSnapshot = task1.getDocuments().get(0);
-                    preferenceManager.putString(ProjectStorage.KEY_USER_ID, documentSnapshot.getId());
+                    if (task1.getDocuments().size() > 0) {
+                        DocumentSnapshot documentSnapshot = task1.getDocuments().get(0);
+                        preferenceManager.putString(ProjectStorage.KEY_USER_ID, documentSnapshot.getId());
+                    }
                 });
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful() && preferenceManager.getString(ProjectStorage.KEY_USER_ID) != null) {

@@ -77,12 +77,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.txtBackToLogin:
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                Pair[] pairs = new Pair[5];
-                pairs[0] = new Pair<View, String>(loginText, "login_text");
-                pairs[1] = new Pair<View, String>(btnRegister, "button_tran");
-                pairs[2] = new Pair<View, String>(txtBackToLogin, "singup_tran");
-                pairs[3] = new Pair<View, String>(editTextEmail, "email_text");
-                pairs[4] = new Pair<View, String>(editTextPassword, "password_text");
+                Pair[] pairs = new Pair[4];
+                pairs[0] = new Pair<View, String>(btnRegister, "button_tran");
+                pairs[1] = new Pair<View, String>(txtBackToLogin, "singup_tran");
+                pairs[2] = new Pair<View, String>(editTextEmail, "email_text");
+                pairs[3] = new Pair<View, String>(editTextPassword, "password_text");
 
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(RegisterActivity.this, pairs);
                 startActivity(intent, options.toBundle());
@@ -115,15 +114,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editTextPassword.getEditText().getText().toString().trim();
         String fullName = editTextFullName.getEditText().getText().toString().trim();
 
-        if (!validateInputFullname(fullName) | !validateInputEmail(email) | !validateInputPassword(password)) {
+        if (!validateInputFullname(fullName) | !validateInputEmail(email) | !validateInputPassword(password) | validateAvatar()) {
             return;
         }
+
         createUser(fullName, email, password);
     }
 
     private boolean validateInputFullname(String fullName) {
         if (fullName.isEmpty()) {
             editTextFullName.setError("Full name is required!");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateAvatar() {
+        if (imgData == null) {
+            Toast.makeText(RegisterActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -136,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextEmail.setError("Pls provide valid email!");
+            editTextEmail.setError("Please provide valid email!");
             return false;
         }
         return true;
