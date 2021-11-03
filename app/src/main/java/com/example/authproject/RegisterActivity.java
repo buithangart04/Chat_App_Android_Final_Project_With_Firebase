@@ -2,39 +2,45 @@ package com.example.authproject;
 
 import static com.example.authproject.utilities.ProjectStorage.PICK_IMAGE_REQUEST;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.FunctionalUtilities;
+import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, UploadFileSuccessListener {
 
-    private TextView banner, btnRegister;
-    private EditText editTextFullName, editTextAge, editTextEmail, editTextPassword;
-    private ImageView img_avatar;
+    private TextView btnRegister, txtBackToLogin, loginText, logoName;
+    private TextInputLayout editTextFullName, editTextEmail, editTextPassword;
+    private ImageView logoImage, img_avatar;
 
     private FirebaseAuth mAuth;
+    private PreferenceManager preferenceManager;
     private Uri imgData;
     private User user;
 
@@ -42,33 +48,44 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        preferenceManager = new PreferenceManager(getApplicationContext());
         mAuth = FirebaseAuth.getInstance();
 
-        banner = (TextView) findViewById(R.id.banner);
-        banner.setOnClickListener(this);
-
-        btnRegister = (Button) findViewById(R.id.btnRegister);
+        btnRegister = findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(this);
 
-        editTextFullName = (EditText) findViewById(R.id.fullName);
-        editTextAge = (EditText) findViewById(R.id.age);
-        editTextEmail = (EditText) findViewById(R.id.email);
-        editTextPassword = (EditText) findViewById(R.id.password);
+        txtBackToLogin = findViewById(R.id.txtBackToLogin);
+        txtBackToLogin.setOnClickListener(this);
 
+        editTextFullName = findViewById(R.id.fullName);
+        editTextEmail = findViewById(R.id.email);
+        editTextPassword = findViewById(R.id.password);
+        loginText = findViewById(R.id.loginText);
+        logoName = findViewById(R.id.logoName);
+        logoImage = findViewById(R.id.logoImage);
         img_avatar = (ImageView) findViewById(R.id.img_avatar);
         img_avatar.setOnClickListener(this);
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.banner:
-                startActivity(new Intent(this, MainActivity.class));
-                break;
             case R.id.btnRegister:
                 register();
+                break;
+            case R.id.txtBackToLogin:
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                Pair[] pairs = new Pair[5];
+                pairs[0] = new Pair<View, String>(loginText, "login_text");
+                pairs[1] = new Pair<View, String>(btnRegister, "button_tran");
+                pairs[2] = new Pair<View, String>(txtBackToLogin, "singup_tran");
+                pairs[3] = new Pair<View, String>(editTextEmail, "email_text");
+                pairs[4] = new Pair<View, String>(editTextPassword, "password_text");
+
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(RegisterActivity.this, pairs);
+                startActivity(intent, options.toBundle());
                 break;
             case R.id.img_avatar:
                 selectImage();
@@ -94,69 +111,57 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void register() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-        String fullName = editTextFullName.getText().toString().trim();
-        String age = editTextAge.getText().toString().trim();
+        String email = editTextEmail.getEditText().getText().toString().trim();
+        String password = editTextPassword.getEditText().getText().toString().trim();
+        String fullName = editTextFullName.getEditText().getText().toString().trim();
 
-        if (validateInput(fullName, age, email, password)) {
-            createUser(fullName, age, email, password);
+        if (!validateInputFullname(fullName) | !validateInputEmail(email) | !validateInputPassword(password)) {
+            return;
         }
-
+        createUser(fullName, email, password);
     }
 
-    private boolean validateInput(String fullName, String age, String email, String password) {
+    private boolean validateInputFullname(String fullName) {
         if (fullName.isEmpty()) {
             editTextFullName.setError("Full name is required!");
-            editTextFullName.requestFocus();
             return false;
         }
+        return true;
+    }
 
-        if (age.isEmpty()) {
-            editTextAge.setError("Age is required!");
-            editTextAge.requestFocus();
-            return false;
-        }
-
+    private boolean validateInputEmail(String email) {
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required!");
-            editTextEmail.requestFocus();
             return false;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Pls provide valid email!");
-            editTextEmail.requestFocus();
             return false;
         }
+        return true;
+    }
 
+    private boolean validateInputPassword(String password) {
         if (password.isEmpty()) {
             editTextPassword.setError("Password is required!");
-            editTextPassword.requestFocus();
             return false;
         }
 
         if (password.length() < 6) {
             editTextPassword.setError("Password must be > 6");
-            editTextPassword.requestFocus();
             return false;
         }
-
-        if (imgData == null) {
-            Toast.makeText(RegisterActivity.this, "Pls select image", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
         return true;
     }
 
-    private void createUser(String fullName, String age, String email, String password) {
+    private void createUser(String fullName, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            user = new User(fullName, age, email);
+                            user = new User(fullName, email);
                             new FileUtilities()
                                     .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
 
@@ -168,20 +173,26 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onUploadFileSuccess(Uri uri) {
+    public void onUploadFileSuccess(Uri uri, Object[] params) {
+        String userId = new FunctionalUtilities().generateId("user");
         user.setUri(uri.toString());
+        user.setId(userId);
 
-        CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
-        dbUsers
-                .add(user)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
+                .document(ProjectStorage.KEY_COLLECTION_USERS + "/" + userId);
+
+        ProjectStorage.DOCUMENT_REFERENCE
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
-                        }
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                     }
                 });
     }

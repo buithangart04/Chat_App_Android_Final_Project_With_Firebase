@@ -9,7 +9,7 @@ import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.Base64;
-import android.util.Log;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.adapters.ChatAdapter;
 import com.example.authproject.adapters.FileChooserAdapter;
@@ -38,7 +37,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-;
+
 
 public class ChatActivity extends AppCompatActivity implements UploadFileSuccessListener {
     private ActivityChatBinding binding;
@@ -48,8 +47,8 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     private FileChooserAdapter fileChooserAdapter ;
     private PreferenceManager preferenceManager;
     boolean showOptionsFile= false;
-    List<Uri> listFileSelected;
-    private static final int PICK_IMAGE_REQUEST = 3241;
+    List<Pair<Uri,String>> listFileSelected;
+    private static final int PICK_IMAGE_REQUEST = 3241,PICK_FILE_REQUEST=3251,PICK_VIDEO_REQUEST=3161;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +59,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         loadReceiversDetails();
         init();
         listenMessage();
+        setCallListener(receiverUser);
     }
     private void init (){
         preferenceManager =new PreferenceManager(getApplicationContext());
@@ -93,12 +93,14 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             message.put(ProjectStorage.KEY_MESSAGE,binding.inputMessage.getText().toString());
             message.put(ProjectStorage.KEY_TIMESTAMP,new Date() );
             message.put(ProjectStorage.KEY_MESSAGE_TYPE,"text");
+            message.put(ProjectStorage.KEY_FILE_NAME,"");
             ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
             binding.inputMessage.setText(null);
         }
         if(listFileSelected.size()!=0){
-            for(Uri uri: listFileSelected){
-               new FileUtilities().uploadFile(this,this,uri);
+            for(Pair<Uri,String> pair : listFileSelected){
+               new FileUtilities().uploadFile(this,this,pair.first,
+                       (Object)pair.second.split("[|]")[0],(Object)pair.second.split("[|]")[1]);
             }
             listFileSelected.clear();
             fileChooserAdapter.notifyDataSetChanged();
@@ -128,6 +130,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
                     chatMessage.dateObject  = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
                     chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
                     chatMessage.type= docs.getDocument().getString(ProjectStorage.KEY_MESSAGE_TYPE);
+                    chatMessage.fileName= docs.getDocument().getString(ProjectStorage.KEY_FILE_NAME);
                     chatMessages.add(chatMessage);
                 }
 
@@ -159,27 +162,40 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     }
 
     public void onChoseOptionSend(View view) {
+        Intent intent = new Intent();
         switch(view.getId()){
             case R.id.optionImage:
-                Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,"Select an image"), PICK_IMAGE_REQUEST);
                 break;
             case R.id.optionFile:
-                Toast.makeText(ChatActivity.this, "file choose", Toast.LENGTH_LONG).show();
+                intent.setType("*/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select file"), PICK_FILE_REQUEST);
                 break;
+            case R.id.optionVideo:
+                intent.setType("video/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Video"), PICK_VIDEO_REQUEST);
+
         }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==PICK_IMAGE_REQUEST&& resultCode==RESULT_OK&& data!=null && data.getData()!=null){
-            Uri filePath = data.getData();
-            listFileSelected.add(filePath);
-            fileChooserAdapter.notifyDataSetChanged();
+        if(resultCode==RESULT_OK&& data!=null && data.getData()!=null){
+            String type= requestCode==PICK_IMAGE_REQUEST ? "image":
+                    requestCode== PICK_FILE_REQUEST? new FileUtilities().getFileType(this,data.getData()):
+                    requestCode==PICK_VIDEO_REQUEST?"video":"undefined" ;
+            if(!type.equals("undefined")){
+                Uri filePath = data.getData();
+                listFileSelected.add(new Pair<>(filePath,new FileUtilities().getFileNameByUri(this,filePath)+"|"+type));
+                fileChooserAdapter.notifyDataSetChanged();
+            }
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -187,13 +203,46 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         binding.recMessage.setAdapter(chatAdapter);
     }
     @Override
-    public void onUploadFileSuccess(Uri uri) {
+    public void onUploadFileSuccess(Uri uri, Object [] params) {
+        String type ="image";
+        String fileName="";
+        if(params.length!=0){
+            fileName= params[0].toString();
+            type=params[1].toString();
+        }
         HashMap<String,Object> message = new HashMap<>();
         message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
         message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
         message.put(ProjectStorage.KEY_MESSAGE,uri.toString());
         message.put(ProjectStorage.KEY_TIMESTAMP,new Date() );
-        message.put(ProjectStorage.KEY_MESSAGE_TYPE,"image");
+        message.put(ProjectStorage.KEY_MESSAGE_TYPE,type);
+        message.put(ProjectStorage.KEY_FILE_NAME,fileName);
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
+    }
+    private void setCallListener(User user) {
+        binding.imageCall.setOnClickListener(v -> initiateAudioMeeting(user));
+        binding.imageVideo.setOnClickListener(v -> initiateVideoMeeting(user));
+    }
+
+    private void initiateVideoMeeting(User user) {
+        if (user.token == null || user.token.trim().isEmpty()) {
+            Toast.makeText(this, user.getFullName() + " is not avaiable for video call", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "video");
+            startActivity(intent);
+        }
+    }
+
+    private void initiateAudioMeeting(User user) {
+        if (user.token == null || user.token.trim().isEmpty()) {
+            Toast.makeText(this, user.getFullName() + " is not avaiable for audio call", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "audio");
+            startActivity(intent);
+        }
     }
 }

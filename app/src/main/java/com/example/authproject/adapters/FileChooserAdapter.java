@@ -1,6 +1,7 @@
 package com.example.authproject.adapters;
 
 import android.net.Uri;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,8 +14,8 @@ import java.util.List;
 
 
 public class FileChooserAdapter extends RecyclerView.Adapter<FileChooserAdapter.FileChooserViewHolder> {
-    List<Uri> listFileSelected;
-    public FileChooserAdapter( List<Uri> listFileSelected){
+    List<Pair<Uri,String>> listFileSelected;
+    public FileChooserAdapter( List<Pair<Uri,String>> listFileSelected){
         this.listFileSelected= listFileSelected;
     }
 
@@ -43,8 +44,8 @@ public class FileChooserAdapter extends RecyclerView.Adapter<FileChooserAdapter.
             super(binding.getRoot());
             this.binding= binding;
         }
-        public void setFileData(Uri uri,int pos ){
-            binding.fileName.setText(uri.getLastPathSegment());
+        public void setFileData(Pair<Uri,String> pair,int pos ){
+            binding.fileName.setText(pair.second.split("[|]")[0]);
             binding.layoutCancel.setOnClickListener(v->onCancel(pos));
         }
         public void onCancel(int pos){

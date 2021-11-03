@@ -9,12 +9,12 @@ public class FunctionalUtilities {
         return new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(date);
     }
 
-    private String getUUID() {
+    public String getUUID() {
         return UUID.randomUUID().toString();
     }
 
-    public String getRandomImageName() {
-        return "images/" + UUID.randomUUID();
+    public String getRandomFileName() {
+        return "files/" + UUID.randomUUID();
     }
 
     public String generateId(String type) {
