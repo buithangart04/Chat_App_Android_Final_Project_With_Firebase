@@ -13,4 +13,9 @@
         android:id="@+id/searchFragment"
         android:title="Search"
         android:icon="@drawable/ic_search"/>
+    <item
+        android:id="@+id/profileFragment"
+        android:title="Profile"
+        android:icon="@drawable/ic_user_profile"
+        />
 </menu>
