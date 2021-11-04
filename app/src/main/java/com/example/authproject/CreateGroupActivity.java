@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.authproject.adapters.ParticipantAdapter;
 import com.example.authproject.databinding.ActivityCreateGroupChatNameAcitivityBinding;
 import com.example.authproject.listeners.UploadFileSuccessListener;
+import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.FileUtilities;
@@ -28,13 +29,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateGroupActivity extends AppCompatActivity implements UploadFileSuccessListener {
+public class CreateGroupActivity extends AppCompatActivity implements UploadFileSuccessListener, UserListener {
     private ActivityCreateGroupChatNameAcitivityBinding binding;
     private List<User> chosenUser;
-    private List<String> user;
-    private List<String> admin;
+    private List<String> userId;
+    private List<String> adminId;
     private Group group;
-    private String groupID;
+    private String groupId;
     private String groupName;
     private String currentUserId;
     private Uri imgData;
@@ -66,7 +67,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
                 getApplicationContext());
 
         binding.recyclerUser.setLayoutManager(linearLayoutManager);
-        ParticipantAdapter participantAdapter = new ParticipantAdapter(chosenUser);
+        ParticipantAdapter participantAdapter = new ParticipantAdapter(chosenUser,this);
         binding.recyclerUser.setAdapter(participantAdapter);
         binding.recyclerUser.setVisibility(View.VISIBLE);
     }
@@ -109,18 +110,18 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
 
 
     private void addGroupToFireStore() {
-        groupID = FunctionalUtilities.generateId("group");
+        groupId = new FunctionalUtilities().generateId("group");
         groupName = binding.editTextGroupName.getText().toString();
         Intent createGroupUser = getIntent();
-        currentUserId = createGroupUser.getStringExtra(ProjectStorage.KEY_USER_EMAIL);
-        user = new ArrayList<>();
+        currentUserId = createGroupUser.getStringExtra(ProjectStorage.KEY_USER_ID);
+        userId = new ArrayList<>();
         for (User u : chosenUser) {
-            user.add(u.getEmail());
+            userId.add(u.getId());
         }
-        user.add(currentUserId);
-        admin = new ArrayList<>();
-        admin.add(currentUserId);
-        group = new Group(groupID, groupName, user, admin);
+        userId.add(currentUserId);
+        adminId = new ArrayList<>();
+        adminId.add(currentUserId);
+        group = new Group(groupId, groupName, userId, adminId);
 
         new FileUtilities()
                 .uploadFile(CreateGroupActivity.this, CreateGroupActivity.this, imgData);
@@ -144,22 +145,26 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
 
     @Override
     public void onUploadFileSuccess(Uri u,Object [] params) {
-        group.uri = u.toString();
+        group.groupURI = u.toString();
 
         ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
-                .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupID);
+                .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupId);
 
         ProjectStorage.DOCUMENT_REFERENCE.set(group)
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(getApplicationContext(), "Group has been created successfully!", Toast.LENGTH_LONG).show();
                     Intent createGroupIntent = new Intent(getApplicationContext(), GroupChatActivity.class);
-                    createGroupIntent.putExtra(ProjectStorage.KEY_GROUP_ID, groupID);
+                    createGroupIntent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
                     createGroupIntent.putExtra(ProjectStorage.KEY_GROUP_NAME, groupName);
-                    createGroupIntent.putExtra(ProjectStorage.KEY_USER_EMAIL, currentUserId);
+                    createGroupIntent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
                     startActivity(createGroupIntent);
                     finish();
                 }).addOnFailureListener(e ->
                 Toast.makeText(getApplicationContext(), "Failed: " + e, Toast.LENGTH_LONG).show());
     }
 
+    @Override
+    public void onUserCLick(User user) {
+
+    }
 }

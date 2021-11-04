@@ -3,6 +3,7 @@ package com.example.authproject.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    private String id;
     private String fullName;
     private String email;
     public String token;
@@ -16,10 +17,8 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public User(String fullName, String email, String uri) {
-        this.fullName = fullName;
-        this.uri = uri;
-        this.email = email;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFullName() {
@@ -37,7 +36,9 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    public String getId() {
+        return id;
+    }
     public String getUri() {
         return uri;
     }

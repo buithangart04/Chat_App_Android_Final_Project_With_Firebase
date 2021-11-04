@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +38,7 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
     private GroupUserAdapter groupUserAdapter;
     private ChosenGroupUserAdapter chosenGroupUserAdapter;
     private List<User> users;
-    private List<String> participant;
+    private List<String> participantId;
     private List<User> chosenUsers;
     private User user;
     private String currentUserId;
@@ -55,19 +56,24 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         getCurrentUser();
         getUsers(types);
         searchUser(users);
+        setListener();
+    }
+
+    private void setListener() {
+        binding.imageBack2.setOnClickListener(v-> onBackPressed());
     }
 
     private void getCurrentUser() {
         preferenceManager = new PreferenceManager(getApplicationContext());
         Intent intent = getIntent();
         ((LinearLayoutManager) binding.userRecycleView.getLayoutManager()).setStackFromEnd(true);
-        preferenceManager.putString(ProjectStorage.KEY_USER_EMAIL, intent.getStringExtra(ProjectStorage.KEY_USER_EMAIL));
+        preferenceManager.putString(ProjectStorage.KEY_USER_ID, "us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601"); //intent get KEY USER ID
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getString(ProjectStorage.KEY_USER_EMAIL).equals(intent.getStringExtra(ProjectStorage.KEY_USER_EMAIL))) {
+                            if (document.getString(ProjectStorage.KEY_USER_ID).equals("us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601")) { //intent get KEY USER ID
                                 preferenceManager.putString(ProjectStorage.KEY_NAME, document.getString(ProjectStorage.KEY_NAME));
                             }
                         }
@@ -107,24 +113,25 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                 .get()
                 .addOnCompleteListener(task -> {
                     loading(false);
-                    currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
+                    currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_ID);
                     if (task.isSuccessful() && task.getResult() != null) {
                         switch (type) {
                             case "new":
-                                users = UserUtilities.getListUsers(currentUserId, task);
+                                users = new UserUtilities().getListUsers(currentUserId, task);
                                 break;
                             case "current":
                                 for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                                     User u = new User();
                                     u.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
                                     u.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
+                                    u.setId(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_ID));
                                     u.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
                                     users.add(u);
                                 }
                                 Bundle bundle = getIntent().getExtras();
-                                participant = (List<String>) bundle.getSerializable(ProjectStorage.KEY_GROUP_CURRENT_PARTICIPANT);
-                                for (String s : participant) {
-                                    users = users.stream().filter(u -> !u.getEmail().equalsIgnoreCase(s)).collect(Collectors.toList());
+                                participantId = (List<String>) bundle.getSerializable(ProjectStorage.KEY_GROUP_CURRENT_PARTICIPANT);
+                                for (String s : participantId) {
+                                    users = users.stream().filter(u -> !u.getId().equalsIgnoreCase(s)).collect(Collectors.toList());
                                 }
                                 break;
                         }
@@ -182,36 +189,34 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
 
     private void saveUserGroup() {
         if (!types.equalsIgnoreCase("current")) {
-            currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
+            currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_ID);
             Bundle bundle = new Bundle();
             bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) chosenUsers);
             Intent createGroupIntent = new Intent(getApplicationContext(), CreateGroupActivity.class);
             createGroupIntent.putExtras(bundle);
-            createGroupIntent.putExtra(ProjectStorage.KEY_USER_EMAIL, currentUserId);
+            createGroupIntent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
             startActivity(createGroupIntent);
         }
 
     }
 
     private void saveUserToCurrentGroup() {
-
         Intent intent = getIntent();
         String groupID = intent.getStringExtra(ProjectStorage.KEY_GROUP_ID);
-        participant = new ArrayList<>();
+        participantId = new ArrayList<>();
         //Update to database
         ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                 .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupID);
         for (User u : chosenUsers) {
             ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
-                    , FieldValue.arrayUnion(u.getEmail()));
+                    , FieldValue.arrayUnion(u.getId()));
         }
-        Log.d("TAG", "SAVE CURRENT");
-        Log.d("TAG", groupID);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) chosenUsers);
         Intent i = new Intent(getApplicationContext(), GroupInfoActivity.class);
-        i.putExtra(ProjectStorage.KEY_USER_EMAIL, currentUserId);
+        i.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
         startActivity(i);
+        Toast.makeText(getApplicationContext(), "Add successfully!", Toast.LENGTH_LONG).show();
         finish();
     }
 

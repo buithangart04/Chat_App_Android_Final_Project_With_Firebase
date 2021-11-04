@@ -1,23 +1,19 @@
 package com.example.authproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Pair;
 import android.util.Patterns;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.authproject.models.User;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,16 +21,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -49,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         txtRegister = (TextView) findViewById(R.id.txtRegister);
         txtRegister.setOnClickListener(this);
 
@@ -78,14 +72,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.txtRegister:
                 intent = new Intent(MainActivity.this, RegisterActivity.class);
-                pairs = new Pair[7];
-                pairs[0] = new Pair<View, String>(logoImage, "logo_name");
-                pairs[1] = new Pair<View, String>(logoName, "logo_text");
-                pairs[2] = new Pair<View, String>(loginText, "login_text");
-                pairs[3] = new Pair<View, String>(btnLogin, "button_tran");
-                pairs[4] = new Pair<View, String>(txtRegister, "singup_tran");
-                pairs[5] = new Pair<View, String>(editTextEmail, "email_text");
-                pairs[6] = new Pair<View, String>(editTextPassword, "password_text");
+                pairs = new Pair[5];
+                pairs[0] = new Pair<View, String>(loginText, "login_text");
+                pairs[1] = new Pair<View, String>(btnLogin, "button_tran");
+                pairs[2] = new Pair<View, String>(txtRegister, "singup_tran");
+                pairs[3] = new Pair<View, String>(editTextEmail, "email_text");
+                pairs[4] = new Pair<View, String>(editTextPassword, "password_text");
 
                 options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
                 startActivity(intent, options.toBundle());
@@ -125,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     finish();
                 })
                 .addOnFailureListener(runnable -> {
-                    Toast.makeText(MainActivity.this, "Unable to remove token: " + runnable.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Unable to remove token: "+runnable.getMessage(), Toast.LENGTH_SHORT).show();
                 });
         super.onDestroy();
     }
@@ -188,8 +180,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }
                             });
-                    Intent intent = new Intent(MainActivity.this, UsersActivity.class);
-                    intent.putExtra("email", email);
+                    Intent intent = new Intent(MainActivity.this, GroupInfoActivity.class);
+                    intent.putExtra("email",email);
                     // redirect to user profile
                     startActivity(intent);
                 } else {
@@ -202,20 +194,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void sendFCMTokenToDatabase(String token) {
+    private void sendFCMTokenToDatabase(String token){
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
         DocumentReference documentReference =
                 database.collection(ProjectStorage.KEY_COLLECTION_USERS).document(
-                        preferenceManager.getString(ProjectStorage.KEY_USER_ID)
+                    preferenceManager.getString(ProjectStorage.KEY_USER_ID)
                 );
 
         documentReference.update(ProjectStorage.KEY_FCM_TOKEN, token)
                 .addOnSuccessListener(runnable -> {
-                    Toast.makeText(MainActivity.this, "token updated successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"token updated successfully", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(runnable -> {
-                    Toast.makeText(MainActivity.this, "Unable to send token: " + runnable.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Unable to send token: "+runnable.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 }

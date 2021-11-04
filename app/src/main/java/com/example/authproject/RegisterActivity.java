@@ -2,10 +2,6 @@ package com.example.authproject;
 
 import static com.example.authproject.utilities.ProjectStorage.PICK_IMAGE_REQUEST;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -14,26 +10,28 @@ import android.os.Bundle;
 import android.util.Pair;
 import android.util.Patterns;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.ProjectStorage;
-
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, UploadFileSuccessListener {
 
@@ -65,8 +63,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         loginText = findViewById(R.id.loginText);
         logoName = findViewById(R.id.logoName);
         logoImage = findViewById(R.id.logoImage);
-//        img_avatar = (ImageView) findViewById(R.id.img_avatar);
-//        img_avatar.setOnClickListener(this);
+        img_avatar = (ImageView) findViewById(R.id.img_avatar);
+        img_avatar.setOnClickListener(this);
 
     }
 
@@ -79,21 +77,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.txtBackToLogin:
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                Pair[] pairs = new Pair[7];
-                pairs[0] = new Pair<View, String>(logoImage, "logo_name");
-                pairs[1] = new Pair<View, String>(logoName, "logo_text");
-                pairs[2] = new Pair<View, String>(loginText, "login_text");
-                pairs[3] = new Pair<View, String>(btnRegister, "button_tran");
-                pairs[4] = new Pair<View, String>(txtBackToLogin, "singup_tran");
-                pairs[5] = new Pair<View, String>(editTextEmail, "email_text");
-                pairs[6] = new Pair<View, String>(editTextPassword, "password_text");
+                Pair[] pairs = new Pair[5];
+                pairs[0] = new Pair<View, String>(loginText, "login_text");
+                pairs[1] = new Pair<View, String>(btnRegister, "button_tran");
+                pairs[2] = new Pair<View, String>(txtBackToLogin, "singup_tran");
+                pairs[3] = new Pair<View, String>(editTextEmail, "email_text");
+                pairs[4] = new Pair<View, String>(editTextPassword, "password_text");
 
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(RegisterActivity.this, pairs);
                 startActivity(intent, options.toBundle());
                 break;
-//            case R.id.img_avatar:
-//                selectImage();
-//                break;
+            case R.id.img_avatar:
+                selectImage();
+                break;
         }
     }
 
@@ -166,8 +162,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             user = new User(fullName, email);
-//                            new FileUtilities()
-//                                    .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
+                            new FileUtilities()
+                                    .uploadFile(RegisterActivity.this, RegisterActivity.this, imgData);
 
                         } else {
                             Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
@@ -177,20 +173,26 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onUploadFileSuccess(Uri uri,Object [] params) {
+    public void onUploadFileSuccess(Uri uri, Object[] params) {
+        String userId = new FunctionalUtilities().generateId("user");
         user.setUri(uri.toString());
+        user.setId(userId);
 
-        CollectionReference dbUsers = ProjectStorage.DATABASE_REFERENCE.collection("users");
-        dbUsers
-                .add(user)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+        ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
+                .document(ProjectStorage.KEY_COLLECTION_USERS + "/" + userId);
+
+        ProjectStorage.DOCUMENT_REFERENCE
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
-                        }
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(RegisterActivity.this, "User has been registered successfully!", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                     }
                 });
     }

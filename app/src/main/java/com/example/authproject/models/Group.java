@@ -6,7 +6,7 @@ public class Group {
     public String groupId;
     public String groupName;
     public List<String> participant;
-    public String uri;
+    public String groupURI;
     public List<String> admin;
 
     public Group(String groupId, String groupName, List<String> participant, List<String> admin) {

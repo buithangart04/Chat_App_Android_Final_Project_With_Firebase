@@ -1,7 +1,5 @@
 package com.example.authproject.utilities;
 
-import android.util.Log;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -11,7 +9,7 @@ public class FunctionalUtilities {
         return new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(date);
     }
 
-    private static String getUUID() {
+    public String getUUID() {
         return UUID.randomUUID().toString();
     }
 
@@ -19,7 +17,7 @@ public class FunctionalUtilities {
         return "files/" + UUID.randomUUID();
     }
 
-    public static String generateId(String type) {
+    public String generateId(String type) {
         switch (type) {
             case "user":
                 return "us" + getUUID();

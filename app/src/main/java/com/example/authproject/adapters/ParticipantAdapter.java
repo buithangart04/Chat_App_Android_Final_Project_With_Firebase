@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.databinding.ItemContainerUserBinding;
+import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.User;
 import com.squareup.picasso.Picasso;
 
@@ -14,9 +15,12 @@ import java.util.List;
 
 public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.UserViewHolder> {
     private final List<User> chosenUser;
+    private final UserListener userListener;
 
-    public ParticipantAdapter(List<User> chosenUser) {
+    public ParticipantAdapter(List<User> chosenUser, UserListener userListener) {
         this.chosenUser = chosenUser;
+        this.userListener = userListener;
+
     }
 
     @NonNull
@@ -55,6 +59,7 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
                     .resize(binding.imageProfile.getLayoutParams().width,
                             binding.imageProfile.getLayoutParams().height)
                     .into(binding.imageProfile);
+            binding.getRoot().setOnClickListener(v -> userListener.onUserCLick(user));
         }
     }
 }

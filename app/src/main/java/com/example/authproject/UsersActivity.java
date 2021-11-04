@@ -44,6 +44,7 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if(document.getString("email").equals(intent.getStringExtra("email"))){
                                     preferenceManager.putString(ProjectStorage.KEY_NAME,document.getString(ProjectStorage.KEY_NAME));
+                                    preferenceManager.putString(ProjectStorage.KEY_AVATAR,document.getString(ProjectStorage.KEY_AVATAR));
                                 }
 
                             }
@@ -77,6 +78,7 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                             User user = new User();
                             user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
                             user.setEmail(queryDocumentSnapshot.getString(ProjectStorage.KEY_USER_EMAIL));
+                            user.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
                             user.token = queryDocumentSnapshot.getString(ProjectStorage.KEY_FCM_TOKEN);
                             users.add(user);
                         }

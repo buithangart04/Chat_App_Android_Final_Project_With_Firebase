@@ -16,7 +16,7 @@
             android:name=".ListGroupParticipantActivity"
             android:exported="false" />
         <activity
-            android:name=".StartScreenActivity"
+            android:name=".GroupInfoActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GroupInfoActivity"
+            android:name=".StartScreenActivity"
             android:exported="false" />
         <activity
             android:name=".GroupChatActivity"
