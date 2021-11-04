@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.authproject.databinding.ActivityGroupInfoBinding;
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.utilities.FileUtilities;
+import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,6 +46,7 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
         init();
         setListener();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -55,8 +57,9 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
                     .uploadFile(GroupInfoActivity.this, GroupInfoActivity.this, imgData);
         }
     }
+
     private void init() {
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
 //        groupID = intent.getStringExtra(ProjectStorage.KEY_GROUP_ID);
 //        currentUserId = intent.getStringExtra(ProjectStorage.KEY_USER_ID);
         currentUserId = "us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601";
@@ -86,7 +89,7 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
         binding.textSeePhoto.setOnClickListener(v -> seeListPhoto());
         binding.textLeave.setOnClickListener(v -> leaveGroup());
         binding.imageBack.setOnClickListener(v -> onBackPressed());
-        binding.textGroupName.setOnClickListener(v -> changeGroupName());
+        binding.textChangeGroupName.setOnClickListener(v -> changeGroupName());
         binding.imgGroupAvatar2.setOnClickListener(v -> changeGroupImage());
     }
 
@@ -139,7 +142,6 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
     private void leaveGroup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Leave Group ?");
-
         if (adminId.contains(currentUserId)) {
             if (adminId.size() == 1) {
                 builder.setMessage("Are you sure want to leave ? You won't get any new message and " +
@@ -167,8 +169,7 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
                     finish();
                 });
             }
-        }
-        else{
+        } else {
             builder.setMessage("Are you sure want to leave ? You won't get any new message");
             builder.setPositiveButton("LEAVE", (dialog, which) -> {
                 ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT, FieldValue.arrayRemove(currentUserId));
