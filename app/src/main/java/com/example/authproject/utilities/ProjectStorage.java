@@ -18,6 +18,9 @@ public class ProjectStorage {
     public static final String KEY_USER_ID = "id";
     public static final String KEY_AVATAR = "uri";
 
+    //Color
+    public static final String KEY_COLOR_DISABLED = "#d7dadc";
+    public static final String KEY_COLOR_NAVIGATE = "#0f7dd6";
     //Key chat in firebase
     public static final String KEY_COLLECTION_CHAT = "chat";
     public static final String KEY_SENDER_EMAIL = "senderEmail";
@@ -26,6 +29,16 @@ public class ProjectStorage {
     public static final String KEY_TIMESTAMP = "timestamp";
     public static final String KEY_MESSAGE_TYPE = "type";
     public static final String KEY_FILE_NAME= "fileName";
+
+    //Key group in firebase
+    public static final String KEY_GROUP_ID = "groupId";
+    public static final String KEY_GROUP_PARTICIPANT = "participant";
+    public static final String KEY_GROUP_CURRENT_PARTICIPANT = "current_participant";
+    public static final String KEY_COLLECTION_GROUP = "group";
+    public static final String KEY_GROUP_ADMIN = "admin";
+    public static final String KEY_GROUP_NAME = "groupName";
+    public static final String KEY_GROUP_URI = "groupURI";
+
     //Key call in firebase
     public static final String REMOTE_MSG_AUTHORIZATION = "Authorization";
     public static final String REMOTE_MSG_CONTENT_TYPE = "Content-Type";
