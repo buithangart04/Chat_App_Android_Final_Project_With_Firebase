@@ -29,10 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsersActivity extends AppCompatActivity implements UserListener {
-    private FirebaseUser user;
-    private DatabaseReference reference;
-    private String userID;
-    private Button btnLogout;
+
     private ActivityUsersBinding binding;
     private PreferenceManager preferenceManager;
     @Override
@@ -43,7 +40,6 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         Intent intent = getIntent();
-//
         preferenceManager.putString(ProjectStorage.KEY_USER_EMAIL,intent.getStringExtra("email"));
         ProjectStorage.DATABASE_REFERENCE.collection("users")
                 .get()
@@ -124,6 +120,5 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
         Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
         intent.putExtra(ProjectStorage.KEY_USER,user);
         startActivity(intent);
-        finish();
     }
 }

@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.authproject.utilities.PreferenceManager;
+import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -122,8 +124,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if (user.isEmailVerified()) {
-                        Intent intent = new Intent(MainActivity.this, UsersActivity.class);
-                        intent.putExtra("email",email);
+                        PreferenceManager preferenceManager = PreferenceManager.getInstance(getApplicationContext());
+                        preferenceManager.putString(ProjectStorage.KEY_USER_EMAIL,email);
+                        Intent intent = new Intent(MainActivity.this, NavigatorActivity.class);
+
 
                         // redirect to user profile
                         startActivity(intent);

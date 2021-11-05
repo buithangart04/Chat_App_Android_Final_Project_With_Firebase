@@ -30,16 +30,30 @@
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_message.xml" value="0.176" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/layout/item_receiver_message.xml" value="0.13020833333333334" />
         <entry key="..\:/Prm391_Presentation/firebase-android-demo/AuthProject/app/src/main/res/menu/send_file_menu.xml" value="0.17135416666666667" />
-        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/activity_chat.xml" value="0.1082427536231884" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/activity_chat.xml" value="0.25" />
         <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/activity_main.xml" value="0.1082427536231884" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/activity_navigator.xml" value="0.16" />
         <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/activity_search.xml" value="0.209375" />
         <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/activity_users.xml" value="0.209375" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/fragment_message.xml" value="0.16510416666666666" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/fragment_notify.xml" value="0.16510416666666666" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/fragment_search.xml" value="0.16510416666666666" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/fragment_test.xml" value="0.33" />
         <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/fragment_users.xml" value="0.22" />
         <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/item_container_user.xml" value="0.25" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/item_message.xml" value="0.15052083333333333" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/layout/item_search_user.xml" value="0.25" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/menu/bottom_menu.xml" value="0.16510416666666666" />
+        <entry key="..\:/Users/doqua/Music/AuthProject/app/src/main/res/menu/send_file_menu.xml" value="0.16510416666666666" />
         <entry key="..\:/demo/AuthProject/app/src/main/res/layout/activity_forgot_password.xml" value="0.25416666666666665" />
         <entry key="..\:/demo/AuthProject/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/demo/AuthProject/app/src/main/res/layout/activity_profile_actitvity.xml" value="0.25416666666666665" />
         <entry key="..\:/demo/AuthProject/app/src/main/res/layout/activity_register.xml" value="0.17753623188405798" />
+        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/activity_navigator.xml" value="0.25416666666666665" />
+        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/fragment_message.xml" value="0.25416666666666665" />
+        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/fragment_notify.xml" value="0.25416666666666665" />
+        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/layout/fragment_search.xml" value="0.25416666666666665" />
+        <entry key="..\:/navigator-android/firebase-android-demo/app/src/main/res/menu/bottom_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
@@ -48,5 +62,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.16510416666666666" />
+      </ProjectState>
+    </option>
   </component>
 </project>

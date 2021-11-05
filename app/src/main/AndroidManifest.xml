@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AuthProject">
         <activity
+            android:name=".NavigatorActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
+        <activity
             android:name=".ChatActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"></activity>

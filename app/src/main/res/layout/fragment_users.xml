@@ -3,20 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".UsersFragment">
 
     <EditText
+        android:id="@+id/search_users"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:hint="Search..."
-        android:id="@+id/search_users"/>
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="100dp"
+        android:background="@color/browser_actions_bg_grey"
+        android:hint="Search..." />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/search_users" />
+        android:layout_below="@id/search_users"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="22dp"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
     <TextView
         android:id="@+id/textErrorMessage"
         android:layout_width="match_parent"
