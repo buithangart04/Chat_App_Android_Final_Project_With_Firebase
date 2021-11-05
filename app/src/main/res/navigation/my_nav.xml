@@ -16,10 +16,10 @@
         android:label="fragment_notify"
         tools:layout="@layout/fragment_notify" />
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.authproject.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
+        android:id="@+id/usersFragment"
+        android:name="com.example.authproject.UsersFragment"
+        android:label="fragment_users"
+        tools:layout="@layout/fragment_users" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.authproject.ProfileFragment"

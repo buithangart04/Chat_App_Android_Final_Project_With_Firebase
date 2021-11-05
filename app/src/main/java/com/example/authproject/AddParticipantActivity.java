@@ -26,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,6 @@ import java.util.stream.Collectors;
 public class AddParticipantActivity extends AppCompatActivity implements GetUserGroupListener {
 
     private ActivityCreateGroupChatBinding binding;
-    private PreferenceManager preferenceManager;
     private GroupUserAdapter groupUserAdapter;
     private ChosenGroupUserAdapter chosenGroupUserAdapter;
     private List<User> users;
@@ -44,6 +44,8 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
     private String currentUserId;
     private String types;
     private String searchChar = "";
+    private LinearLayoutManager linearLayoutManagerUser;
+    private LinearLayoutManager linearLayoutManagerUserGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         binding = ActivityCreateGroupChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         init();
-        getCurrentUser();
         getUsers(types);
         searchUser(users);
         setListener();
@@ -59,25 +60,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
 
     private void setListener() {
         binding.imageBack2.setOnClickListener(v-> onBackPressed());
-    }
-
-    private void getCurrentUser() {
-        preferenceManager = new PreferenceManager(getApplicationContext());
-        ((LinearLayoutManager) binding.userRecycleView.getLayoutManager()).setStackFromEnd(true);
-        preferenceManager.putString(ProjectStorage.KEY_USER_ID, "us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601"); //intent get KEY USER ID
-        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getString(ProjectStorage.KEY_USER_ID).equals("us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601")) { //intent get KEY USER ID
-                                preferenceManager.putString(ProjectStorage.KEY_NAME, document.getString(ProjectStorage.KEY_NAME));
-                            }
-                        }
-                    } else {
-                        showErrorMessage();
-                    }
-                });
     }
 
     private void init() {
@@ -89,16 +71,18 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         if (types.equalsIgnoreCase("current")) {
             binding.textCreateGroupNext.setText("ADD");
         }
-
+        linearLayoutManagerUser = new LinearLayoutManager(
+                getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        linearLayoutManagerUserGroup = new LinearLayoutManager(
+                getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
         chosenUsers = new ArrayList<>();
         chosenGroupUserAdapter = new ChosenGroupUserAdapter(chosenUsers, this);
+
         binding.userGroupRecylerView.setAdapter(chosenGroupUserAdapter);
         binding.userGroupRecylerView.setVisibility(View.VISIBLE);
-        binding.userGroupRecylerView.setLayoutManager(new LinearLayoutManager(
-                getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        binding.userRecycleView.setLayoutManager(new LinearLayoutManager(
-                getApplicationContext(), LinearLayoutManager.VERTICAL, true));
+        binding.userGroupRecylerView.setLayoutManager(linearLayoutManagerUserGroup);
+        binding.userRecycleView.setLayoutManager(linearLayoutManagerUser);
     }
 
     private void getUsers(String type) {
@@ -108,7 +92,7 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                 .get()
                 .addOnCompleteListener(task -> {
                     loading(false);
-                    currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_ID);
+                    currentUserId = PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID);
                     if (task.isSuccessful() && task.getResult() != null) {
                         switch (type) {
                             case "new":
@@ -131,7 +115,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                                 break;
                         }
                         if (users.size() > 0) {
-                            Collections.reverse(users);
                             groupUserAdapter = new GroupUserAdapter(users, this);
                             binding.userRecycleView.setAdapter(groupUserAdapter);
                             binding.userRecycleView.setVisibility(View.VISIBLE);
@@ -184,7 +167,7 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
 
     private void saveUserGroup() {
         if (!types.equalsIgnoreCase("current")) {
-            currentUserId = preferenceManager.getString(ProjectStorage.KEY_USER_ID);
+            currentUserId = PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID);
             Bundle bundle = new Bundle();
             bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) chosenUsers);
             Intent createGroupIntent = new Intent(getApplicationContext(), CreateGroupActivity.class);
@@ -209,7 +192,7 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         Bundle bundle = new Bundle();
         bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) chosenUsers);
         Intent i = new Intent(getApplicationContext(), GroupInfoActivity.class);
-        i.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
+        i.putExtra(ProjectStorage.KEY_GROUP_ID,groupID);
         startActivity(i);
         Toast.makeText(getApplicationContext(), "Add successfully!", Toast.LENGTH_LONG).show();
         finish();

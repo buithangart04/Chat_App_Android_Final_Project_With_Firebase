@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.authproject.adapters.ParticipantAdapter;
 import com.example.authproject.databinding.DialogGroupActionAllBinding;
 import com.example.authproject.listeners.UserListener;
+import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.firestore.FieldValue;
@@ -105,12 +106,13 @@ public class GroupAdminFragment extends Fragment implements UserListener {
     }
 
     @Override
-    public void onUserCLick(User user) {
+    public void onUserCLick(User user, Group group) {
         if (isAdmin) {
             ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                     .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupId);
             binding = DialogGroupActionAllBinding.inflate(getLayoutInflater());
             Intent intent = new Intent(getContext(), GroupInfoActivity.class);
+            intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setView(binding.getRoot());
             binding.textAllUser.setText(user.getFullName());
@@ -118,13 +120,14 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                     .resize(binding.imgAllUser.getLayoutParams().width,
                             binding.imgAllUser.getLayoutParams().height)
                     .into(binding.imgAllUser);
-            if (user.getId().equals(currentUserId)) {// Truong hop admin co 2 ma` minh la` admin //done
+            if (user.getId().equals(currentUserId)) {// Truong hop admin co 2 ma` minh la` admin
                 binding.textRemoveGroup.setText("Leave Group");
                 binding.textRemoveGroup.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
                             , FieldValue.arrayRemove(user.getId()));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Leave Group successfully", Toast.LENGTH_SHORT).show();
                 });
@@ -135,6 +138,7 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                 binding.textAdminAction.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Remove from Admin successfully", Toast.LENGTH_SHORT).show();
                 });
@@ -143,12 +147,13 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                             , FieldValue.arrayRemove(user.getId()));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Remove from Group successfully 1", Toast.LENGTH_SHORT).show();
                 });
             }
 
-            if (adminId.size() == 1 && user.getId().equals(currentUserId)) { //DONE
+            if (adminId.size() == 1 && user.getId().equals(currentUserId)) { //Truong hop minh` la admin duy nhat
                 binding.textAdminAction.setText("");
                 binding.textAdminAction.setClickable(false);
                 binding.frameLayoutAdminAction.setVisibility(View.GONE);
@@ -160,11 +165,12 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                     for (String s : participantId) {
                         ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN, FieldValue.arrayUnion(s));
                     }
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Remove Group successfully", Toast.LENGTH_SHORT).show();
                 });
             }
-            if(!user.getId().equals(currentUserId) && !adminId.contains(user.getId())) {
+            if (!user.getId().equals(currentUserId) && !adminId.contains(user.getId())) { // Con lai
                 binding.textRemoveGroup.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
                             , FieldValue.arrayRemove(user.getId()));
@@ -176,6 +182,7 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                 binding.textAdminAction.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayUnion(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Add into Admin successfully", Toast.LENGTH_SHORT).show();
                 });

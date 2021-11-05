@@ -5,6 +5,13 @@ import android.content.SharedPreferences;
 
 public class PreferenceManager {
     private final SharedPreferences sharedPreferences;
+    private static PreferenceManager preferenceManager;
+    public static PreferenceManager getInstance(Context ... params){
+        if(preferenceManager == null){
+            preferenceManager = new PreferenceManager(params[0]);
+        }
+        return preferenceManager;
+    }
 
     public PreferenceManager(Context context) {
         sharedPreferences = context.getSharedPreferences(ProjectStorage.KEY_PREFERENCE_NAME, Context.MODE_PRIVATE);

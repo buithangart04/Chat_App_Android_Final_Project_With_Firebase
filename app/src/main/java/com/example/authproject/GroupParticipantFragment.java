@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.authproject.adapters.ParticipantAdapter;
 import com.example.authproject.databinding.DialogGroupActionAllBinding;
 import com.example.authproject.listeners.UserListener;
+import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.exoplayer2.util.Log;
@@ -106,12 +107,13 @@ public class GroupParticipantFragment extends Fragment implements UserListener {
     }
 
     @Override
-    public void onUserCLick(User user) {
+    public void onUserCLick(User user, Group group) {
         if (isAdmin) {
             ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                     .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupId);
             binding = DialogGroupActionAllBinding.inflate(getLayoutInflater());
             Intent intent = new Intent(getContext(), GroupInfoActivity.class);
+            intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setView(binding.getRoot());
             binding.textAllUser.setText(user.getFullName());
@@ -126,6 +128,7 @@ public class GroupParticipantFragment extends Fragment implements UserListener {
                             , FieldValue.arrayRemove(user.getId()));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Leave Group successfully", Toast.LENGTH_SHORT).show();
                 });
@@ -136,6 +139,7 @@ public class GroupParticipantFragment extends Fragment implements UserListener {
                 binding.textAdminAction.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Remove from Admin successfully", Toast.LENGTH_SHORT).show();
                 });
@@ -144,6 +148,7 @@ public class GroupParticipantFragment extends Fragment implements UserListener {
                             , FieldValue.arrayRemove(user.getId()));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Remove from Group successfully 1", Toast.LENGTH_SHORT).show();
                 });
@@ -161,11 +166,12 @@ public class GroupParticipantFragment extends Fragment implements UserListener {
                     for (String s : participantId) {
                         ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN, FieldValue.arrayUnion(s));
                     }
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Remove Group successfully", Toast.LENGTH_SHORT).show();
                 });
             }
-            if(!user.getId().equals(currentUserId) && !adminId.contains(user.getId())) { // Con lai
+            if (!user.getId().equals(currentUserId) && !adminId.contains(user.getId())) { // Con lai
                 binding.textRemoveGroup.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
                             , FieldValue.arrayRemove(user.getId()));
@@ -177,6 +183,7 @@ public class GroupParticipantFragment extends Fragment implements UserListener {
                 binding.textAdminAction.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayUnion(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Add into Admin successfully", Toast.LENGTH_SHORT).show();
                 });

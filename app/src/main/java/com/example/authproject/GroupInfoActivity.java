@@ -59,8 +59,10 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
     }
 
     private void init() {
-        currentUserId = "us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601";
-        groupId = "gr12cd7bd3-aac0-4a9b-bf5a-079c37e59be2";
+        Intent intent = getIntent();
+        groupId = intent.getStringExtra(ProjectStorage.KEY_GROUP_ID);
+//        currentUserId = new PreferenceManager(getApplicationContext()).getString(ProjectStorage.KEY_USER_ID);
+        currentUserId = PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID);
         ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                 .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupId);
         ProjectStorage.DOCUMENT_REFERENCE.addSnapshotListener((value, error) -> {
@@ -117,8 +119,8 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
 
     private void seeListMember() {
         Intent intent = new Intent(getApplicationContext(), ListGroupParticipantActivity.class);
-        intent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
         intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
+        intent.putExtra(ProjectStorage.KEY_USER_ID,currentUserId);
         startActivity(intent);
     }
 
@@ -127,7 +129,6 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
         Bundle bundle = new Bundle();
         bundle.putSerializable(ProjectStorage.KEY_GROUP_CURRENT_PARTICIPANT, (ArrayList<? extends Serializable>) participantId);
         intent.putExtras(bundle);
-        intent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
         intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
         intent.putExtra(ProjectStorage.REMOTE_MSG_TYPE, "current");
         startActivity(intent);

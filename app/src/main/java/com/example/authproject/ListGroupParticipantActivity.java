@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,6 +58,7 @@ public class ListGroupParticipantActivity extends AppCompatActivity {
                     participantId = (List<String>) document.get(ProjectStorage.KEY_GROUP_PARTICIPANT);
                     frameLayoutAll.setBackground(getDrawable(R.drawable.background_curved_group_button));
                     frameLayoutAdmin.setBackgroundColor(Color.WHITE);
+                    ((TextView)findViewById(R.id.textAdmins)).setTextColor(Color.BLACK);
                     replaceFragment(new GroupParticipantFragment());
                 } else {
                     Log.d("TAG", "No such document");
@@ -71,11 +74,15 @@ public class ListGroupParticipantActivity extends AppCompatActivity {
         frameLayoutAll.setOnClickListener(v -> {
             frameLayoutAll.setBackground(getDrawable(R.drawable.background_curved_group_button));
             frameLayoutAdmin.setBackgroundColor(Color.WHITE);
+            ((TextView)findViewById(R.id.textAdmins)).setTextColor(Color.BLACK);
+            ((TextView)findViewById(R.id.textAll)).setTextColor(Color.WHITE);
             replaceFragment(new GroupParticipantFragment());
         });
         frameLayoutAdmin.setOnClickListener(v -> {
             frameLayoutAdmin.setBackground(getDrawable(R.drawable.background_curved_group_button));
             frameLayoutAll.setBackgroundColor(Color.WHITE);
+            ((TextView)findViewById(R.id.textAll)).setTextColor(Color.BLACK);
+            ((TextView)findViewById(R.id.textAdmins)).setTextColor(Color.WHITE);
             replaceFragment(new GroupAdminFragment());
         });
         imageViewBack.setOnClickListener(v -> onBackPressed());
@@ -98,7 +105,7 @@ public class ListGroupParticipantActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ProjectStorage.KEY_GROUP_CURRENT_PARTICIPANT, (ArrayList<? extends Serializable>) participantId);
         intent.putExtras(bundle);
-        intent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
+//        intent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
         intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
         intent.putExtra(ProjectStorage.REMOTE_MSG_TYPE, "current");
         startActivity(intent);

@@ -14,7 +14,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu"/>
+        app:menu="@menu/bottom_menu">
+        <TextView
+            android:id="@+id/txt_noti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:background="@drawable/background_reject_invitation"
+            android:textStyle="bold"
+            android:textSize="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:textColor="#ECE5E5"
+            android:layout_marginStart="142dp"
+            />
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"

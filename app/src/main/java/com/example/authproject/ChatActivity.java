@@ -23,11 +23,13 @@ import com.example.authproject.adapters.FileChooserAdapter;
 import com.example.authproject.databinding.ActivityChatBinding;
 import com.example.authproject.listeners.UploadFileSuccessListener;
 import com.example.authproject.models.ChatMessage;
+import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
+import com.example.authproject.utilities.RemoveFcmToken;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -42,6 +44,7 @@ import java.util.List;
 public class ChatActivity extends AppCompatActivity implements UploadFileSuccessListener {
     private ActivityChatBinding binding;
     private User receiverUser;
+    private Group receiverGroup ;
     List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
     private FileChooserAdapter fileChooserAdapter ;
@@ -65,7 +68,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         preferenceManager =new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
         listFileSelected = new ArrayList<>();
-        chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
+        chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(ProjectStorage.KEY_USER_ID));
         binding.recMessage.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
         binding.recMessage.setAdapter(chatAdapter);
         // set adapter for message
@@ -88,12 +91,15 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     private void sendMessage (){
         if(!binding.inputMessage.getText().toString().trim().isEmpty()&&binding.inputMessage.getText()!= null){
             HashMap<String,Object> message = new HashMap<>();
-            message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
-            message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
+            message.put(ProjectStorage.KEY_SENDER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID));
+            if(receiverUser!=null) message.put(ProjectStorage.KEY_RECEIVER_ID , receiverUser.getId());
+            else  message.put(ProjectStorage.KEY_RECEIVER_ID , receiverGroup.groupId);
             message.put(ProjectStorage.KEY_MESSAGE,binding.inputMessage.getText().toString());
             message.put(ProjectStorage.KEY_TIMESTAMP,new Date() );
             message.put(ProjectStorage.KEY_MESSAGE_TYPE,"text");
             message.put(ProjectStorage.KEY_FILE_NAME,"");
+            if(receiverUser!=null)  ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
+            else ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_GROUP_CHAT).add(message);
             ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
             binding.inputMessage.setText(null);
         }
@@ -108,14 +114,20 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
 
     }
     public void listenMessage(){
-        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
-                .whereEqualTo(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL))
-                .whereEqualTo(ProjectStorage.KEY_RECEIVER_EMAIL, receiverUser.getEmail())
-                .addSnapshotListener(eventListener);
-        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
-                .whereEqualTo(ProjectStorage.KEY_SENDER_EMAIL, receiverUser.getEmail())
-                .whereEqualTo(ProjectStorage.KEY_RECEIVER_EMAIL,preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL) )
-                .addSnapshotListener(eventListener);
+        if(receiverUser!=null) {
+            ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
+                    .whereEqualTo(ProjectStorage.KEY_SENDER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID))
+                    .whereEqualTo(ProjectStorage.KEY_RECEIVER_ID, receiverUser.getId())
+                    .addSnapshotListener(eventListener);
+            ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
+                    .whereEqualTo(ProjectStorage.KEY_SENDER_ID, receiverUser.getId())
+                    .whereEqualTo(ProjectStorage.KEY_RECEIVER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID))
+                    .addSnapshotListener(eventListener);
+        }else {
+            ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_GROUP_CHAT)
+                    .whereEqualTo(ProjectStorage.KEY_RECEIVER_ID, receiverGroup.groupId)
+                    .addSnapshotListener(eventListener);
+        }
     }
     private final EventListener<QuerySnapshot> eventListener = (value, error)->{
         if(error!=null) return;
@@ -124,8 +136,8 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             for(DocumentChange docs : value.getDocumentChanges()){
                 if(docs.getType()==DocumentChange.Type.ADDED){
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderEmail  = docs.getDocument().getString(ProjectStorage.KEY_SENDER_EMAIL);
-                    chatMessage.receiverEmail  = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_EMAIL);
+                    chatMessage.senderId  = docs.getDocument().getString(ProjectStorage.KEY_SENDER_ID);
+                    chatMessage.receiverId  = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_ID);
                     chatMessage.message  = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
                     chatMessage.dateObject  = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
                     chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
@@ -152,8 +164,20 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         return BitmapFactory.decodeByteArray(bytes,0,bytes.length);
     }
     private void loadReceiversDetails (){
-        receiverUser = (User) getIntent().getSerializableExtra(ProjectStorage.KEY_USER);
-        binding.textName.setText(receiverUser.getFullName());
+        try {
+            receiverUser = (User) getIntent().getSerializableExtra(ProjectStorage.KEY_USER);
+            binding.textName.setText(receiverUser.getFullName());
+            binding.imageInfo.setVisibility(View.GONE);
+        }catch (Exception e){
+            receiverGroup= (Group) getIntent().getSerializableExtra(ProjectStorage.KEY_COLLECTION_GROUP);
+            binding.textName.setText(receiverGroup.groupName);
+            binding.imageInfo.setOnClickListener(v->{
+                Intent intent= new Intent(this, GroupInfoActivity.class);
+                intent.putExtra(ProjectStorage.KEY_GROUP_ID, receiverGroup.groupId);
+                startActivity(intent);
+            });
+        }
+
     }
     private void setListener(){
         binding.imageBack.setOnClickListener(v-> onBackPressed());
@@ -211,13 +235,15 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             type=params[1].toString();
         }
         HashMap<String,Object> message = new HashMap<>();
-        message.put(ProjectStorage.KEY_SENDER_EMAIL, preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
-        message.put(ProjectStorage.KEY_RECEIVER_EMAIL , receiverUser.getEmail());
+        message.put(ProjectStorage.KEY_SENDER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID));
+        if(receiverUser!=null) message.put(ProjectStorage.KEY_RECEIVER_ID, receiverUser.getId());
+        else message.put(ProjectStorage.KEY_RECEIVER_ID, receiverGroup.groupId);
         message.put(ProjectStorage.KEY_MESSAGE,uri.toString());
         message.put(ProjectStorage.KEY_TIMESTAMP,new Date() );
         message.put(ProjectStorage.KEY_MESSAGE_TYPE,type);
         message.put(ProjectStorage.KEY_FILE_NAME,fileName);
-        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
+        if(receiverUser!=null) ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
+        else ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_GROUP_CHAT).add(message);
     }
     private void setCallListener(User user) {
         binding.imageCall.setOnClickListener(v -> initiateAudioMeeting(user));
@@ -244,5 +270,12 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             intent.putExtra("type", "audio");
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
+        removeFcmToken.removeToken(preferenceManager, ChatActivity.this);
+        super.onDestroy();
     }
 }
