@@ -18,6 +18,7 @@ import com.example.authproject.listeners.GetUserSuccessListener;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
+import com.example.authproject.utilities.RemoveFcmToken;
 import com.example.authproject.utilities.UserUtilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -106,22 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-
-        DocumentReference documentReference =
-                database.collection(ProjectStorage.KEY_COLLECTION_USERS).document(
-                        preferenceManager.getString(ProjectStorage.KEY_USER_ID)
-                );
-        HashMap<String, Object> updates = new HashMap<>();
-        updates.put(ProjectStorage.KEY_FCM_TOKEN, FieldValue.delete());
-        documentReference.update(updates)
-                .addOnSuccessListener(runnable -> {
-                    preferenceManager.clear();
-                    finish();
-                })
-                .addOnFailureListener(runnable -> {
-                    Toast.makeText(MainActivity.this,"Unable to remove token: "+runnable.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
+        removeFcmToken.removeToken(preferenceManager, MainActivity.this);
         super.onDestroy();
     }
 
@@ -217,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onGetUserSuccess(User user) {
         PreferenceManager.getInstance().putString(ProjectStorage.KEY_USER_ID,user.getId());
+        PreferenceManager.getInstance().putString(ProjectStorage.KEY_NAME,user.getFullName());
         Intent intent = new Intent(MainActivity.this, NavigatorActivity.class);
         startActivity(intent);
     }

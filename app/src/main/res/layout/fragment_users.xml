@@ -6,14 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".UsersFragment">
 
+
     <EditText
         android:id="@+id/search_users"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="100dp"
-        android:background="@color/browser_actions_bg_grey"
-        android:hint="Search..." />
+        android:layout_marginEnd="35dp"
+        android:background="@drawable/background_search"
+        android:hint=" Search"
+        android:maxLines="1"
+        android:paddingLeft="15dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_search"

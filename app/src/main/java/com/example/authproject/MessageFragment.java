@@ -38,7 +38,7 @@ public class MessageFragment extends Fragment implements UserListener, GetUserSu
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private TextView textErrorMessage;
-    private ImageView imageBack;
+    private ImageView imageBack, imageCreateGroup;
     private PreferenceManager preferenceManager;
     UsersAdapter usersAdapter;
     List<User> users ;
@@ -52,6 +52,7 @@ public class MessageFragment extends Fragment implements UserListener, GetUserSu
         progressBar = view.findViewById(R.id.progressBar);
         textErrorMessage = view.findViewById(R.id.textErrorMessage);
         imageBack = view.findViewById(R.id.imageBack);
+        imageCreateGroup = view.findViewById(R.id.image_create_group);
         preferenceManager = PreferenceManager.getInstance();
         String userEmail = preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL);
         users = new ArrayList<>();
@@ -140,6 +141,7 @@ public class MessageFragment extends Fragment implements UserListener, GetUserSu
 
     private void setListeners() {
         imageBack.setOnClickListener(v -> getActivity().onBackPressed());
+        imageCreateGroup.setOnClickListener(v -> startActivity(new Intent(getContext(),AddParticipantActivity.class)));
     }
 
 

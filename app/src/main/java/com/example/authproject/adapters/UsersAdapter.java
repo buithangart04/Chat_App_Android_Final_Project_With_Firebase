@@ -70,6 +70,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             if(user!=null) {
                 binding.textName.setText(user.getFullName());
                 binding.textEmail.setText(user.getEmail());
+                binding.textEmail.setVisibility(View.VISIBLE);
                 uri= user.getUri();
             }
             else {
