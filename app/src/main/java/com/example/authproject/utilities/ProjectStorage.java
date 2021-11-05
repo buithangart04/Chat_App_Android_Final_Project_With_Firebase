@@ -56,6 +56,7 @@ public class ProjectStorage {
     public static final String REMOTE_MSG_INVITATION_CANCELLED = "cancelled";
 
     public static final String REMOTE_MSG_MEETING_ROOM = "meetingRoom";
+    public static final String KEY_FRIEND = "friend";
 
     // access firebase database
     public static  FirebaseFirestore DATABASE_REFERENCE ;

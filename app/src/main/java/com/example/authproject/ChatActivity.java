@@ -67,7 +67,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         preferenceManager =new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
         listFileSelected = new ArrayList<>();
-        chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(ProjectStorage.KEY_USER_EMAIL));
+        chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(ProjectStorage.KEY_USER_ID));
         binding.recMessage.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
         binding.recMessage.setAdapter(chatAdapter);
         // set adapter for message

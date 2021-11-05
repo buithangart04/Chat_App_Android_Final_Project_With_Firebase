@@ -64,16 +64,16 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
     }
 
     private void getCurrentUser() {
-        preferenceManager = new PreferenceManager(getApplicationContext());
         Intent intent = getIntent();
+        currentUserId= PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID);
         ((LinearLayoutManager) binding.userRecycleView.getLayoutManager()).setStackFromEnd(true);
-        preferenceManager.putString(ProjectStorage.KEY_USER_ID, "us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601"); //intent get KEY USER ID
+        preferenceManager.putString(ProjectStorage.KEY_USER_ID, currentUserId); //intent get KEY USER ID
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.getString(ProjectStorage.KEY_USER_ID).equals("us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601")) { //intent get KEY USER ID
+                            if (document.getString(ProjectStorage.KEY_USER_ID).equals(currentUserId)) { //intent get KEY USER ID
                                 preferenceManager.putString(ProjectStorage.KEY_NAME, document.getString(ProjectStorage.KEY_NAME));
                             }
                         }

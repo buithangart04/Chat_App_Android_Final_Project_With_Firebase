@@ -10,6 +10,9 @@ public class Group implements Serializable  {
     public String groupURI;
     public List<String> admin;
 
+    public Group() {
+    }
+
     public Group(String groupId, String groupName, List<String> participant, List<String> admin) {
         this.groupId = groupId;
         this.groupName = groupName;

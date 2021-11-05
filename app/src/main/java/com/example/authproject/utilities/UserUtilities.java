@@ -38,8 +38,10 @@ public class UserUtilities {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            user.setId(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_ID).toString());
                             user.setFullName(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_NAME).toString());
                             user.setEmail(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL).toString());
+                            user.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
                             listener.onGetUserSuccess(user);
                         }
 
