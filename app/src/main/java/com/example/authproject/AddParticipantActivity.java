@@ -44,8 +44,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
     private String currentUserId;
     private String types;
     private String searchChar = "";
-    private LinearLayoutManager linearLayoutManagerUser;
-    private LinearLayoutManager linearLayoutManagerUserGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +63,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
 
     private void getCurrentUser() {
         preferenceManager = new PreferenceManager(getApplicationContext());
-        Intent intent = getIntent();
         ((LinearLayoutManager) binding.userRecycleView.getLayoutManager()).setStackFromEnd(true);
         preferenceManager.putString(ProjectStorage.KEY_USER_ID, "us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601"); //intent get KEY USER ID
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
@@ -92,18 +89,16 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         if (types.equalsIgnoreCase("current")) {
             binding.textCreateGroupNext.setText("ADD");
         }
-        linearLayoutManagerUser = new LinearLayoutManager(
-                getApplicationContext(), LinearLayoutManager.VERTICAL, true);
-        linearLayoutManagerUserGroup = new LinearLayoutManager(
-                getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+
 
         chosenUsers = new ArrayList<>();
         chosenGroupUserAdapter = new ChosenGroupUserAdapter(chosenUsers, this);
-
         binding.userGroupRecylerView.setAdapter(chosenGroupUserAdapter);
         binding.userGroupRecylerView.setVisibility(View.VISIBLE);
-        binding.userGroupRecylerView.setLayoutManager(linearLayoutManagerUserGroup);
-        binding.userRecycleView.setLayoutManager(linearLayoutManagerUser);
+        binding.userGroupRecylerView.setLayoutManager(new LinearLayoutManager(
+                getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        binding.userRecycleView.setLayoutManager(new LinearLayoutManager(
+                getApplicationContext(), LinearLayoutManager.VERTICAL, true));
     }
 
     private void getUsers(String type) {
