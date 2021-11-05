@@ -45,12 +45,12 @@
         android:id="@+id/frameLayoutRemove"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="100dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayoutAdminAction">
+        app:layout_constraintTop_toBottomOf="@+id/text_all_user">
 
         <TextView
             android:id="@+id/text_remove_group"

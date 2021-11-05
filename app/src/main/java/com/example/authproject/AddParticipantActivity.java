@@ -111,7 +111,6 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
                                 break;
                         }
                         if (users.size() > 0) {
-                            Collections.reverse(users);
                             groupUserAdapter = new GroupUserAdapter(users, this);
                             binding.userRecycleView.setAdapter(groupUserAdapter);
                             binding.userRecycleView.setVisibility(View.VISIBLE);
@@ -189,7 +188,7 @@ public class AddParticipantActivity extends AppCompatActivity implements GetUser
         Bundle bundle = new Bundle();
         bundle.putSerializable(ProjectStorage.KEY_GROUP_PARTICIPANT, (ArrayList<? extends Serializable>) chosenUsers);
         Intent i = new Intent(getApplicationContext(), GroupInfoActivity.class);
-        i.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
+        i.putExtra(ProjectStorage.KEY_GROUP_ID,groupID);
         startActivity(i);
         Toast.makeText(getApplicationContext(), "Add successfully!", Toast.LENGTH_LONG).show();
         finish();

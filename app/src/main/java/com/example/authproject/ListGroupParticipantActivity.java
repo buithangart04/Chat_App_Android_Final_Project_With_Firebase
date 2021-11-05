@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -104,7 +105,6 @@ public class ListGroupParticipantActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ProjectStorage.KEY_GROUP_CURRENT_PARTICIPANT, (ArrayList<? extends Serializable>) participantId);
         intent.putExtras(bundle);
-        intent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
         intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
         intent.putExtra(ProjectStorage.REMOTE_MSG_TYPE, "current");
         startActivity(intent);

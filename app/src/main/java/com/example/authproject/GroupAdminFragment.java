@@ -112,6 +112,7 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                     .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupId);
             binding = DialogGroupActionAllBinding.inflate(getLayoutInflater());
             Intent intent = new Intent(getContext(), GroupInfoActivity.class);
+            intent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setView(binding.getRoot());
             binding.textAllUser.setText(user.getFullName());
@@ -119,39 +120,43 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                     .resize(binding.imgAllUser.getLayoutParams().width,
                             binding.imgAllUser.getLayoutParams().height)
                     .into(binding.imgAllUser);
-
-
-            if(user.getId().equals(currentUserId)){
+            if (user.getId().equals(currentUserId)) {// Truong hop admin co 2 ma` minh la` admin
                 binding.textRemoveGroup.setText("Leave Group");
                 binding.textRemoveGroup.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
                             , FieldValue.arrayRemove(user.getId()));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
-                    Toast.makeText(getContext(),"Leave Group successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Leave Group successfully", Toast.LENGTH_SHORT).show();
                 });
             }
-            if (adminId.contains(user.getId())) {
+
+            if (adminId.contains(user.getId()) && !user.getId().equals(currentUserId)) { // Truong hop admin la` nguoi khac
                 binding.textAdminAction.setText("Remove Admin");
                 binding.textAdminAction.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
-                    Toast.makeText(getContext(),"Remove from Admin successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Remove from Admin successfully", Toast.LENGTH_SHORT).show();
                 });
                 binding.textRemoveGroup.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
                             , FieldValue.arrayRemove(user.getId()));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
-                    Toast.makeText(getContext(),"Remove from Group successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Remove from Group successfully", Toast.LENGTH_SHORT).show();
                 });
             }
-            if (adminId.size() == 1) {
-                binding.textAdminAction.setOnClickListener(v -> Toast.makeText(getContext(),
-                        "You are the last admin of the group. Add more to remove", Toast.LENGTH_SHORT).show());
+
+            if (adminId.size() == 1 && user.getId().equals(currentUserId)) { //Truong hop minh` la admin duy nhat
+                binding.textAdminAction.setText("");
+                binding.textAdminAction.setClickable(false);
+                binding.frameLayoutAdminAction.setVisibility(View.GONE);
                 binding.textRemoveGroup.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN, FieldValue.arrayRemove(currentUserId));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT, FieldValue.arrayRemove(currentUserId));
@@ -160,26 +165,27 @@ public class GroupAdminFragment extends Fragment implements UserListener {
                     for (String s : participantId) {
                         ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN, FieldValue.arrayUnion(s));
                     }
+                    getActivity().finish();
                     startActivity(intent);
                     Toast.makeText(getContext(), "Remove Group successfully", Toast.LENGTH_SHORT).show();
                 });
             }
-            else {
+            if (!user.getId().equals(currentUserId) && !adminId.contains(user.getId())) { // Con lai
                 binding.textRemoveGroup.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_PARTICIPANT
                             , FieldValue.arrayRemove(user.getId()));
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayRemove(user.getId()));
                     startActivity(intent);
-                    Toast.makeText(getContext(),"Remove from Group successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Remove from Group successfully", Toast.LENGTH_SHORT).show();
                 });
                 binding.textAdminAction.setOnClickListener(v -> {
                     ProjectStorage.DOCUMENT_REFERENCE.update(ProjectStorage.KEY_GROUP_ADMIN
                             , FieldValue.arrayUnion(user.getId()));
+                    getActivity().finish();
                     startActivity(intent);
-                    Toast.makeText(getContext(),"Add into Admin successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Add into Admin successfully", Toast.LENGTH_SHORT).show();
                 });
-
             }
             builder.show();
         }

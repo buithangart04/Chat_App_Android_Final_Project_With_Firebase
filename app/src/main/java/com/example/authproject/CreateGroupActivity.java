@@ -23,6 +23,7 @@ import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.FunctionalUtilities;
+import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -112,8 +113,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
     private void addGroupToFireStore() {
         groupId = new FunctionalUtilities().generateId("group");
         groupName = binding.editTextGroupName.getText().toString();
-        Intent createGroupUser = getIntent();
-        currentUserId = createGroupUser.getStringExtra(ProjectStorage.KEY_USER_ID);
+        currentUserId = PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID);
         userId = new ArrayList<>();
         for (User u : chosenUser) {
             userId.add(u.getId());
@@ -153,7 +153,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
         ProjectStorage.DOCUMENT_REFERENCE.set(group)
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(getApplicationContext(), "Group has been created successfully!", Toast.LENGTH_LONG).show();
-                    Intent createGroupIntent = new Intent(getApplicationContext(), ChatActivity.class);
+                    Intent createGroupIntent = new Intent(getApplicationContext(), NavigatorActivity.class);
                     createGroupIntent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
                     createGroupIntent.putExtra(ProjectStorage.KEY_GROUP_NAME, groupName);
                     createGroupIntent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
