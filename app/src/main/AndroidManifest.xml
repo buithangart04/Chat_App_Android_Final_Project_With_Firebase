@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AuthProject">
         <activity
-            android:name=".GroupInfoActivity"
+            android:name=".StartScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,17 +25,17 @@
             android:name=".ListGroupParticipantActivity"
             android:exported="false" />
         <activity
-            android:name=".StartScreenActivity"
+            android:name=".GroupInfoActivity"
             android:exported="true" />
         <activity
             android:name=".GroupChatActivity"
             android:exported="true" />
         <activity
-            android:name=".CreateGroupActivity"
+            android:name=".AddParticipantActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name=".AddParticipantActivity"
+            android:name=".CreateGroupActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
