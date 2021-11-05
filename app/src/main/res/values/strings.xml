@@ -4,4 +4,5 @@
     <string name="app_name">HyperChat</string>
     <string name="incoming_meeting_invitation">Incoming call invitation</string>
     <string name="send_meeting_invitation">Send call invitation</string>
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

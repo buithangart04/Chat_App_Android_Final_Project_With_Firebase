@@ -46,4 +46,13 @@ public class User implements Serializable {
     public void setUri(String uri) {
         this.uri = uri;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", uri='" + uri + '\'' +
+                '}'+"\n";
+    }
 }

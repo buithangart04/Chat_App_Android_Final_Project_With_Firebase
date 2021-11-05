@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }
                             });
-                    Intent intent = new Intent(MainActivity.this, UsersActivity.class);
+                    Intent intent = new Intent(MainActivity.this, GroupInfoActivity.class);
                     intent.putExtra("email",email);
                     // redirect to user profile
                     startActivity(intent);
