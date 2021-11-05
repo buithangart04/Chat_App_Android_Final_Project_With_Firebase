@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.adapters.UsersSearchAdapter;
 import com.example.authproject.models.User;
+import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -73,7 +74,10 @@ public class UsersFragment extends Fragment {
 
                         for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
 
-                            if(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL).toString().toLowerCase().contains(s.toLowerCase())){
+                            if(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL).toString().toLowerCase().contains(s.toLowerCase())
+                                    && !queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL)
+                                    .toString().toLowerCase().equals(PreferenceManager.getInstance()
+                                            .getString(ProjectStorage.KEY_USER_EMAIL))){
 
                                 User user = new User();
                                 user.setFullName(queryDocumentSnapshot.getString(ProjectStorage.KEY_NAME));
