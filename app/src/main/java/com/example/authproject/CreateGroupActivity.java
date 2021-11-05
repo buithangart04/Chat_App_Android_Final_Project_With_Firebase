@@ -153,7 +153,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
         ProjectStorage.DOCUMENT_REFERENCE.set(group)
                 .addOnSuccessListener(unused -> {
                     Toast.makeText(getApplicationContext(), "Group has been created successfully!", Toast.LENGTH_LONG).show();
-                    Intent createGroupIntent = new Intent(getApplicationContext(), GroupChatActivity.class);
+                    Intent createGroupIntent = new Intent(getApplicationContext(), ChatActivity.class);
                     createGroupIntent.putExtra(ProjectStorage.KEY_GROUP_ID, groupId);
                     createGroupIntent.putExtra(ProjectStorage.KEY_GROUP_NAME, groupName);
                     createGroupIntent.putExtra(ProjectStorage.KEY_USER_ID, currentUserId);
@@ -164,7 +164,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
     }
 
     @Override
-    public void onUserCLick(User user) {
+    public void onUserCLick(User user,Group group) {
 
     }
 }

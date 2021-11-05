@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.authproject.adapters.UsersAdapter;
 import com.example.authproject.databinding.ActivityUsersBinding;
 import com.example.authproject.listeners.UserListener;
+import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
@@ -110,9 +111,15 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
     }
 
     @Override
-    public void onUserCLick(User user) {
-        Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
-        intent.putExtra(ProjectStorage.KEY_USER,user);
-        startActivity(intent);
+    public void onUserCLick(User user, Group group) {
+        if (user!=null) {
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            intent.putExtra(ProjectStorage.KEY_USER, user);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            intent.putExtra(ProjectStorage.KEY_COLLECTION_GROUP, group);
+            startActivity(intent);
+        }
     }
 }

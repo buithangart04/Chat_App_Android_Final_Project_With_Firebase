@@ -29,9 +29,6 @@
             android:name=".StartScreenActivity"
             android:exported="true" />
         <activity
-            android:name=".GroupChatActivity"
-            android:exported="true" />
-        <activity
             android:name=".CreateGroupActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan|adjustResize" />

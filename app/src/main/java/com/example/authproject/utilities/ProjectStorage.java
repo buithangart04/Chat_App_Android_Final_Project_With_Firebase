@@ -23,8 +23,9 @@ public class ProjectStorage {
     public static final String KEY_COLOR_NAVIGATE = "#0f7dd6";
     //Key chat in firebase
     public static final String KEY_COLLECTION_CHAT = "chat";
-    public static final String KEY_SENDER_EMAIL = "senderEmail";
-    public static final String KEY_RECEIVER_EMAIL = "receiverEmail";
+    public static final String KEY_COLLECTION_GROUP_CHAT = "group_chat";
+    public static final String KEY_SENDER_ID = "senderId";
+    public static final String KEY_RECEIVER_ID = "receiverId";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
     public static final String KEY_MESSAGE_TYPE = "type";

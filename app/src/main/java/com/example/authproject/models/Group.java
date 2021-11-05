@@ -1,8 +1,9 @@
 package com.example.authproject.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Group {
+public class Group implements Serializable  {
     public String groupId;
     public String groupName;
     public List<String> participant;
