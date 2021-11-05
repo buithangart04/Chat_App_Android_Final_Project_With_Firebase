@@ -63,7 +63,7 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
 //        groupID = intent.getStringExtra(ProjectStorage.KEY_GROUP_ID);
 //        currentUserId = intent.getStringExtra(ProjectStorage.KEY_USER_ID);
         currentUserId = "us3ddd37ba-6f4b-45b0-ad5d-788a2cca5601";
-        groupId = "gr205af17a-4de6-49be-8053-60d4eb469d87";
+        groupId = "gr12cd7bd3-aac0-4a9b-bf5a-079c37e59be2";
         ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                 .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupId);
         ProjectStorage.DOCUMENT_REFERENCE.addSnapshotListener((value, error) -> {
