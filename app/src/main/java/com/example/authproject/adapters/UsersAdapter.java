@@ -23,7 +23,6 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
-    private FirebaseUser user;
     private final List<User> users;
     private final UserListener userListener;
     List<Group> groups;

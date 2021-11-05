@@ -20,7 +20,7 @@ public class RemoveFcmToken {
         updates.put(ProjectStorage.KEY_FCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
                 .addOnSuccessListener(runnable -> {
-                    preferenceManager.clear();
+                   // preferenceManager.clear();
                 })
                 .addOnFailureListener(runnable -> {
                     Toast.makeText(context,"Unable to remove token: "+runnable.getMessage(), Toast.LENGTH_SHORT).show();

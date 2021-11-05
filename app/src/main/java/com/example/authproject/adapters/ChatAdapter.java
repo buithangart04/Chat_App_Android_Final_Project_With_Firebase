@@ -69,7 +69,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }else {
             return TYPE_RECEIVER;
         }
-
     }
 
     static class  SentMessageViewHolder extends RecyclerView.ViewHolder{

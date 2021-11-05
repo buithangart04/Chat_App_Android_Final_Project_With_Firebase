@@ -55,7 +55,6 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListener();
@@ -65,7 +64,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         setCallListener(receiverUser);
     }
     private void init (){
-        preferenceManager =new PreferenceManager(getApplicationContext());
+        preferenceManager =PreferenceManager.getInstance();
         chatMessages = new ArrayList<>();
         listFileSelected = new ArrayList<>();
         chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(ProjectStorage.KEY_USER_ID));
@@ -100,7 +99,6 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             message.put(ProjectStorage.KEY_FILE_NAME,"");
             if(receiverUser!=null)  ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
             else ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_GROUP_CHAT).add(message);
-            ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
             binding.inputMessage.setText(null);
         }
         if(listFileSelected.size()!=0){
@@ -166,6 +164,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     private void loadReceiversDetails (){
         try {
             receiverUser = (User) getIntent().getSerializableExtra(ProjectStorage.KEY_USER);
+            if(receiverUser== null) throw new Exception();
             binding.textName.setText(receiverUser.getFullName());
             binding.imageInfo.setVisibility(View.GONE);
         }catch (Exception e){

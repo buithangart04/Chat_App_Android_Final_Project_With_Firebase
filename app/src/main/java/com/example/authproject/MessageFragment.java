@@ -159,15 +159,13 @@ public class MessageFragment extends Fragment implements UserListener, GetUserSu
 
     @Override
     public void onUserCLick(User user, Group group) {
+        Intent intent = new Intent(getContext(), ChatActivity.class);
         if (user != null) {
-            Intent intent = new Intent(getContext(), ChatActivity.class);
             intent.putExtra(ProjectStorage.KEY_USER, user);
-            startActivity(intent);
         } else {
-            Intent intent = new Intent(getContext(), ChatActivity.class);
             intent.putExtra(ProjectStorage.KEY_COLLECTION_GROUP, group);
-            startActivity(intent);
         }
+        startActivity(intent);
     }
     @Override
     public void onGetUserSuccess(User user) {
