@@ -28,6 +28,7 @@ import com.example.authproject.utilities.FileUtilities;
 import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
+import com.example.authproject.utilities.RemoveFcmToken;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -244,5 +245,12 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             intent.putExtra("type", "audio");
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
+        removeFcmToken.removeToken(preferenceManager, ChatActivity.this);
+        super.onDestroy();
     }
 }

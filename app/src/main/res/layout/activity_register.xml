@@ -9,8 +9,8 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/img_avatar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="128dp"
         android:scaleType="centerCrop"
@@ -60,14 +60,14 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="10dp"
             android:hint="Password"
             app:passwordToggleEnabled="true"
             android:id="@+id/password">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:inputType="textPassword"
                 android:transitionName="password_text">
             </com.google.android.material.textfield.TextInputEditText>
@@ -78,7 +78,7 @@
             android:layout_width="@dimen/_200sdp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="30dp"
             android:backgroundTint="#0ED6B9"
             android:text="Sign up"
             android:textColor="#ffffff"
@@ -92,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
         android:text="Already have an account? LogIn"
         android:textSize="18sp"
         android:textStyle="bold"

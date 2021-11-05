@@ -13,6 +13,7 @@ import com.example.authproject.listeners.UserListener;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
+import com.example.authproject.utilities.RemoveFcmToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -114,5 +115,12 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
         Intent intent = new Intent(getApplicationContext(),ChatActivity.class);
         intent.putExtra(ProjectStorage.KEY_USER,user);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
+        removeFcmToken.removeToken(preferenceManager, UsersActivity.this);
+        super.onDestroy();
     }
 }
