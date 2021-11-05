@@ -1,5 +1,6 @@
 package com.example.authproject.adapters;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,22 +10,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.databinding.ItemMessageBinding;
 import com.example.authproject.databinding.ItemReceiverMessageBinding;
+import com.example.authproject.listeners.GetUserSuccessListener;
 import com.example.authproject.models.ChatMessage;
+import com.example.authproject.models.User;
 import com.example.authproject.utilities.FileUtilities;
+import com.example.authproject.utilities.ProjectStorage;
+import com.example.authproject.utilities.UserUtilities;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<ChatMessage> chatMessages ;
-    private String senderEmail ;
+    private String senderId ;
 
     public static  final int TYPE_SENT=1 ;
     public static  final int TYPE_RECEIVER=2 ;
 
-    public ChatAdapter(List<ChatMessage> chatMessages, String senderEmail ) {
+        public ChatAdapter(List<ChatMessage> chatMessages, String senderId ) {
         this.chatMessages = chatMessages;
-        this.senderEmail = senderEmail;
+        this.senderId = senderId;
     }
 
     @NonNull
@@ -59,7 +64,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if(chatMessages.get(position).senderEmail.equals(senderEmail) ){
+        if(chatMessages.get(position).senderId.equals(senderId) ){
             return TYPE_SENT;
         }else {
             return TYPE_RECEIVER;
@@ -102,7 +107,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     }
-    static class  ReceiverMessageViewHolder extends RecyclerView.ViewHolder{
+    static class  ReceiverMessageViewHolder extends RecyclerView.ViewHolder implements GetUserSuccessListener {
         private final ItemReceiverMessageBinding binding;
         public ReceiverMessageViewHolder(@NonNull ItemReceiverMessageBinding itemReceiverMessageBinding) {
             super(itemReceiverMessageBinding.getRoot());
@@ -115,6 +120,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             binding.textReceiveMessage.setVisibility(View.GONE);
         }
         void setData(ChatMessage chatMessage){
+            new UserUtilities().getUserByCondition(this, new Pair<>(ProjectStorage.KEY_USER_ID,chatMessage.senderId));
+
             setViewGone();
             if (chatMessage.type.contains("text")){
                 binding.textReceiveMessage.setVisibility(View.VISIBLE);
@@ -133,6 +140,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 new FileUtilities().loadVideoToView(itemView.getContext(),binding.exoPlayer,chatMessage.message);
             }
             binding.textDatetime.setText(chatMessage.dateTime);
+        }
+
+        @Override
+        public void onGetUserSuccess(User user) {
+            Picasso.get().load(user.getUri())
+                    .resize(binding.imageProfile.getLayoutParams().width,binding.imageProfile.getLayoutParams().height)
+                    .into(binding.imageProfile);
         }
     }
 }

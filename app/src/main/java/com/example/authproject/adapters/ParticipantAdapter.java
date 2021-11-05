@@ -59,7 +59,7 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
                     .resize(binding.imageProfile.getLayoutParams().width,
                             binding.imageProfile.getLayoutParams().height)
                     .into(binding.imageProfile);
-            binding.getRoot().setOnClickListener(v -> userListener.onUserCLick(user));
+            binding.getRoot().setOnClickListener(v -> userListener.onUserCLick(user,null));
         }
     }
 }

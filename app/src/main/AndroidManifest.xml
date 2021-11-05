@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -15,21 +16,19 @@
         <activity
             android:name=".GroupInfoActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ListGroupParticipantActivity"
             android:exported="false" />
         <activity
             android:name=".StartScreenActivity"
-            android:exported="true" />
-        <activity
-            android:name=".GroupChatActivity"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".CreateGroupActivity"
             android:exported="true"
@@ -48,7 +47,8 @@
             android:screenOrientation="fullSensor" />
         <activity
             android:name=".NavigatorActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity
             android:name=".ChatActivity"
             android:exported="true" android:windowSoftInputMode="adjustResize">
@@ -61,9 +61,6 @@
             android:exported="true" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="true" />
-        <activity
-            android:name=".UsersActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

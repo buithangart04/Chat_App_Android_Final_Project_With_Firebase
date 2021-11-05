@@ -14,8 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.authproject.listeners.GetUserSuccessListener;
+import com.example.authproject.models.User;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
+import com.example.authproject.utilities.RemoveFcmToken;
+import com.example.authproject.utilities.UserUtilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,7 +33,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, GetUserSuccessListener {
 
     private TextView txtRegister, txtForgotPassword, loginText, logoName;
     private ImageView logoImage;
@@ -103,22 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-
-        DocumentReference documentReference =
-                database.collection(ProjectStorage.KEY_COLLECTION_USERS).document(
-                        preferenceManager.getString(ProjectStorage.KEY_USER_ID)
-                );
-        HashMap<String, Object> updates = new HashMap<>();
-        updates.put(ProjectStorage.KEY_FCM_TOKEN, FieldValue.delete());
-        documentReference.update(updates)
-                .addOnSuccessListener(runnable -> {
-                    preferenceManager.clear();
-                    finish();
-                })
-                .addOnFailureListener(runnable -> {
-                    Toast.makeText(MainActivity.this,"Unable to remove token: "+runnable.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
+        removeFcmToken.removeToken(preferenceManager, MainActivity.this);
         super.onDestroy();
     }
 
@@ -182,10 +172,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     }
                                 }
                             });
-                    Intent intent = new Intent(MainActivity.this, GroupInfoActivity.class);
-                    intent.putExtra("email",email);
-                    // redirect to user profile
-                    startActivity(intent);
+                     PreferenceManager.getInstance(getApplicationContext()).putString(ProjectStorage.KEY_USER_EMAIL,email);
+                     new UserUtilities().getUserByCondition(this, new Pair<>(ProjectStorage.KEY_USER_EMAIL,email));
                 } else {
                     user.sendEmailVerification();
                     Toast.makeText(MainActivity.this, "Check your email to verify your account", Toast.LENGTH_LONG).show();
@@ -211,5 +199,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .addOnFailureListener(runnable -> {
                     Toast.makeText(MainActivity.this,"Unable to send token: "+runnable.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    @Override
+    public void onGetUserSuccess(User user) {
+        PreferenceManager.getInstance().putString(ProjectStorage.KEY_USER_ID,user.getId());
+        PreferenceManager.getInstance().putString(ProjectStorage.KEY_NAME,user.getFullName());
+        Intent intent = new Intent(MainActivity.this, NavigatorActivity.class);
+        startActivity(intent);
     }
 }

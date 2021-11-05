@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.authproject.adapters.ParticipantAdapter;
 import com.example.authproject.databinding.DialogGroupActionAllBinding;
 import com.example.authproject.listeners.UserListener;
+import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.example.authproject.utilities.ProjectStorage;
 import com.google.firebase.firestore.FieldValue;
@@ -105,7 +106,7 @@ public class GroupAdminFragment extends Fragment implements UserListener {
     }
 
     @Override
-    public void onUserCLick(User user) {
+    public void onUserCLick(User user, Group group) {
         if (isAdmin) {
             ProjectStorage.DOCUMENT_REFERENCE = FirebaseFirestore.getInstance()
                     .document(ProjectStorage.KEY_COLLECTION_GROUP + "/" + groupId);

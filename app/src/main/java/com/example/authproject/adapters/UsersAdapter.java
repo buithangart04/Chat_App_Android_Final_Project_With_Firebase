@@ -2,8 +2,10 @@ package com.example.authproject.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.authproject.databinding.ItemContainerUserBinding;
 import com.example.authproject.listeners.UserListener;
+import com.example.authproject.models.Group;
 import com.example.authproject.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -22,9 +26,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     private FirebaseUser user;
     private final List<User> users;
     private final UserListener userListener;
+    List<Group> groups;
 
-    public UsersAdapter(List<User> users,UserListener userListener) {
+    public UsersAdapter(List<User> users, List<Group> groups,UserListener userListener) {
         this.users = users;
+        this.groups= groups;
         this.userListener=userListener;
     }
 
@@ -41,12 +47,15 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        holder.setUserData(users.get(position));
+        if(position>= users.size()){
+            holder.setUserData(null,groups.get(position- users.size()));
+        }else  holder.setUserData(users.get(position),null);
+
     }
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return users.size()+ groups.size();
     }
 
     class UserViewHolder extends RecyclerView.ViewHolder{
@@ -56,11 +65,21 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             binding = itemContainerUserBinding;
 
         }
-        void setUserData(User user){
-
-            binding.textName.setText(user.getFullName());
-            binding.textEmail.setText(user.getEmail());
-            binding.getRoot().setOnClickListener(v-> userListener.onUserCLick(user));
+        void setUserData(User user, Group group){
+            String uri =null;
+            if(user!=null) {
+                binding.textName.setText(user.getFullName());
+                binding.textEmail.setText(user.getEmail());
+                binding.textEmail.setVisibility(View.VISIBLE);
+                uri= user.getUri();
+            }
+            else {
+                uri= group.groupURI;
+                binding.textName.setText(group.groupName);
+                binding.textEmail.setVisibility(View.GONE);
+            }
+            Picasso.get().load(uri).resize(binding.imageProfile.getLayoutParams().width,binding.imageProfile.getLayoutParams().height).into(binding.imageProfile);
+            binding.getRoot().setOnClickListener(v -> userListener.onUserCLick(user,group));
         }
     }
     private Bitmap getUserImage(String encodedImage){
