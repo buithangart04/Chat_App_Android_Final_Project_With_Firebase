@@ -111,6 +111,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UploadFile
 
 
     private void addGroupToFireStore() {
+        binding.textCreateGroup.setClickable(false);
         groupId = new FunctionalUtilities().generateId("group");
         groupName = binding.editTextGroupName.getText().toString();
         currentUserId = PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID);
