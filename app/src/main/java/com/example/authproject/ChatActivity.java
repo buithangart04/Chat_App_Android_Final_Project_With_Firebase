@@ -34,6 +34,7 @@ import com.example.authproject.utilities.RemoveFcmToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -137,30 +138,21 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     private final EventListener<QuerySnapshot> eventListener = (value, error)->{
         if(error!=null) return;
         if(value!=null ){
-            int count = chatMessages.size();
-            for(DocumentChange docs : value.getDocumentChanges()){
-                if(docs.getType()==DocumentChange.Type.ADDED){
+            chatMessages.clear();
+            for(DocumentSnapshot docs : value.getDocuments()){
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderId  = docs.getDocument().getString(ProjectStorage.KEY_SENDER_ID);
-                    chatMessage.receiverId  = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_ID);
-                    chatMessage.message  = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
-                    chatMessage.dateObject  = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
+                    chatMessage.senderId  = docs.getString(ProjectStorage.KEY_SENDER_ID);
+                    chatMessage.receiverId  = docs.getString(ProjectStorage.KEY_RECEIVER_ID);
+                    chatMessage.message  = docs.getString(ProjectStorage.KEY_MESSAGE);
+                    chatMessage.dateObject  = docs.getDate(ProjectStorage.KEY_TIMESTAMP);
                     chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
-                    chatMessage.type= docs.getDocument().getString(ProjectStorage.KEY_MESSAGE_TYPE);
-                    chatMessage.fileName= docs.getDocument().getString(ProjectStorage.KEY_FILE_NAME);
+                    chatMessage.type= docs.getString(ProjectStorage.KEY_MESSAGE_TYPE);
+                    chatMessage.fileName= docs.getString(ProjectStorage.KEY_FILE_NAME);
                     chatMessages.add(chatMessage);
-                }
 
             }
             Collections.sort(chatMessages, (obj1,obj2) -> {return obj1.dateObject.compareTo(obj2.dateObject) ;});
-            if(count==0){
-                chatAdapter.notifyDataSetChanged();
-            }else {
-                //visible true ------------------------------------
-                // change recyler View
-                chatAdapter.notifyItemRangeInserted(chatMessages.size(),chatMessages.size());
-                binding.recMessage.smoothScrollToPosition(chatMessages.size()-1);
-            }
+            chatAdapter.notifyDataSetChanged();
             binding.recMessage.setVisibility(View.VISIBLE);
         }
     };

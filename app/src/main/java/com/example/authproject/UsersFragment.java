@@ -85,7 +85,7 @@ public class UsersFragment extends Fragment {
                                 users.add(user);
                             }
                         }
-                        if(users.size()>0){
+                        if(users.size()>=0){
                             usersSearchAdapter = new UsersSearchAdapter(users);
                             recyclerView.setAdapter(usersSearchAdapter);
                         }else{
