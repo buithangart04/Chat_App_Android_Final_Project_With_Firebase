@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.authproject.adapters.UsersAdapter;
 import com.example.authproject.listeners.GetUserSuccessListener;
@@ -23,6 +24,7 @@ import com.example.authproject.models.User;
 import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
+import com.example.authproject.utilities.RemoveFcmToken;
 import com.example.authproject.utilities.UserUtilities;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -139,8 +141,16 @@ public class MessageFragment extends Fragment implements UserListener, GetUserSu
     }
 
     private void setListeners() {
-        imageBack.setOnClickListener(v -> getActivity().onBackPressed());
+        imageBack.setOnClickListener(v -> signOut());
         imageCreateGroup.setOnClickListener(v -> startActivity(new Intent(getContext(),AddParticipantActivity.class)));
+    }
+
+    private void signOut() {
+        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
+        removeFcmToken.removeToken(preferenceManager, getActivity());
+        Intent intent = new Intent(getActivity(),MainActivity.class);
+        Toast.makeText(getActivity(), "Sign out successfully!", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 
 
