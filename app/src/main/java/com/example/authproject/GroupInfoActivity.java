@@ -86,7 +86,7 @@ public class GroupInfoActivity extends AppCompatActivity implements UploadFileSu
         binding.textAddParticipant.setOnClickListener(v -> addParticipant());
         binding.textSeePhoto.setOnClickListener(v -> seeListPhoto());
         binding.textLeave.setOnClickListener(v -> leaveGroup());
-        binding.imageBack.setOnClickListener(v -> onBackPressed());
+        binding.imageBack.setOnClickListener(v -> startActivity(new Intent(this,NavigatorActivity.class)));
         binding.textChangeGroupName.setOnClickListener(v -> changeGroupName());
         binding.imgGroupAvatar2.setOnClickListener(v -> changeGroupImage());
     }

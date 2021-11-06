@@ -138,21 +138,28 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     private final EventListener<QuerySnapshot> eventListener = (value, error)->{
         if(error!=null) return;
         if(value!=null ){
-            chatMessages.clear();
-            for(DocumentSnapshot docs : value.getDocuments()){
+            int count = chatMessages.size();
+            for(DocumentChange docs : value.getDocumentChanges()){
+                if(docs.getType()==DocumentChange.Type.ADDED){
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.senderId  = docs.getString(ProjectStorage.KEY_SENDER_ID);
-                    chatMessage.receiverId  = docs.getString(ProjectStorage.KEY_RECEIVER_ID);
-                    chatMessage.message  = docs.getString(ProjectStorage.KEY_MESSAGE);
-                    chatMessage.dateObject  = docs.getDate(ProjectStorage.KEY_TIMESTAMP);
+                    chatMessage.senderId  = docs.getDocument().getString(ProjectStorage.KEY_SENDER_ID);
+                    chatMessage.receiverId  = docs.getDocument().getString(ProjectStorage.KEY_RECEIVER_ID);
+                    chatMessage.message  = docs.getDocument().getString(ProjectStorage.KEY_MESSAGE);
+                    chatMessage.dateObject  = docs.getDocument().getDate(ProjectStorage.KEY_TIMESTAMP);
                     chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
-                    chatMessage.type= docs.getString(ProjectStorage.KEY_MESSAGE_TYPE);
-                    chatMessage.fileName= docs.getString(ProjectStorage.KEY_FILE_NAME);
+                    chatMessage.type= docs.getDocument().getString(ProjectStorage.KEY_MESSAGE_TYPE);
+                    chatMessage.fileName= docs.getDocument().getString(ProjectStorage.KEY_FILE_NAME);
                     chatMessages.add(chatMessage);
+                }
 
             }
-            Collections.sort(chatMessages, (obj1,obj2) -> {return obj1.dateObject.compareTo(obj2.dateObject) ;});
-            chatAdapter.notifyDataSetChanged();
+            Collections.sort(chatMessages, (obj1,obj2) -> {return obj1.dateObject.compareTo(obj2.dateObject);});
+            if(count==0){
+                chatAdapter.notifyDataSetChanged();
+            }else {
+                chatAdapter.notifyItemRangeInserted(chatMessages.size(),chatMessages.size());
+            }
+            if(chatMessages.size()!=0) binding.recMessage.smoothScrollToPosition(chatMessages.size()-1);
             binding.recMessage.setVisibility(View.VISIBLE);
         }
     };
@@ -164,7 +171,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         listReceiverUser = new ArrayList<>();
         try {
             receiverUser = (User) getIntent().getSerializableExtra(ProjectStorage.KEY_USER);
-            if(receiverUser== null) throw new Exception();
+            if(receiverUser == null) throw new Exception();
             binding.textName.setText(receiverUser.getFullName());
             binding.imageInfo.setVisibility(View.GONE);
             if (receiverUser != null){
@@ -258,7 +265,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             type=params[1].toString();
         }
         HashMap<String,Object> message = new HashMap<>();
-        message.put(ProjectStorage.KEY_SENDER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID));
+        message.put(ProjectStorage.KEY_SENDER_ID, PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID));
         if(receiverUser!=null) message.put(ProjectStorage.KEY_RECEIVER_ID, receiverUser.getId());
         else message.put(ProjectStorage.KEY_RECEIVER_ID, receiverGroup.groupId);
         message.put(ProjectStorage.KEY_MESSAGE,uri.toString());
