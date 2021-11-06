@@ -65,13 +65,11 @@ public class UsersFragment extends Fragment {
     }
 
     private void searchUsers(String s) {
-        users.clear();
-
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
                 .addOnCompleteListener(task ->{
                     if(task.isSuccessful() && task.getResult()!=null){
-
+                        users.clear();
                         for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
 
                             if(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL).toString().toLowerCase().contains(s.toLowerCase())
