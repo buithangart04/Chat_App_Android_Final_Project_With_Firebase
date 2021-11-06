@@ -298,7 +298,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
             intent.putExtra("groupUser", new Gson().toJson(listReceiverUser));
             intent.putExtra("group", receiverGroup);
-            intent.putExtra("type", "audio");
+            intent.putExtra("type", "video");
             intent.putExtra("isGroup", true);
             startActivity(intent);
         }
