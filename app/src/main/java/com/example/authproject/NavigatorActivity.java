@@ -1,5 +1,6 @@
 package com.example.authproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -54,4 +55,10 @@ public class NavigatorActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(getIntent());
+        super.onBackPressed();
+    }
 }

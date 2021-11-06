@@ -62,6 +62,7 @@ public class InComingInvitationActivity extends AppCompatActivity {
         ImageView imageAvatar = findViewById(R.id.imageAvatar);
         TextView textUsername = findViewById(R.id.textUsername);
         TextView textEmail = findViewById(R.id.textEmail);
+        TextView textIncomingMeetingInvitation = findViewById(R.id.textIncomingMeetingInvitation);
 
         String avatarUrl = getIntent().getStringExtra(ProjectStorage.KEY_AVATAR);
         if (avatarUrl != null) {
@@ -77,8 +78,13 @@ public class InComingInvitationActivity extends AppCompatActivity {
                     .transform(transformation)
                     .into(imageAvatar);
         }
+        if (getIntent().getStringExtra(ProjectStorage.KEY_USER_EMAIL).isEmpty()) {
+            textIncomingMeetingInvitation.setText("Incoming group call invitation");
+            textEmail.setText("Group");
+        } else {
+            textEmail.setText(getIntent().getStringExtra(ProjectStorage.KEY_USER_EMAIL));
+        }
         textUsername.setText(getIntent().getStringExtra(ProjectStorage.KEY_NAME));
-        textEmail.setText(getIntent().getStringExtra(ProjectStorage.KEY_USER_EMAIL));
 
         ImageView imageAcceptInvitation = findViewById(R.id.imageAcceptInvitation);
         imageAcceptInvitation.setOnClickListener(view -> {
@@ -173,7 +179,7 @@ public class InComingInvitationActivity extends AppCompatActivity {
             String type = intent.getStringExtra(ProjectStorage.REMOTE_MSG_INVITATION_RESPONSE);
             if (type != null) {
                 if (type.equals(ProjectStorage.REMOTE_MSG_INVITATION_CANCELLED)) {
-                    Toast.makeText(context, "Invitation accepted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Invitation rejected", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }

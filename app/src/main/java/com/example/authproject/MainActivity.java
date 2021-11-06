@@ -105,13 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
-        removeFcmToken.removeToken(preferenceManager, MainActivity.this);
-        super.onDestroy();
-    }
-
     private void Login() {
         String email = editTextEmail.getEditText().getText().toString().trim();
         String password = editTextPassword.getEditText().getText().toString().trim();
