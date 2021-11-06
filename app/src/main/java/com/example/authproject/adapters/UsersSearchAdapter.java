@@ -144,13 +144,27 @@ public class UsersSearchAdapter extends RecyclerView.Adapter<UsersSearchAdapter.
 
                         });
                     }else if(binding.btnAdd.getText().equals("Add Friend")){
-                            binding.btnAdd.setText("Cancel");
-                            Map<String,String> addFriend = new HashMap<>();
-                            addFriend.put("receiverEmail",user.getEmail().toString());
-                            addFriend.put("senderEmail",userEmail);
-                            addFriend.put("status","sent");
+                        String senderEmail= PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_EMAIL);
+                        String receiverEmail = user.getEmail().toString();
+                        ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_FRIEND)
+                                .whereEqualTo(ProjectStorage.KEY_RECEIVER_EMAIL,receiverEmail)
+                                .whereEqualTo(ProjectStorage.KEY_SENDER_EMAIL,senderEmail)
+                                .get()
+                                .addOnCompleteListener(task->{
+                                   if(task.isSuccessful()) {
+                                       QuerySnapshot querySnapshot=task.getResult();
+                                       if(querySnapshot.getDocuments().size()==0){
+                                           binding.btnAdd.setText("Cancel");
+                                           Map<String,String> addFriend = new HashMap<>();
+                                           addFriend.put("receiverEmail",receiverEmail);
+                                           addFriend.put("senderEmail",senderEmail);
+                                           addFriend.put("status","sent");
+                                           firestore.collection(ProjectStorage.KEY_FRIEND).add(addFriend);
+                                       }
+                                   }
+                                });
 
-                            firestore.collection(ProjectStorage.KEY_FRIEND).add(addFriend);
+
                     }
                 }
             });
