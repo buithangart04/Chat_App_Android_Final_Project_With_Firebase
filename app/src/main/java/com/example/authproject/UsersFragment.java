@@ -65,6 +65,7 @@ public class UsersFragment extends Fragment {
     }
 
     private void searchUsers(String s) {
+        users.clear();
         ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
                 .get()
                 .addOnCompleteListener(task ->{
