@@ -113,8 +113,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String email = editTextEmail.getEditText().getText().toString().trim();
         String password = editTextPassword.getEditText().getText().toString().trim();
         String fullName = editTextFullName.getEditText().getText().toString().trim();
-
-        if (!validateInputFullname(fullName) | !validateInputEmail(email) | !validateInputPassword(password) | validateAvatar()) {
+        if (!validateInputFullname(fullName) | !validateInputEmail(email) | !validateInputPassword(password) | !validateAvatar()) {
             return;
         }
 
