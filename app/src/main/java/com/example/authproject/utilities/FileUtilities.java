@@ -85,6 +85,10 @@ public class FileUtilities {
                     return "file";
                 case "txt":
                     return "file";
+                case "ppt":
+                    return "file";
+                case "pptx":
+                    return "file";
                 case "jpg":
                     return "image";
                 case "jpeg":
