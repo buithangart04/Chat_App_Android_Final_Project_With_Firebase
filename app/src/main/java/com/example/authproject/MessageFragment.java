@@ -69,6 +69,7 @@ public class MessageFragment extends Fragment implements UserListener, GetUserSu
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if(document.getString("email").equals(userEmail)){
                                     preferenceManager.putString(ProjectStorage.KEY_NAME,document.getString(ProjectStorage.KEY_NAME));
+                                    preferenceManager.putString(ProjectStorage.KEY_AVATAR,document.getString(ProjectStorage.KEY_AVATAR));
                                 }
                             }
                         } else {
@@ -111,9 +112,7 @@ public class MessageFragment extends Fragment implements UserListener, GetUserSu
                 .get()
                 .addOnCompleteListener(task ->{
                     loading(false);
-
                     if(task.isSuccessful() && task.getResult()!=null){
-
                         for(QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
                             if((currentUserEmail.toLowerCase().equals(queryDocumentSnapshot.getData().get("senderEmail").toString().toLowerCase()) ||
                                     currentUserEmail.toLowerCase().equals(queryDocumentSnapshot.getData().get("receiverEmail").toString().toLowerCase())) &&

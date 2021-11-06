@@ -53,7 +53,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
 
     // TODO: Rename and change types of parameters
     private ImageView imgAvatar;
-    private TextView textUsername, textUserEmail;
+    private TextView textUsername, textUserEmail, textSignOut;
     private TextInputLayout textInputUsername, textInputPassword, textInputRePassword;
     private Button btnSave;
     private PreferenceManager preferenceManager;
@@ -102,6 +102,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
         btnSave.setOnClickListener(this);
         imgAvatar = view.findViewById(R.id.img_avatar);
         imgAvatar.setOnClickListener(this);
+        textSignOut = view.findViewById(R.id.txtSignOut);
+        textSignOut.setOnClickListener(this);
         preferenceManager = new PreferenceManager(requireContext());
         database = FirebaseFirestore.getInstance();
         documentReference = database.collection(ProjectStorage.KEY_COLLECTION_USERS).document(
@@ -139,6 +141,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 break;
             case R.id.img_avatar:
                 selectImage();
+                break;
+            case R.id.txtSignOut:
+                RemoveFcmToken removeFcmToken = new RemoveFcmToken();
+                removeFcmToken.removeToken(preferenceManager, getActivity());
+                Intent intent = new Intent(getActivity(),MainActivity.class);
+                Toast.makeText(getActivity(), "Sign out successfully!", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
                 break;
         }
     }

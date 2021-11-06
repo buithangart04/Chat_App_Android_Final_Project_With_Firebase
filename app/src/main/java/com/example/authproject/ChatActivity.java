@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,9 +31,14 @@ import com.example.authproject.utilities.FunctionalUtilities;
 import com.example.authproject.utilities.PreferenceManager;
 import com.example.authproject.utilities.ProjectStorage;
 import com.example.authproject.utilities.RemoveFcmToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +57,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     private PreferenceManager preferenceManager;
     boolean showOptionsFile= false;
     List<Pair<Uri,String>> listFileSelected;
+    List<User> listReceiverUser;
     private static final int PICK_IMAGE_REQUEST = 3241,PICK_FILE_REQUEST=3251,PICK_VIDEO_REQUEST=3161;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +69,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         loadReceiversDetails();
         init();
         listenMessage();
-        setCallListener(receiverUser);
+        setCallListener(listReceiverUser);
     }
     private void init (){
         preferenceManager =new PreferenceManager(getApplicationContext());
@@ -164,10 +171,14 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         return BitmapFactory.decodeByteArray(bytes,0,bytes.length);
     }
     private void loadReceiversDetails (){
+        listReceiverUser = new ArrayList<>();
         try {
             receiverUser = (User) getIntent().getSerializableExtra(ProjectStorage.KEY_USER);
             binding.textName.setText(receiverUser.getFullName());
             binding.imageInfo.setVisibility(View.GONE);
+            if (receiverUser != null){
+                listReceiverUser.add(receiverUser);
+            }
         }catch (Exception e){
             receiverGroup= (Group) getIntent().getSerializableExtra(ProjectStorage.KEY_COLLECTION_GROUP);
             binding.textName.setText(receiverGroup.groupName);
@@ -176,6 +187,27 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
                 intent.putExtra(ProjectStorage.KEY_GROUP_ID, receiverGroup.groupId);
                 startActivity(intent);
             });
+            List<String> lístIdReceiverParticipant = receiverGroup.participant;
+            lístIdReceiverParticipant.remove(PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID));
+            ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_USERS)
+                    .whereIn(FieldPath.documentId(), lístIdReceiverParticipant)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()){
+                                    User user = new User();
+                                    user.setId(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_ID).toString());
+                                    user.setFullName(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_NAME).toString());
+                                    user.setEmail(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL).toString());
+                                    user.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
+                                    user.setToken(queryDocumentSnapshot.getString(ProjectStorage.KEY_FCM_TOKEN));
+                                    listReceiverUser.add(user);
+                                }
+                            }
+                        }
+                    });
         }
 
     }
@@ -245,37 +277,52 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         if(receiverUser!=null) ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT).add(message);
         else ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_GROUP_CHAT).add(message);
     }
-    private void setCallListener(User user) {
-        binding.imageCall.setOnClickListener(v -> initiateAudioMeeting(user));
-        binding.imageVideo.setOnClickListener(v -> initiateVideoMeeting(user));
+    private void setCallListener(List<User> listReceiverUser) {
+        binding.imageCall.setOnClickListener(v -> initiateAudioMeeting(listReceiverUser));
+        binding.imageVideo.setOnClickListener(v -> initiateVideoMeeting(listReceiverUser));
     }
 
-    private void initiateVideoMeeting(User user) {
-        if (user.token == null || user.token.trim().isEmpty()) {
-            Toast.makeText(this, user.getFullName() + " is not avaiable for video call", Toast.LENGTH_SHORT).show();
+    private void initiateVideoMeeting(List<User> listReceiverUser) {
+        if (listReceiverUser.size() == 1) {
+            User user = listReceiverUser.get(0);
+            if (user.getToken() == null || user.getToken().trim().isEmpty()) {
+                Toast.makeText(this, user.getFullName() + " is not avaiable for video call", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+                intent.putExtra("user", user);
+                intent.putExtra("type", "video");
+                intent.putExtra("isGroup", false);
+                startActivity(intent);
+            }
         } else {
             Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
-            intent.putExtra("user", user);
-            intent.putExtra("type", "video");
-            startActivity(intent);
-        }
-    }
-
-    private void initiateAudioMeeting(User user) {
-        if (user.token == null || user.token.trim().isEmpty()) {
-            Toast.makeText(this, user.getFullName() + " is not avaiable for audio call", Toast.LENGTH_SHORT).show();
-        } else {
-            Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
-            intent.putExtra("user", user);
+            intent.putExtra("groupUser", new Gson().toJson(listReceiverUser));
+            intent.putExtra("group", receiverGroup);
             intent.putExtra("type", "audio");
+            intent.putExtra("isGroup", true);
             startActivity(intent);
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        RemoveFcmToken removeFcmToken = new RemoveFcmToken();
-        removeFcmToken.removeToken(preferenceManager, ChatActivity.this);
-        super.onDestroy();
+    private void initiateAudioMeeting(List<User> listReceiverUser) {
+        if (listReceiverUser.size() == 1) {
+            User user = listReceiverUser.get(0);
+            if (user.getToken() == null || user.getToken().trim().isEmpty()) {
+                Toast.makeText(this, user.getFullName() + " is not avaiable for audio call", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+                intent.putExtra("user", user);
+                intent.putExtra("type", "audio");
+                intent.putExtra("isGroup", false);
+                startActivity(intent);
+            }
+        } else {
+                Intent intent = new Intent(getApplicationContext(), OutgoingInvitationActivity.class);
+                intent.putExtra("groupUser", new Gson().toJson(listReceiverUser));
+                intent.putExtra("group", receiverGroup);
+                intent.putExtra("type", "audio");
+                intent.putExtra("isGroup", true);
+                startActivity(intent);
+        }
     }
 }

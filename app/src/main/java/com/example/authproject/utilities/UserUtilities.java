@@ -42,6 +42,7 @@ public class UserUtilities {
                             user.setFullName(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_NAME).toString());
                             user.setEmail(queryDocumentSnapshot.getData().get(ProjectStorage.KEY_USER_EMAIL).toString());
                             user.setUri(queryDocumentSnapshot.getString(ProjectStorage.KEY_AVATAR));
+                            user.setToken(queryDocumentSnapshot.getString(ProjectStorage.KEY_FCM_TOKEN));
                             listener.onGetUserSuccess(user);
                         }
 

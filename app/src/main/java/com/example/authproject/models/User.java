@@ -6,7 +6,7 @@ public class User implements Serializable {
     private String id;
     private String fullName;
     private String email;
-    public String token;
+    private String token;
     private String uri;
 
     public User() {
@@ -45,6 +45,14 @@ public class User implements Serializable {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
