@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ChatActivity extends AppCompatActivity implements UploadFileSuccessListener {
@@ -55,7 +56,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
     private FileChooserAdapter fileChooserAdapter ;
-    private PreferenceManager preferenceManager;
+    private String senderId;
     boolean showOptionsFile= false;
     List<Pair<Uri,String>> listFileSelected;
     List<User> listReceiverUser;
@@ -72,10 +73,10 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
         setCallListener(listReceiverUser);
     }
     private void init (){
-        preferenceManager =PreferenceManager.getInstance();
+        senderId =PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID);
         chatMessages = new ArrayList<>();
         listFileSelected = new ArrayList<>();
-        chatAdapter= new ChatAdapter(chatMessages ,preferenceManager.getString(ProjectStorage.KEY_USER_ID));
+        chatAdapter= new ChatAdapter(chatMessages ,senderId);
         binding.recMessage.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
         binding.recMessage.setAdapter(chatAdapter);
         // set adapter for message
@@ -98,7 +99,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     private void sendMessage (){
         if(!binding.inputMessage.getText().toString().trim().isEmpty()&&binding.inputMessage.getText()!= null){
             HashMap<String,Object> message = new HashMap<>();
-            message.put(ProjectStorage.KEY_SENDER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID));
+            message.put(ProjectStorage.KEY_SENDER_ID,senderId);
             if(receiverUser!=null) message.put(ProjectStorage.KEY_RECEIVER_ID , receiverUser.getId());
             else  message.put(ProjectStorage.KEY_RECEIVER_ID , receiverGroup.groupId);
             message.put(ProjectStorage.KEY_MESSAGE,binding.inputMessage.getText().toString());
@@ -122,12 +123,12 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     public void listenMessage(){
         if(receiverUser!=null) {
             ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
-                    .whereEqualTo(ProjectStorage.KEY_SENDER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID))
+                    .whereEqualTo(ProjectStorage.KEY_SENDER_ID, senderId)
                     .whereEqualTo(ProjectStorage.KEY_RECEIVER_ID, receiverUser.getId())
                     .addSnapshotListener(eventListener);
             ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_CHAT)
                     .whereEqualTo(ProjectStorage.KEY_SENDER_ID, receiverUser.getId())
-                    .whereEqualTo(ProjectStorage.KEY_RECEIVER_ID, preferenceManager.getString(ProjectStorage.KEY_USER_ID))
+                    .whereEqualTo(ProjectStorage.KEY_RECEIVER_ID, senderId)
                     .addSnapshotListener(eventListener);
         }else {
             ProjectStorage.DATABASE_REFERENCE.collection(ProjectStorage.KEY_COLLECTION_GROUP_CHAT)
@@ -149,6 +150,10 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
                     chatMessage.dateTime= FunctionalUtilities.getDateFormat(chatMessage.dateObject);
                     chatMessage.type= docs.getDocument().getString(ProjectStorage.KEY_MESSAGE_TYPE);
                     chatMessage.fileName= docs.getDocument().getString(ProjectStorage.KEY_FILE_NAME);
+                    List<ChatMessage> duplicateMessByTime = chatMessages.stream()
+                            .filter(c-> c.senderId.equals(chatMessage.senderId)&&c.dateTime.equals(chatMessage.dateTime))
+                            .collect(Collectors.toList());
+                    if(duplicateMessByTime.size()>0) continue;
                     chatMessages.add(chatMessage);
                 }
 
@@ -265,7 +270,7 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
             type=params[1].toString();
         }
         HashMap<String,Object> message = new HashMap<>();
-        message.put(ProjectStorage.KEY_SENDER_ID, PreferenceManager.getInstance().getString(ProjectStorage.KEY_USER_ID));
+        message.put(ProjectStorage.KEY_SENDER_ID, senderId);
         if(receiverUser!=null) message.put(ProjectStorage.KEY_RECEIVER_ID, receiverUser.getId());
         else message.put(ProjectStorage.KEY_RECEIVER_ID, receiverGroup.groupId);
         message.put(ProjectStorage.KEY_MESSAGE,uri.toString());
