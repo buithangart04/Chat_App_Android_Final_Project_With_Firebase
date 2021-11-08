@@ -259,7 +259,6 @@ public class ChatActivity extends AppCompatActivity implements UploadFileSuccess
     protected void onResume() {
         super.onResume();
         chatAdapter.notifyDataSetChanged();
-        binding.recMessage.setAdapter(chatAdapter);
     }
     @Override
     public void onUploadFileSuccess(Uri uri, Object [] params) {
